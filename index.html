@@ -3,229 +3,484 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель МЗ — Halloween Edition</title>
+    <title>Панель МЗ — Промышленный Хэллоуинский Монолит</title>
     <style>
+        /* ========================================================================= */
+        /* РАЗДЕЛ 1: ПОДСИСТЕМА ГЛОБАЛЬНЫХ ПЕРЕМЕННЫХ И НЕОНОВЫХ HUD-СТИЛЕЙ          */
+        /* ========================================================================= */
         :root { 
-            --bg: #06060c; 
-            --accent: #ff6200; 
-            --accent-p: #8e44ad; 
-            --card: rgba(20,20,30,0.7); 
-            --web-color: rgba(255, 98, 0, 0.15);
+            --bg-dark-core: #06060c; 
+            --neon-pumpkin-orange: #ff6200; 
+            --neon-witch-purple: #8e44ad; 
+            --glass-panel-background: rgba(20, 20, 30, 0.7); 
+            --text-pure-white: #ffffff;
+            --matrix-green: #2ecc71;
+            --blood-red: #c0392b;
+            --spider-web-opacity: 0.25;
         }
+
         body { 
-            font-family: sans-serif; 
-            background: var(--bg); 
-            color: #fff; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background-color: var(--bg-dark-core); 
+            color: var(--text-pure-white); 
             margin: 0; 
             padding: 20px; 
             display: flex; 
             flex-direction: column; 
+            justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            background-image: radial-gradient(circle, #150d2a 0%, #06060c 100%); 
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%); 
             user-select: none; 
+            -webkit-user-select: none;
         }
-        .container { display: flex; gap: 25px; max-width: 950px; width: 100%; flex-wrap: wrap; justify-content: center; position: relative; }
-        
-        .hud-card { 
-            background: var(--card); 
-            backdrop-filter: blur(10px); 
-            padding: 30px; 
-            border-radius: 20px; 
-            width: 100%; 
-            max-width: 430px; 
-            text-align: center; 
-            border: 1px solid rgba(255,98,0,0.2); 
-            box-sizing: border-box; 
+
+        /* ========================================================================= */
+        /* РАЗДЕЛ 2: ВЕКТОРНЫЕ ПАУТИНЫ ПО УГЛАМ ВСЕГО ЭКРАНА (SVG / CSS)             */
+        /* ========================================================================= */
+        .site-spider-web-top-left {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 250px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .site-spider-web-top-right {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 250px;
+            height: 250px;
+            z-index: 1;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+
+        .site-spider-web-bottom-left {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 250px;
+            height: 250px;
+            z-index: 1;
+            pointer-events: none;
+            transform: scaleY(-1);
+        }
+
+        .site-spider-web-bottom-right {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 250px;
+            height: 250px;
+            z-index: 1;
+            pointer-events: none;
+            transform: scale(-1, -1);
+        }
+
+        /* АНИМИРОВАННЫЙ ПОДЗЕМНЫЙ ТУМАН */
+        .fog-ambient-layer {
+            position: fixed;
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(142,68,173,0.06) 0%, transparent 60%);
+            top: 0;
+            left: -50%;
+            z-index: 0;
+            animation: coreFogEngineMovement 25s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes coreFogEngineMovement {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 3%) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* ========================================================================= */
+        /* РАЗДЕЛ 3: СЕТКА ИНТЕРФЕЙСА И КАРТОЧКИ МОНИТОРИНГА                        */
+        /* ========================================================================= */
+        .master-layout-container { 
+            display: flex;
+            flex-direction: row;
+            gap: 25px;
+            max-width: 950px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
             position: relative;
+            z-index: 10;
+        }
+
+        .hud-glass-card { 
+            background: var(--glass-panel-background); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 430px;
+            text-align: center;
+            border: 1px solid rgba(255, 98, 0, 0.2); 
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .hud-glass-card.game-node { 
+            border-color: rgba(142, 68, 173, 0.3); 
+        }
+        
+        h1 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--neon-pumpkin-orange);
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(255, 98, 0, 0.3);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--neon-witch-purple);
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(142, 68, 173, 0.3);
+        }
+        
+        .core-status-badge { 
+            display: inline-block;
+            padding: 5px 15px;
+            font-weight: bold;
+            border-radius: 20px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-size: 12px;
+            background: rgba(255, 98, 0, 0.1);
+            color: var(--neon-pumpkin-orange);
+            border: 1px solid var(--neon-pumpkin-orange);
+        }
+        
+        .hud-info-wrapper { 
+            text-align: left;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 12px;
+        }
+        
+        .hud-data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            padding-bottom: 5px;
+        }
+
+        .hud-data-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .hud-row-label {
+            color: #8e8e9f;
+        }
+
+        .hud-row-value {
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        .credits-container {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #73738c;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+            line-height: 1.6;
+        }
+        
+        /* ========================================================================= */
+        /* РАЗДЕЛ 4: СИСТЕМА УПРАВЛЕНИЯ, КНОПКИ И ГРАФИЧЕСКИЙ ХОЛСТ                 */
+        /* ========================================================================= */
+        .game-area-viewport {
+            width: 100%;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            position: relative;
+            margin-top: 15px;
+            border: 1px solid rgba(142, 68, 173, 0.2);
             overflow: hidden;
         }
-        .hud-card::before {
-            content: "";
+
+        #pumpkin {
+            font-size: 40px;
             position: absolute;
-            top: 0; left: 0;
-            width: 60px; height: 60px;
-            background: radial-gradient(circle at 0 0, transparent 40%, var(--web-color) 41%, transparent 45%, var(--web-color) 46%, transparent 60%, var(--web-color) 61%, transparent 65%),
-                        linear-gradient(to bottom, var(--web-color) 1px, transparent 1px),
-                        linear-gradient(to right, var(--web-color) 1px, transparent 1px);
-            background-size: 100% 100%, 10px 100%, 100% 10px;
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        .hud-card::after {
-            content: "";
-            position: absolute;
-            top: 0; right: 0;
-            width: 60px; height: 60px;
-            background: radial-gradient(circle at 100% 0, transparent 40%, var(--web-color) 41%, transparent 45%, var(--web-color) 46%, transparent 60%, var(--web-color) 61%, transparent 65%),
-                        linear-gradient(to bottom, var(--web-color) 1px, transparent 1px),
-                        linear-gradient(to left, var(--web-color) 1px, transparent 1px);
-            background-size: 100% 100%, 10px 100%, 100% 10px;
-            opacity: 0.7;
-            pointer-events: none;
+            cursor: pointer;
+            top: 35%;
+            left: 45%;
+            user-select: none;
+            filter: drop-shadow(0 0 8px var(--neon-pumpkin-orange));
+            transition: left 0.1s ease, top 0.1s ease;
         }
         
-        .hud-card.game { border-color: rgba(142,68,173,0.3); --web-color: rgba(142, 68, 173, 0.2); }
-        h1 { color: var(--accent); margin: 0 0 15px 0; font-size: 24px; text-shadow: 0 0 10px rgba(255,98,0,0.3); }
-        h2 { color: var(--accent-p); margin: 0 0 15px 0; font-size: 24px; text-shadow: 0 0 10px rgba(142,68,173,0.3); }
-        .status { display: inline-block; padding: 5px 15px; font-weight: bold; border-radius: 20px; background: rgba(255,98,0,0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px; font-size: 12px; }
-        .info-block { text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; }
-        .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 6px; }
-        .info-item:last-child { border-bottom: none; margin-bottom: 0; }
-        .label { color: #8e8e9f; } .value { font-weight: bold; }
-        .credits { margin-top: 20px; font-size: 13px; color: #73738c; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; line-height: 1.6; }
-        .game-area { width: 100%; height: 180px; background: rgba(0,0,0,0.6); border-radius: 12px; position: relative; margin-top: 15px; border: 1px solid rgba(142,68,173,0.2); overflow: hidden; }
-        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 35%; left: 45%; user-select: none; filter: drop-shadow(0 0 8px var(--accent)); transition: left 0.1s ease, top 0.1s ease; }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; background: var(--accent-p); color: #fff; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .btn-stop { background: #c0392b; }
-        .audio-banner { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 30px; margin-bottom: 20px; font-size: 13px; color: #a0a0b0; cursor: pointer; text-align: center; width: 100%; max-width: 885px; box-sizing: border-box; font-weight: bold; transition: all 0.3s; }
-        .audio-banner:hover { border-color: var(--accent); color: #fff; background: rgba(255,255,255,0.05); }
+        .control-btn-layout {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .hud-action-button {
+            flex: 1;
+            background: var(--neon-witch-purple);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .hud-action-button:hover {
+            background: #9b59b6;
+        }
+
+        .hud-action-button.stop-modifier {
+            background: var(--blood-red);
+        }
+
+        .hud-action-button.stop-modifier:hover {
+            background: #e74c3c;
+        }
         
-        .achievements-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,121,0,0.1); width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; box-sizing: border-box; }
-        .ach-title { font-weight: bold; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
-        .ach-item.unlocked { color: #2ecc71; font-weight: 600; }
+        .master-audio-banner-panel {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #a0a0b0;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            max-width: 885px;
+            box-sizing: border-box;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .master-audio-banner-panel:hover {
+            border-color: var(--neon-pumpkin-orange);
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        /* БЛОК НАГРАД И ДОСТИЖЕНИЙ СЕССИИ */
+        .achievements-hud-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 121, 0, 0.1);
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .achievements-panel-header {
+            font-weight: bold;
+            color: var(--neon-pumpkin-orange);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .achievement-row-node {
+            color: #8e8e9f;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 4px;
+        }
+
+        .achievement-row-node.unlocked-state {
+            color: var(--matrix-green);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ИСПРАВЛЕНО: Прямой вызов функций через onclick гарантирует работу кликов в обход блокировок CSP -->
-    <div class="audio-banner" id="audio-btn" onclick="initMusic()">🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)</div>
+    <!-- ВЕКТОРНЫЕ ПАУТИНЫ В УГЛАХ ОКОН КЛИЕНТА -->
+    <svg class="site-spider-web-top-left" viewBox="0 0 100 100">
+ 🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)
+Мониторинг Технички МЗ
+● СИСТЕМА АКТИВНА
 
-    <div class="container">
-        <div class="hud-card">
-            <h1>Мониторинг Технички МЗ</h1>
-            <div class="status">● СИСТЕМА АКТИВНА</div>
-            <div class="info-block">
-                <div class="info-item"><span class="label">Имя узла:</span><span class="value">Техничка Озогин МЗ</span></div>
-                <div class="info-item"><span class="label">Издание:</span><span class="value" style="color:var(--accent);">Halloween Edition</span></div>
-                <div class="info-item"><span class="label">Дата создания:</span><span class="value">25.10.2026</span></div>
-                <div class="info-item"><span class="label">Время работы:</span><span class="value" id="b-uptime" style="color:var(--accent); font-family:monospace; font-weight: bold;">0ч 0мин 0сек</span></div>
-                <div class="info-item"><span class="label">База данных:</span><span class="value">Google Таблица</span></div>
-                <div class="info-item"><span class="label">Сетевой узел:</span><span class="value">GitHub Pages live</span></div>
-            </div>
-            <div class="credits">
-                Разработчик: <span style="color:var(--accent); font-weight:bold;">Ozogin</span><br>
-                ИИ-Архитектор: <span style="color:var(--accent-p); font-weight:bold;">Алиса</span><br>
-                Спонсор: <span style="color:#2ecc71; font-weight:bold;">Alberto Pepper</span>
-            </div>
-        </div>
+Имя узла:Техничка Озогин МЗ
+Издание:Halloween Edition
+Дата создания:25.10.2026
+Время работы:0ч 0мин 0сек
+База данных:Google Таблица
+Сетевой узел:GitHub Pages live
 
-        <div class="hud-card game">
-            <h2>🦇 Хэллоуинская Игра</h2>
-            <div class="game-area">
-                <div id="pumpkin" onclick="catchPumpkin()">🎃</div>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:bold;">
-                <div>Счет: <span id="score" style="color:var(--accent-p);">0</span></div>
-                <div>Рекорд: <span id="best" style="color:#2ecc71;">0</span></div>
-            </div>
-            <div class="btn-group">
-                <button class="btn" id="btn-start" onclick="startGame()">Старт</button>
-                <button class="btn btn-stop" id="btn-stop" onclick="stopGame()">Стоп</button>
-            </div>
-            
-            <div class="achievements-box">
-                <div class="ach-title">🎃 Достижения сессии:</div>
-                <div class="ach-item" id="ach-1">❌ Охотник за призраками (10 очков)</div>
-                <div class="ach-item" id="ach-2">❌ Повелитель тыкв (25 очков)</div>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        var score = 0, best = 0, gameInterval = null, gameActive = false, audioCtx = null, melodyInterval = null;
+Разработчик: Ozogin
 
-        // Счетчик аптайма реального времени
-        var seconds = 0;
-        setInterval(function() {
-            seconds++;
-            var h = Math.floor(seconds / 3600);
-            var m = Math.floor((seconds % 3600) / 60);
-            var s = seconds % 60;
-            document.getElementById("b-uptime").innerText = h + "ч " + m + "мин " + s + "сек";
-        }, 1000);
+ИИ-Архитектор: Алиса
 
-        function initMusic() {
-            if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
-            var notes = [130.81, 155.56, 196.00, 220.00]; 
-            var currentNoteIdx = 0;
+Спонсор: Alberto Pepper
 
-            function playMelodyStep() {
-                if (!audioCtx) return;
-                var osc = audioCtx.createOscillator();
-                var gainNode = audioCtx.createGain();
-                
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(notes[currentNoteIdx], audioCtx.currentTime);
-                
-                gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
-                
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 1.2);
-                
-                currentNoteIdx = (currentNoteIdx + 1) % notes.length;
-            }
+🦇 Хэллоуинская Игра
 
-            playMelodyStep();
-            melodyInterval = setInterval(playMelodyStep, 1000); 
-document.getElementById("audio-btn").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
+🎃
+
+
+Счет: 0
+Рекорд: 0
+
+
+Старт
+Стоп
+🎃 Достижения сессии:
+❌ Охотник за призраками (10 очков)
+❌ Повелитель тыкв (25 очков)
+
+
+// ПОДСИСТЕМА 5: ИЗОЛИРОВАННЫЙ ПРОФЕССИОНАЛЬНЫЙ JAVASCRIPT-ОБЪЕКТ            //
+var totalSystemSecondsCounter = 0;
+var coreGameIntervalLoop = null;
+var isSystemGameActive = false;
+// 1. АВТОНОМНЫЙ СЧЕТЧИК АПТАЙМА
+function executeRealtimeClockTick() {
+totalSystemSecondsCounter++;
+var h = Math.floor(totalSystemSecondsCounter / 3600);
+var m = Math.floor((totalSystemSecondsCounter % 3600) / 60);
+var s = totalSystemSecondsCounter % 60;
+var clockDisplay = document.getElementById("realtime-clock-digital-display");
+if (clockDisplay) {
+clockDisplay.innerText = h + "ч " + m + "мин " + s + "сек";
 }
-function playSound() {
-if (!audioCtx) return;
-var o = audioCtx.createOscillator(), g = audioCtx.createGain();
-o.type = "sine"; o.frequency.setValueAtTime(300, audioCtx.currentTime);
-o.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.15);
-g.gain.setValueAtTime(0.08, audioCtx.currentTime);
-g.gain.linearRampToValueAtTime(0.001, g.currentTime + 0.15);
-o.connect(g); g.connect(audioCtx.destination);
-o.start(); o.stop(audioCtx.currentTime + 0.15);
 }
-function move() {
-if (!gameActive) return;
+setInterval(executeRealtimeClockTick, 1000);
+// 2. ИЗОЛИРОВАННЫЙ МОДУЛЬ АУДИОСИСТЕМЫ
+var moduleAudioEngine = {
+context: null,
+interval: null,
+notes: [130.81, 155.56, 196.00, 220.00], // До, Ре-диез, Соль, Ля
+currentIdx: 0,
+init: function() {
+if (this.context) return;
+try {
+this.context = new (window.AudioContext || window.webkitAudioContext)();
+var self = this;
+function playMelodyStep() {
+if (!self.context) return;
+var osc = self.context.createOscillator();
+var gainNode = self.context.createGain();
+osc.type = "sine";
+osc.frequency.setValueAtTime(self.notes[self.currentIdx], self.context.currentTime);
+gainNode.gain.setValueAtTime(0.06, self.context.currentTime);
+gainNode.gain.exponentialRampToValueAtTime(0.001, self.context.currentTime + 1.2);
+osc.connect(gainNode);
+gainNode.connect(self.context.destination);
+osc.start();
+osc.stop(self.context.currentTime + 1.2);
+self.currentIdx = (self.currentIdx + 1) % self.notes.length;
+}
+playMelodyStep();
+this.interval = setInterval(playMelodyStep, 1000);
+document.getElementById("master-audio-engine-activation-button").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
+} catch(error) {
+console.error("Ошибка запуска звука:", error);
+}
+},
+playCatchSoundEffect: function() {
+if (!this.context) return;
+try {
+var osc = this.context.createOscillator();
+var gain = this.context.createGain();
+osc.type = "sine";
+osc.frequency.setValueAtTime(300, this.context.currentTime);
+osc.frequency.exponentialRampToValueAtTime(90, this.context.currentTime + 0.15);
+gain.gain.setValueAtTime(0.08, this.context.currentTime);
+gain.gain.linearRampToValueAtTime(0.001, this.context.currentTime + 0.15);
+osc.connect(gain);
+gain.connect(this.context.destination);
+osc.start();
+osc.stop(this.context.currentTime + 0.15);
+} catch(e){}
+}
+};
+// 3. ИЗОЛИРОВАННЫЙ ИГРОВОЙ МОДУЛЬ
+var moduleGameCore = {
+score: 0,
+best: 0,
+start: function() {
+moduleAudioEngine.init(); // Запуск звука при старте
+this.score = 0;
+document.getElementById("runtime-score-counter").innerText = this.score;
+isSystemGameActive = true;
+var self = this;
+if (coreGameIntervalLoop) clearInterval(coreGameIntervalLoop);
+this.movePumpkinToRandomPoint();
+coreGameIntervalLoop = setInterval(function() {
+self.movePumpkinToRandomPoint();
+}, 750);
+},
+stop: function() {
+isSystemGameActive = false;
+if (coreGameIntervalLoop) clearInterval(coreGameIntervalLoop);
 var p = document.getElementById("pumpkin");
+if (p) {
+p.style.left = "45%";
+p.style.top = "35%";
+}
+},
+movePumpkinToRandomPoint: function() {
+if (!isSystemGameActive) return;
+var p = document.getElementById("pumpkin");
+if (p) {
 p.style.left = Math.floor(Math.random() * 320) + "px";
 p.style.top = Math.floor(Math.random() * 130) + "px";
 }
-function checkAchievements() {
-if (score >= 10) {
-var a1 = document.getElementById("ach-1");
-if (a1) { a1.innerText = "🏆 Охотник за призраками (Получено!)"; a1.className = "ach-item unlocked"; }
+},
+catchPumpkin: function() {
+if (!isSystemGameActive) return;
+this.score++;
+document.getElementById("runtime-score-counter").innerText = this.score;
+if (this.score > this.best) {
+this.best = this.score;
+document.getElementById("historical-best-counter").innerText = this.best;
 }
-if (score >= 25) {
-var a2 = document.getElementById("ach-2");
-if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "ach-item unlocked"; }
+try { moduleAudioEngine.playCatchSoundEffect(); } catch(e){}
+this.evaluateAchievementsNode();
+this.movePumpkinToRandomPoint();
+},
+evaluateAchievementsNode: function() {
+if (this.score >= 10) {
+var a1 = document.getElementById("achievement-slot-1");
+if (a1) { a1.innerText = "🏆 Охотник за призраками (Получено!)"; a1.className = "achievement-row-node unlocked-state"; }
+}
+if (this.score >= 25) {
+var a2 = document.getElementById("achievement-slot-2");
+if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "achievement-row-node unlocked-state"; }
 }
 }
-// Вынесли логику в именованные функции для прямого вызова через onclick
-function startGame() {
-initMusic();
-score = 0;
-document.getElementById("score").innerText = score;
-gameActive = true;
-if (gameInterval) clearInterval(gameInterval);
-move();
-gameInterval = setInterval(move, 750);
-}
-function stopGame() {
-gameActive = false;
-if (gameInterval) clearInterval(gameInterval);
-var p = document.getElementById("pumpkin");
-p.style.left = "45%"; p.style.top = "35%";
-}
-function catchPumpkin() {
-if (!gameActive) return;
-score++;
-document.getElementById("score").innerText = score;
-if (score > best) { best = score; document.getElementById("best").innerText = best; }
-try { playSound(); } catch(e){}
-checkAchievements();
-move();
-} 
+};
+// Клонируем паутину по всем остальным углам экрана при загрузке
+window.onload = function() {
+var webSvgContent = document.querySelector(".site-spider-web-top-left").innerHTML;
+document.querySelector(".site-spider-web-top-right").innerHTML = webSvgContent;
+document.querySelector(".site-spider-web-bottom-left").innerHTML = webSvgContent;
+document.querySelector(".site-spider-web-bottom-right").innerHTML = webSvgContent;
+};
