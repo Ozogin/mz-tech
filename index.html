@@ -3,32 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель МЗ</title>
+    <title>Панель МЗ — Halloween Edition</title>
     <style>
-        :root { --bg: #06060c; --accent: #ff6200; --accent-p: #8e44ad; --card: rgba(20,20,30,0.7); }
-        body { font-family: sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; background-image: radial-gradient(circle, #150d2a 0%, #06060c 100%); user-select: none; }
-        .container { display: flex; gap: 25px; max-width: 950px; width: 100%; flex-wrap: wrap; justify-content: center; }
-        .hud-card { background: var(--card); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; width: 100%; max-width: 430px; text-align: center; border: 1px solid rgba(255,98,0,0.2); box-sizing: border-box; }
-        .hud-card.game { border-color: rgba(142,68,173,0.3); }
-        h1 { color: var(--accent); margin: 0 0 15px 0; font-size: 24px; }
-        h2 { color: var(--accent-p); margin: 0 0 15px 0; font-size: 24px; }
+        :root { 
+            --bg: #06060c; 
+            --accent: #ff6200; 
+            --accent-p: #8e44ad; 
+            --card: rgba(20,20,30,0.7); 
+            --web-color: rgba(255, 98, 0, 0.15);
+        }
+        body { 
+            font-family: sans-serif; 
+            background: var(--bg); 
+            color: #fff; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            background-image: radial-gradient(circle, #150d2a 0%, #06060c 100%); 
+            user-select: none; 
+        }
+        .container { display: flex; gap: 25px; max-width: 950px; width: 100%; flex-wrap: wrap; justify-content: center; position: relative; }
+        
+        .hud-card { 
+            background: var(--card); 
+            backdrop-filter: blur(10px); 
+            padding: 30px; 
+            border-radius: 20px; 
+            width: 100%; 
+            max-width: 430px; 
+            text-align: center; 
+            border: 1px solid rgba(255,98,0,0.2); 
+            box-sizing: border-box; 
+            position: relative;
+            overflow: hidden;
+        }
+        .hud-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 60px; height: 60px;
+            background: radial-gradient(circle at 0 0, transparent 40%, var(--web-color) 41%, transparent 45%, var(--web-color) 46%, transparent 60%, var(--web-color) 61%, transparent 65%),
+                        linear-gradient(to bottom, var(--web-color) 1px, transparent 1px),
+                        linear-gradient(to right, var(--web-color) 1px, transparent 1px);
+            background-size: 100% 100%, 10px 100%, 100% 10px;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .hud-card::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0;
+            width: 60px; height: 60px;
+            background: radial-gradient(circle at 100% 0, transparent 40%, var(--web-color) 41%, transparent 45%, var(--web-color) 46%, transparent 60%, var(--web-color) 61%, transparent 65%),
+                        linear-gradient(to bottom, var(--web-color) 1px, transparent 1px),
+                        linear-gradient(to left, var(--web-color) 1px, transparent 1px);
+            background-size: 100% 100%, 10px 100%, 100% 10px;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .hud-card.game { border-color: rgba(142,68,173,0.3); --web-color: rgba(142, 68, 173, 0.2); }
+        h1 { color: var(--accent); margin: 0 0 15px 0; font-size: 24px; text-shadow: 0 0 10px rgba(255,98,0,0.3); }
+        h2 { color: var(--accent-p); margin: 0 0 15px 0; font-size: 24px; text-shadow: 0 0 10px rgba(142,68,173,0.3); }
         .status { display: inline-block; padding: 5px 15px; font-weight: bold; border-radius: 20px; background: rgba(255,98,0,0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px; font-size: 12px; }
         .info-block { text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; }
         .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 5px; }
         .info-item:last-child { border-bottom: none; margin-bottom: 0; }
         .label { color: #8e8e9f; } .value { font-weight: bold; }
         .credits { margin-top: 20px; font-size: 13px; color: #73738c; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; line-height: 1.6; }
-        .game-area { width: 100%; height: 180px; background: rgba(0,0,0,0.6); border-radius: 12px; position: relative; margin-top: 15px; border: 1px solid rgba(142,68,173,0.2); }
-        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 35%; left: 45%; user-select: none; }
+        .game-area { width: 100%; height: 180px; background: rgba(0,0,0,0.6); border-radius: 12px; position: relative; margin-top: 15px; border: 1px solid rgba(142,68,173,0.2); overflow: hidden; }
+        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 35%; left: 45%; user-select: none; filter: drop-shadow(0 0 8px var(--accent)); transition: left 0.1s ease, top 0.1s ease; }
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn { flex: 1; background: var(--accent-p); color: #fff; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-stop { background: #c0392b; }
-        .audio-banner { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 30px; margin-bottom: 20px; font-size: 13px; color: #a0a0b0; cursor: pointer; text-align: center; width: 100%; max-width: 880px; box-sizing: border-box; }
+        .audio-banner { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 30px; margin-bottom: 20px; font-size: 13px; color: #a0a0b0; cursor: pointer; text-align: center; width: 100%; max-width: 885px; box-sizing: border-box; font-weight: bold; transition: all 0.3s; }
+        .audio-banner:hover { border-color: var(--accent); color: #fff; background: rgba(255,255,255,0.05); }
+        
+        .achievements-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,121,0,0.1); width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; box-sizing: border-box; }
+        .ach-title { font-weight: bold; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+        .ach-item.unlocked { color: #2ecc71; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div class="audio-banner" id="audio-btn">🎵 Нажми сюда, чтобы включить громкую музыку панели</div>
+    <div class="audio-banner" id="audio-btn">🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)</div>
 
     <div class="container">
         <div class="hud-card">
@@ -38,7 +100,7 @@
                 <div class="info-item"><span class="label">Имя узла:</span><span class="value">Техничка Озогин МЗ</span></div>
                 <div class="info-item"><span class="label">Издание:</span><span class="value" style="color:var(--accent);">Halloween Edition</span></div>
                 <div class="info-item"><span class="label">Дата создания:</span><span class="value">25.10.2026</span></div>
-                <div class="info-item"><span class="label">Время работы:</span><span class="value" id="b-uptime" style="color:var(--accent); font-family:monospace;">0ч 0мин 0сек</span></div>
+                <div class="info-item"><span class="label">Время работы:</span><span class="value" id="b-uptime" style="color:var(--accent); font-family:monospace; font-weight: bold;">0ч 0мин 0сек</span></div>
                 <div class="info-item"><span class="label">База данных:</span><span class="value">Google Таблица</span></div>
                 <div class="info-item"><span class="label">Сетевой узел:</span><span class="value">GitHub Pages live</span></div>
             </div>
@@ -62,13 +124,18 @@
                 <button class="btn" id="btn-start">Старт</button>
                 <button class="btn btn-stop" id="btn-stop">Стоп</button>
             </div>
+            
+            <div class="achievements-box">
+                <div class="ach-title">🎃 Достижения сессии:</div>
+                <div class="ach-item" id="ach-1">❌ Охотник за призраками (10 очков)</div>
+                <div class="ach-item" id="ach-2">❌ Повелитель тыкв (25 очков)</div>
+            </div>
         </div>
     </div>
 
     <script>
-        var score = 0, best = 0, gameInterval = null, gameActive = false, audioCtx = null, ambientOsc = null;
+        var score = 0, best = 0, gameInterval = null, gameActive = false, audioCtx = null, melodyInterval = null;
 
-        // Счетчик аптайма реального времени
         var seconds = 0;
         setInterval(function() {
             seconds++;
@@ -78,66 +145,86 @@
             document.getElementById("b-uptime").innerText = h + "ч " + m + "мин " + s + "сек";
         }, 1000);
 
-        // Включение фоновой музыки на максимум
         function initMusic() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            ambientOsc = audioCtx.createOscillator();
-            var gain = audioCtx.createGain();
-            ambientOsc.type = "triangle";
-            ambientOsc.frequency.setValueAtTime(55.00, audioCtx.currentTime); 
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime); 
-            ambientOsc.connect(gain);
-            gain.connect(audioCtx.destination);
-            ambientOsc.start();
-            document.getElementById("audio-btn").innerText = "🔮 Фоновая хоррор-музыка успешно запущена!";
+            
+            var notes = [130.81, 155.56, 196.00, 220.00]; 
+            var currentNoteIdx = 0;
+
+            function playMelodyStep() {
+                if (!audioCtx) return;
+                var osc = audioCtx.createOscillator();
+                var gainNode = audioCtx.createGain();
+                
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(notes[currentNoteIdx], audioCtx.currentTime);
+                
+                gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.2);
+                
+                currentNoteIdx = (currentNoteIdx + 1) % notes.length;
+            }
+
+            playMelodyStep();
+            melodyInterval = setInterval(playMelodyStep, 1000); 
+            document.getElementById("audio-btn").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
         }
 
         function playSound() {
             if (!audioCtx) return;
-            var o = audioCtx.createOscillator(), g = audioCtx.createGain();
-            o.type = "sine"; o.frequency.setValueAtTime(250, audioCtx.currentTime);
-            o.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.15);
-            g.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + 0.15);
-        }
-
-        function move() {
-            if (!gameActive) return;
-            var p = document.getElementById("pumpkin");
-            p.style.left = Math.floor(Math.random() * 300) + "px";
-            p.style.top = Math.floor(Math.random() * 130) + "px";
-        }
-
-        document.getElementById("audio-btn").addEventListener("click", initMusic);
-        
-        document.getElementById("btn-start").addEventListener("click", function() {
-            initMusic();
-            score = 0;
-            document.getElementById("score").innerText = score;
-            gameActive = true;
-            if (gameInterval) clearInterval(gameInterval);
-            move();
-            gameInterval = setInterval(move, 750);
-        });
-
-        document.getElementById("btn-stop").addEventListener("click", function() {
-            gameActive = false;
-            if (gameInterval) clearInterval(gameInterval);
-            var p = document.getElementById("pumpkin");
-            p.style.left = "45%"; p.style.top = "35%";
-        });
-
-        document.getElementById("pumpkin").addEventListener("click", function() {
-            if (!gameActive) return;
-            score++;
-            document.getElementById("score").innerText = score;
-            if (score > best) { best = score; document.getElementById("best").innerText = best; }
-            try { playSound(); } catch(e){}
-            move();
-        });
-    </script>
-</body>
-</html>
+var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+o.type = "sine"; o.frequency.setValueAtTime(300, audioCtx.currentTime);
+o.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.15);
+g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+o.connect(g); g.connect(audioCtx.destination);
+o.start(); o.stop(audioCtx.currentTime + 0.15);
+}
+function move() {
+if (!gameActive) return;
+var p = document.getElementById("pumpkin");
+p.style.left = Math.floor(Math.random() * 320) + "px";
+p.style.top = Math.floor(Math.random() * 130) + "px";
+}
+function checkAchievements() {
+if (score >= 10) {
+var a1 = document.getElementById("ach-1");
+if (a1) { a1.innerText = "🏆 Охотник за призраками (Получено!)"; a1.className = "ach-item unlocked"; }
+}
+if (score >= 25) {
+var a2 = document.getElementById("ach-2");
+if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "ach-item unlocked"; }
+}
+}
+document.getElementById("audio-btn").addEventListener("click", initMusic);
+document.getElementById("btn-start").addEventListener("click", function() {
+initMusic();
+score = 0;
+document.getElementById("score").innerText = score;
+gameActive = true;
+if (gameInterval) clearInterval(gameInterval);
+move();
+gameInterval = setInterval(move, 750);
+});
+document.getElementById("btn-stop").addEventListener("click", function() {
+gameActive = false;
+if (gameInterval) clearInterval(gameInterval);
+var p = document.getElementById("pumpkin");
+p.style.left = "45%"; p.style.top = "35%";
+});
+document.getElementById("pumpkin").addEventListener("click", function() {
+if (!gameActive) return;
+score++;
+document.getElementById("score").innerText = score;
+if (score > best) { best = score; document.getElementById("best").innerText = best; }
+try { playSound(); } catch(e){}
+checkAchievements();
+move();
+});
