@@ -1,82 +1,208 @@
-var score = 0;
-var gameInterval = null;
-var gameActive = false;
-var audioCtx = null;
-var ambientOsc = null;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель Мониторинга Технички МЗ</title>
+    <style>
+        :root { 
+            --bg: #06060c; 
+            --accent: #ff6200; 
+            --accent-purple: #8e44ad;
+            --card-bg: rgba(20, 20, 30, 0.6); 
+            --text: #ffffff; 
+        }
+        body { 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%);
+            user-select: none;
+        }
+        .fog {
+            position: absolute; width: 200%; height: 100%;
+            background: radial-gradient(circle, rgba(142,68,173,0.06) 0%, transparent 60%);
+            top: 0; left: -50%; z-index: -2; animation: fogMove 25s infinite linear; pointer-events: none;
+        }
+        @keyframes fogMove {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 3%) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        .container { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 25px; 
+            max-width: 950px; 
+            width: 100%; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            z-index: 5;
+        }
+        .hud-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            width: 100%; 
+            max-width: 440px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 98, 0, 0.2); 
+            box-sizing: border-box; 
+        }
+        .hud-card.game { border: 1px solid rgba(142, 68, 173, 0.2); }
+        h1 { margin-top: 0; color: var(--accent); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255, 98, 0, 0.4); }
+        h2 { margin-top: 0; color: var(--accent-purple); font-size: 26px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 15px rgba(142, 68, 173, 0.4); }
+        .status-badge { 
+            display: inline-block; padding: 6px 18px; font-weight: bold; border-radius: 30px; 
+            text-transform: uppercase; margin-bottom: 20px; font-size: 12px; letter-spacing: 1px;
+            background: rgba(255, 98, 0, 0.15); color: var(--accent); border: 1px solid var(--accent);
+        }
+        .info-block { 
+            text-align: left; background: rgba(0, 0, 0, 0.3); padding: 18px; 
+            border-radius: 12px; margin-top: 15px; border-left: 4px solid var(--accent); 
+        }
+        .hud-card.game .info-block { border-left: 4px solid var(--accent-purple); }
+        .info-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 6px; }
+        .info-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .label { color: #8e8e9f; }
+        .value { font-weight: 600; color: #ffffff; }
+        .credits { margin-top: 25px; font-size: 13px; color: #73738c; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; line-height: 1.7; }
+        .dev-name { color: var(--accent); font-weight: bold; }
+        .ai-name { color: var(--accent-purple); font-weight: bold; }
+        .sponsor-name { color: #2ecc71; font-weight: bold; }
+        .game-area { width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 12px; position: relative; margin-top: 15px; overflow: hidden; border: 1px solid rgba(142, 68, 173, 0.3); }
+        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 40%; left: 45%; filter: drop-shadow(0 0 8px var(--accent)); transition: all 0.1s ease; }
+        .score-board { font-size: 18px; margin-top: 15px; font-weight: 700; color: #fff; }
+        .btn-group { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
+        .btn { flex: 1; background: var(--accent-purple); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .btn-stop { background: #c0392b; }
+        .audio-banner { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 10px 20px; border-radius: 30px; margin-bottom: 25px; font-size: 13px; color: #a0a0b0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+    <div class="audio-banner" id="audio-btn">
+        🎵 Нажми сюда, чтобы включить громкую хэллоуинскую музыку
+    </div>
+    <div class="container">
+        <div class="hud-card">
+            <h1>Мониторинг Технички МЗ</h1>
+            <div class="status-badge" id="bot-status">● СЕТЬ АКТИВНА</div>
+            <div class="info-block">
+                <div class="info-item"><span class="label">Имя бота:</span><span class="value">Техничка Озогин МЗ</span></div>
+                <div class="info-item"><span class="label">Версия системы:</span><span class="value" style="color: var(--accent);">Halloween Edition</span></div>
+                <div class="info-item"><span class="label">Дата создания:</span><span class="value">25.10.2026</span></div>
+                <div class="info-item"><span class="label">Время работы:</span><span class="value" id="b-uptime" style="color: #ff6200; font-family: monospace; font-size: 15px;">0ч 0мин 0сек</span></div>
+                <div class="info-item"><span class="label">Статус серверов:</span><span class="value" style="color: #2ecc71;">Стабильно</span></div>
+                <div class="info-item"><span class="label">Задержка сети:</span><span class="value">42 мс</span></div>
+            </div>
+            <div class="credits">
+                Главный Разработчик: <span class="dev-name">Ozogin</span><br>
+                ИИ-Архитектор Системы: <span class="ai-name">Алиса</span><br>
+                Официальный Спонсор: <span class="sponsor-name">Alberto Pepper</span>
+            </div>
+        </div>
+        <div class="hud-card game">
+            <h2>🦇 Хэллоуинская Игра</h2>
+            <p style="font-size: 13px; color: #8e8e9f; margin: 0;">Поймай летящую неоновую тыкву!</p>
+            <div class="game-area">
+                <div id="pumpkin">🎃</div>
+            </div>
+            <div class="score-board">Поймано тыкв: <span id="score" style="color: var(--accent-purple);">0</span></div>
+            <div class="btn-group">
+                <button class="btn" id="btn-start">Старт</button>
+                <button class="btn btn-stop" id="btn-stop">Стоп</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var score = 0;
+        var gameInterval = null;
+        var gameActive = false;
+        var audioCtx = null;
+        var ambientOsc = null;
 
-// Сверхточный таймер аптайма реального времени прямо на экране!
-var secondsPassed = 0;
-function runRealtimeClock() {
-    secondsPassed++;
-    var h = Math.floor(secondsPassed / 3600);
-    var m = Math.floor((secondsPassed % 3600) / 60);
-    var s = secondsPassed % 60;
-    document.getElementById("b-uptime").innerText = h + "ч " + m + "мин " + s + "сек";
-}
-setInterval(runRealtimeClock, 1000);
+        var secondsPassed = 0;
+        function runRealtimeClock() {
+            secondsPassed++;
+            var h = Math.floor(secondsPassed / 3600);
+            var m = Math.floor((secondsPassed % 3600) / 60);
+            var s = secondsPassed % 60;
+            document.getElementById("b-uptime").innerText = h + "ч " + m + "мин " + s + "сек";
+        }
+        setInterval(runRealtimeClock, 1000);
 
-function initAtmosphere() {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    ambientOsc = audioCtx.createOscillator();
-    var ambientGain = audioCtx.createGain();
-    ambientOsc.type = 'triangle';
-    ambientOsc.frequency.setValueAtTime(65.41, audioCtx.currentTime); 
-    ambientGain.gain.setValueAtTime(0.06, audioCtx.currentTime); 
-    ambientOsc.connect(ambientGain);
-    ambientGain.connect(audioCtx.destination);
-    ambientOsc.start();
-    document.getElementById('audio-btn').innerText = "🔮 Атмосферная фоновая музыка успешно включена!";
-}
+        function initAtmosphere() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            ambientOsc = audioCtx.createOscillator();
+            var ambientGain = audioCtx.createGain();
+            ambientOsc.type = "triangle";
+            ambientOsc.frequency.setValueAtTime(65.41, audioCtx.currentTime); 
+            ambientGain.gain.setValueAtTime(0.06, audioCtx.currentTime); 
+            ambientOsc.connect(ambientGain);
+            ambientGain.connect(audioCtx.destination);
+            ambientOsc.start();
+            document.getElementById("audio-btn").innerText = "🔮 Атмосферная фоновая музыка успешно включена!";
+        }
 
-function playCatchSound() {
-    if(!audioCtx) return;
-    var osc = audioCtx.createOscillator();
-    var gainNode = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.2);
-    gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.2);
-}
+        function playCatchSound() {
+            if(!audioCtx) return;
+            var osc = audioCtx.createOscillator();
+            var gainNode = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
 
-function movePumpkin() {
-    if(!gameActive) return;
-    var p = document.getElementById('pumpkin');
-    var x = Math.floor(Math.random() * 320);
-    var y = Math.floor(Math.random() * 140);
-    p.style.left = x + 'px';
-    p.style.top = y + 'px';
-}
+        function movePumpkin() {
+            if(!gameActive) return;
+            var p = document.getElementById("pumpkin");
+            var x = Math.floor(Math.random() * 320);
+            var y = Math.floor(Math.random() * 140);
+            p.style.left = x + "px";
+            p.style.top = y + "px";
+        }
 
-document.getElementById('audio-btn').addEventListener('click', initAtmosphere);
+        document.getElementById("audio-btn").addEventListener("click", initAtmosphere);
+        
+        document.getElementById("btn-start").addEventListener("click", function() {
+            score = 0;
+            document.getElementById("score").innerText = score;
+            gameActive = true;
+            if(gameInterval) clearInterval(gameInterval);
+            movePumpkin();
+            gameInterval = setInterval(movePumpkin, 750);
+        });
 
-document.getElementById('btn-start').addEventListener('click', function() {
-    score = 0;
-    document.getElementById('score').innerText = score;
-    gameActive = true;
-    if(gameInterval) clearInterval(gameInterval);
-    movePumpkin();
-    gameInterval = setInterval(movePumpkin, 750);
+        document.getElementById("btn-stop").addEventListener("click", function() {
+            gameActive = false;
+if(gameInterval) clearInterval(gameInterval);
+var p = document.getElementById("pumpkin");
+p.style.left = "45%";
+p.style.top = "40%";
 });
-
-document.getElementById('btn-stop').addEventListener('click', function() {
-    gameActive = false;
-    if(gameInterval) clearInterval(gameInterval);
-    var p = document.getElementById('pumpkin');
-    p.style.left = '45%';
-    p.style.top = '40%';
+document.getElementById("pumpkin").addEventListener("click", function() {
+if(!gameActive) return;
+score++;
+document.getElementById("score").innerText = score;
+try { playCatchSound(); } catch(e){}
+movePumpkin();
 });
-
-document.getElementById('pumpkin').addEventListener('click', function() {
-    if(!gameActive) return;
-    score++;
-    document.getElementById('score').innerText = score;
-    try { playCatchSound(); } catch(e){}
-    movePumpkin();
-});
- 
