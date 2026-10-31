@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель МЗ — Halloween Monolith v2.1</title>
+<title>Панель МЗ — Halloween Monolith v2.3</title>
 <style>
 :root{
   --bg:#06060c; --panel:rgba(20,20,32,.55);
@@ -33,21 +33,10 @@ body{
 body.shake{animation:shake .35s ease;}
 @keyframes shake{0%,100%{transform:translate(0,0);}25%{transform:translate(-6px,3px);}50%{transform:translate(6px,-3px);}75%{transform:translate(-3px,-2px);}}
 
-/* Танцующие скелеты на фоне */
-.background-skeletons{
-  position:fixed; inset:0; z-index:2; pointer-events:none; overflow:hidden;
-  opacity:0; transition:opacity .5s ease;
-}
-.background-skeletons.active{ opacity:1; }
-.bg-skeleton{
-  position:absolute; font-size:40px; opacity:.15;
-  animation:skeletonDance 0.6s ease-in-out infinite alternate;
-  transform-origin:bottom center; filter:blur(1px);
-}
-@keyframes skeletonDance{
-  0%{ transform: rotate(-15deg) translateY(0) scale(1); }
-  100%{ transform: rotate(15deg) translateY(-10px) scale(1.05); }
-}
+.background-skeletons{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .5s ease;}
+.background-skeletons.active{opacity:1;}
+.bg-skeleton{position:absolute;font-size:40px;opacity:.15;animation:skeletonDance 0.6s ease-in-out infinite alternate;transform-origin:bottom center;filter:blur(1px);}
+@keyframes skeletonDance{0%{transform:rotate(-15deg) translateY(0) scale(1);}100%{transform:rotate(15deg) translateY(-10px) scale(1.05);}}
 
 .fog{position:fixed;inset:-20%;z-index:0;pointer-events:none;
   background:radial-gradient(circle at 30% 30%,rgba(142,68,173,.10),transparent 55%),
@@ -63,12 +52,8 @@ body.shake{animation:shake .35s ease;}
 .web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);}
 .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
 
-.topbar{width:100%;max-width:1200px;display:flex;flex-wrap:wrap;gap:10px;
-  justify-content:center;margin-bottom:22px;position:relative;z-index:10;margin-top:30px;align-items:center;}
-.pill{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  color:#c9c9d6;font-size:12.5px;font-weight:600;cursor:pointer;
-  backdrop-filter:blur(10px);transition:all .25s ease;white-space:nowrap;}
+.topbar{width:100%;max-width:1200px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px;position:relative;z-index:10;margin-top:30px;align-items:center;}
+.pill{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#c9c9d6;font-size:12.5px;font-weight:600;cursor:pointer;backdrop-filter:blur(10px);transition:all .25s ease;white-space:nowrap;}
 .pill:hover{color:#fff;border-color:var(--accent);}
 .pill.active{border-color:var(--accent);color:var(--accent);}
 .pill.hardcore.active{border-color:var(--red);color:var(--red);}
@@ -78,10 +63,7 @@ body.shake{animation:shake .35s ease;}
 .lang-btn.active{background:var(--accent);color:#000;}
 
 .grid{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;width:100%;max-width:1200px;position:relative;z-index:10;}
-.card{position:relative;flex:1 1 420px;max-width:560px;
-  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;
-  backdrop-filter:blur(16px);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.05);
-  transition:border-color .5s ease,transform .3s ease;}
+.card{position:relative;flex:1 1 420px;max-width:560px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;backdrop-filter:blur(16px);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .5s ease,transform .3s ease;}
 .card:hover{transform:translateY(-2px);}
 .card.game{border-color:var(--border-2);}
 .card.game.active{border-color:var(--accent);box-shadow:0 0 30px -10px var(--accent),var(--shadow);}
@@ -90,9 +72,7 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}
 h1{color:var(--accent);} h2{color:var(--accent-2);}
 .subtitle{color:var(--muted);font-size:12px;margin-bottom:18px;}
 
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
-  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:var(--accent);border:1px solid var(--accent);background:rgba(255,98,0,.10);margin-bottom:16px;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);background:rgba(255,98,0,.10);margin-bottom:16px;}
 .badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.8s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
 
@@ -102,10 +82,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 .row .k{color:var(--muted);} .row .v{font-weight:600;color:#fff;text-align:right;}
 .row .v.accent{color:var(--accent);font-family:monospace;}
 
-.arena{position:relative;width:100%;height:230px;margin-top:14px;border-radius:16px;
-  background:rgba(0,0,0,.55);border:1px solid var(--border-2);overflow:hidden;}
-#pumpkin{position:absolute;top:38%;left:45%;font-size:42px;cursor:pointer;z-index:3;
-  filter:drop-shadow(0 0 10px var(--accent));transition:left .12s ease,top .12s ease,transform .08s ease;}
+.arena{position:relative;width:100%;height:230px;margin-top:14px;border-radius:16px;background:rgba(0,0,0,.55);border:1px solid var(--border-2);overflow:hidden;}
+#pumpkin{position:absolute;top:38%;left:45%;font-size:42px;cursor:pointer;z-index:3;filter:drop-shadow(0 0 10px var(--accent));transition:left .12s ease,top .12s ease,transform .08s ease;}
 #pumpkin:active{transform:scale(.85);}
 #pumpkin.bonus{filter:drop-shadow(0 0 16px var(--green));}
 #pumpkin.cursed{filter:drop-shadow(0 0 16px var(--red)) saturate(1.8);}
@@ -116,8 +94,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 #combo.show{opacity:1;}
 
 .btns{display:flex;gap:10px;margin-top:12px;}
-.btn{flex:1;padding:11px;border:none;border-radius:13px;color:#fff;font-weight:700;font-size:13px;
-  cursor:pointer;transition:transform .15s,box-shadow .2s;background:linear-gradient(135deg,var(--accent-2),#5a2a75);}
+.btn{flex:1;padding:11px;border:none;border-radius:13px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:transform .15s,box-shadow .2s;background:linear-gradient(135deg,var(--accent-2),#5a2a75);}
 .btn:hover{transform:translateY(-1px);} .btn:active{transform:translateY(1px);}
 .btn.stop{background:linear-gradient(135deg,var(--red),#7a1f15);}
 .btn.share{background:linear-gradient(135deg,var(--accent),#a83e00);font-size:12px;}
@@ -129,10 +106,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 
 .tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;backdrop-filter:blur(2px);}
 .tour-overlay.open{display:block;}
-.tour-highlight{position:fixed;z-index:201;border:2px solid var(--accent);border-radius:14px;
-  box-shadow:0 0 0 9999px rgba(0,0,0,.4),0 0 20px var(--accent);pointer-events:none;display:none;}
-.tour-tooltip{position:fixed;z-index:202;background:#1a1a24;border:1px solid var(--accent);
-  border-radius:16px;padding:18px;max-width:300px;box-shadow:0 10px 40px rgba(0,0,0,.9);display:none;}
+.tour-highlight{position:fixed;z-index:201;border:2px solid var(--accent);border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.4),0 0 20px var(--accent);pointer-events:none;display:none;}
+.tour-tooltip{position:fixed;z-index:202;background:#1a1a24;border:1px solid var(--accent);border-radius:16px;padding:18px;max-width:300px;box-shadow:0 10px 40px rgba(0,0,0,.9);display:none;}
 .tour-tooltip h3{margin:0 0 8px;font-size:15px;color:var(--accent);}
 .tour-tooltip p{margin:0 0 14px;font-size:13px;color:#c9c9d6;}
 .tour-tooltip .tour-btns{display:flex;gap:8px;justify-content:flex-end;}
@@ -140,12 +115,9 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 .tour-tooltip .tour-next{background:var(--accent);color:#000;}
 .tour-tooltip .tour-skip{background:rgba(255,255,255,.1);color:#ccc;}
 
-.help-btn{position:fixed;bottom:20px;right:20px;z-index:50;width:48px;height:48px;border-radius:50%;
-  border:2px solid var(--accent);background:rgba(20,20,30,.8);color:var(--accent);font-size:22px;
-  cursor:pointer;font-weight:bold;}
+.help-btn{position:fixed;bottom:20px;right:20px;z-index:50;width:48px;height:48px;border-radius:50%;border:2px solid var(--accent);background:rgba(20,20,30,.8);color:var(--accent);font-size:22px;cursor:pointer;font-weight:bold;}
 .help-btn:hover{background:var(--accent);color:#000;}
 
-/* Вкладки */
 .tabs{display:flex;width:100%;max-width:1200px;margin-bottom:15px;gap:10px;z-index:10;}
 .tab-btn{padding:10px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:#c9c9d6;font-weight:700;cursor:pointer;}
 .tab-btn.active{background:rgba(255,98,0,.1);border-color:var(--accent);color:var(--accent);}
@@ -160,18 +132,11 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 </style>
 </head>
 <body>
-
-<!-- Фоновые танцующие скелеты -->
 <div class="background-skeletons" id="bg-skeletons"></div>
-
 <div class="fog"></div>
-<div class="garland">
-  <span>🎃</span><span>🦇</span><span>💀</span><span>🕷️</span><span>🎃</span><span>🦇</span><span>👻</span><span>🎃</span><span>🕸️</span><span>💀</span>
-</div>
+<div class="garland"><span>🎃</span><span>🦇</span><span>💀</span><span>🕷️</span><span>🎃</span><span>🦇</span><span>👻</span><span>🎃</span><span>🕸️</span><span>💀</span></div>
 
-<svg class="web tl" viewBox="0 0 100 100">
-  <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.22)" stroke-width="0.8" fill="none"/>
-</svg>
+<svg class="web tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.22)" stroke-width="0.8" fill="none"/></svg>
 <svg class="web tr" viewBox="0 0 100 100"></svg>
 <svg class="web bl" viewBox="0 0 100 100"></svg>
 <svg class="web br" viewBox="0 0 100 100"></svg>
@@ -179,34 +144,19 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 <button class="help-btn" id="help-btn" title="Обучение">?</button>
 
 <div class="topbar">
-  <div class="lang-group">
-    <button class="lang-btn active" id="lang-ru">RU</button>
-    <button class="lang-btn" id="lang-en">EN</button>
-  </div>
-  <div class="pill" id="theme-toggle">
-    <span id="theme-icon">🎃</span><span id="theme-label">Тема: Тыква</span>
-  </div>
-  <div class="pill music" id="music-toggle">
-    <span id="music-icon">🔇</span><span id="music-label">Музыка: выкл</span>
-  </div>
-  <div class="pill" id="sfx-toggle">
-    <span id="sfx-icon">🔔</span><span id="sfx-label">Звуки: вкл</span>
-  </div>
-  <div class="pill hardcore" id="hardcore-toggle">
-    <span id="hardcore-icon">💀</span><span id="hardcore-label">Хардкор: выкл</span>
-  </div>
-  <div class="pill" id="skeleton-toggle">
-    <span id="skel-icon">💃</span><span id="skel-label">Скелеты: вкл</span>
-  </div>
+  <div class="lang-group"><button class="lang-btn active" id="lang-ru">RU</button><button class="lang-btn" id="lang-en">EN</button></div>
+  <div class="pill" id="theme-toggle"><span id="theme-icon">🎃</span><span id="theme-label">Тема: Тыква</span></div>
+  <div class="pill music" id="music-toggle"><span id="music-icon">🔇</span><span id="music-label">Музыка: выкл</span></div>
+  <div class="pill" id="sfx-toggle"><span id="sfx-icon">🔔</span><span id="sfx-label">Звуки: вкл</span></div>
+  <div class="pill hardcore" id="hardcore-toggle"><span id="hardcore-icon">💀</span><span id="hardcore-label">Хардкор: выкл</span></div>
+  <div class="pill" id="skeleton-toggle"><span id="skel-icon">💃</span><span id="skel-label">Скелеты: вкл</span></div>
 </div>
 
-<!-- Вкладки -->
 <div class="tabs">
   <button class="tab-btn active" id="tab-main-btn">🎮 Основное</button>
   <button class="tab-btn" id="tab-vers-btn">📜 Версия и изменения</button>
 </div>
 
-<!-- Основная вкладка -->
 <div class="tab-content active" id="tab-main">
   <div class="grid">
     <div class="card" id="tour-card-info">
@@ -238,13 +188,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
         <div><span id="t-best">Рекорд</span>: <span class="val" id="best">0</span></div>
       </div>
       <div id="combo"></div>
-      <div class="btns">
-        <button class="btn" id="start-btn">Старт</button>
-        <button class="btn stop" id="stop-btn">Стоп</button>
-      </div>
-      <div class="btns">
-        <button class="btn share" id="share-btn">📤 Поделиться</button>
-      </div>
+      <div class="btns"><button class="btn" id="start-btn">Старт</button><button class="btn stop" id="stop-btn">Стоп</button></div>
+      <div class="btns"><button class="btn share" id="share-btn">📤 Поделиться</button></div>
       <div class="ach" id="ach-box">
         <div class="ach-title" id="t-ach">🎃 Достижения</div>
         <div class="ach-item" id="ach1">❌ Охотник (10)</div>
@@ -255,31 +200,25 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   </div>
 </div>
 
-<!-- Вкладка Версия -->
 <div class="tab-content" id="tab-vers">
   <div class="changelog">
     <h3>📜 История версий — Halloween Monolith</h3>
     <ul>
-      <li><b>v2.1 (31.10.2026)</b> — Добавлена оригинальная музыка Spooky Scary Skeletons. Фоновые танцующие скелеты (появляются при включении музыки). Отдельный тур по обновлению. Возвращён спонсор Alberto Pepper. Добавлено 30 фишек.</li>
-      <li><b>v2.0</b> — Глобальное обновление. Вкладки, переработанный тур, синтезатор (удалён в v2.1).</li>
-      <li><b>v1.5</b> — Скелеты, хардкор, серии. Локальная музыка.</li>
-      <li><b>v1.2</b> — Привязка обучения к IP. Достижения.</li>
+      <li><b>v2.3 (31.10.2026)</b> — Исправлены кнопки (скрипт больше не обрывается). Добавлена резервная ссылка на музыку (The Living Tombstone Remix). Убран синтезатор. Танцующие скелеты на фоне при включении музыки.</li>
+      <li><b>v2.2</b> — Резервная ссылка, исправление кнопок.</li>
+      <li><b>v2.1</b> — Оригинальная музыка, фоновые скелеты, тур по обновлению, возвращён спонсор.</li>
+      <li><b>v2.0</b> — Вкладки, переработанный тур.</li>
       <li><b>v1.0</b> — Первый релиз.</li>
     </ul>
-    <p style="color:var(--muted);font-size:12px;margin-top:20px;">Текущая версия сайта: <b style="color:var(--accent);">v2.1</b></p>
   </div>
 </div>
 
-<!-- Тур -->
 <div class="tour-overlay" id="tour-overlay"></div>
 <div class="tour-highlight" id="tour-highlight"></div>
 <div class="tour-tooltip" id="tour-tooltip">
   <h3 id="tour-title"></h3>
   <p id="tour-content"></p>
-  <div class="tour-btns">
-    <button class="tour-skip" id="tour-skip">Пропустить</button>
-    <button class="tour-next" id="tour-next">Далее</button>
-  </div>
+  <div class="tour-btns"><button class="tour-skip" id="tour-skip">Пропустить</button><button class="tour-next" id="tour-next">Далее</button></div>
 </div>
 
 <script>
@@ -314,7 +253,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
         {ti:'Готово!',tx:'Тур больше не появится. Кнопка «?» в углу запустит его снова.',sel:null}
       ],
       tourUpdate:[
-        {ti:'🎉 Обновление v2.1!',tx:'Что нового: оригинальная музыка Spooky Scary Skeletons, фоновые танцующие скелеты, отдельный тур по обновлению, возвращён спонсор и добавлено 30 фишек!',sel:null},
+        {ti:'🎉 Обновление v2.3!',tx:'Что нового: резервная ссылка на музыку, танцующие скелеты на фоне, тур по обновлению, возвращён спонсор и добавлено 30 фишек!',sel:null},
         {ti:'Музыка и скелеты',tx:'Включи музыку — и на фоне появятся танцующие скелеты, как в оригинальном клипе.',sel:'#music-toggle'},
         {ti:'История версий',tx:'Все изменения теперь записываются во вкладке «Версия и изменения».',sel:'.tabs'},
         {ti:'Приятной игры!',tx:'Спонсор Alberto Pepper вернулся. Спасибо, что ты с нами!',sel:null}
@@ -345,8 +284,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
         {ti:'Done!',tx:'"?" re-opens tour.',sel:null}
       ],
       tourUpdate:[
-        {ti:'🎉 Update v2.1!',tx:'What\'s new: original Spooky Scary Skeletons music, background dancing skeletons, update tour, sponsor is back, and 30 new features!',sel:null},
-        {ti:'Music & Skeletons',tx:'Turn on music and dancing skeletons appear in the background, just like in the original clip.',sel:'#music-toggle'},
+        {ti:'🎉 Update v2.3!',tx:'What\'s new: backup music link, background dancing skeletons, update tour, sponsor is back, and 30 new features!',sel:null},
+        {ti:'Music & Skeletons',tx:'Turn on music and dancing skeletons appear in the background.',sel:'#music-toggle'},
         {ti:'Version History',tx:'All changes are now logged in the "Version & changes" tab.',sel:'.tabs'},
         {ti:'Enjoy!',tx:'Sponsor Alberto Pepper is back. Thanks for staying with us!',sel:null}
       ]
@@ -366,15 +305,17 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     this.classList.add('active'); $('tab-main-btn').classList.remove('active');
   });
 
-  /* ===== МУЗЫКА (Spooky Scary Skeletons) ===== */
-  var MUSIC_URL = 'https://archive.org/download/AndrewGoldSpookyScarySkeletons/Andrew%20Gold%20-%20Spooky%20Scary%20Skeletons.mp3';
+  /* ===== МУЗЫКА (ДВЕ ССЫЛКИ) ===== */
+  var MUSIC_URLS = [
+    'https://archive.org/download/AndrewGoldSpookyScarySkeletons/Andrew%20Gold%20-%20Spooky%20Scary%20Skeletons.mp3',
+    'http://www.mediafire.com/listen/mbmt60n3uebfbqy/TombstoneSpookyScarySkeletonsRemix-Final-Extended.mp3'
+  ];
   
   var audioEl = new Audio();
   audioEl.loop = true;
   audioEl.preload = 'auto';
-  // Убираем crossOrigin, чтобы избежать CORS-блокировки на Archive.org
-  audioEl.src = MUSIC_URL;
-
+  audioEl.src = MUSIC_URLS[0];
+  var currentUrlIndex = 0;
   var musicOn = false;
   var bgSkeletons = $('bg-skeletons');
 
@@ -397,7 +338,6 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   function startBgSkeletons() {
     if (!bgSkeletons) return;
     bgSkeletons.classList.add('active');
-    // Спавним скелетов каждые 800мс, пока играет музыка
     if (window._bgSkelInterval) clearInterval(window._bgSkelInterval);
     window._bgSkelInterval = setInterval(spawnBgSkeleton, 800);
   }
@@ -409,7 +349,6 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
       clearInterval(window._bgSkelInterval);
       window._bgSkelInterval = null;
     }
-    // Очищаем оставшихся
     bgSkeletons.innerHTML = '';
   }
 
@@ -419,70 +358,35 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     var lb=$('music-label'); if(lb) lb.textContent = musicOn ? L[lang].mOn : L[lang].mOff;
   }
 
-  // Синтезатор на случай, если Archive.org заблокирован
-  var synth = {
-    ctx:null, master:null, timer:null, step:0, bpm:154,
-    mel:[493.88,0,587.33,493.88,440,0,493.88,587.33,659.25,0,587.33,493.88,440,0,392,493.88],
-    bass:[123.47,123.47,146.83,146.83,110,110,98,98],
-    ensure:function(){
-      if(this.ctx){if(this.ctx.state==='suspended')this.ctx.resume().catch(function(){});return true;}
-      try{
-        this.ctx=new (window.AudioContext||window.webkitAudioContext)();
-        this.master=this.ctx.createGain(); this.master.gain.value=0.3; this.master.connect(this.ctx.destination);
-      }catch(e){return false;}
-      if(this.ctx.state==='suspended')this.ctx.resume().catch(function(){});
-      return true;
-    },
-    note:function(f,t,d,type,v){
-      if(!f)return;
-      var o=this.ctx.createOscillator(),g=this.ctx.createGain();
-      o.type=type||'square'; o.frequency.setValueAtTime(f,t);
-      g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(v,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+d);
-      o.connect(g); g.connect(this.master); o.start(t); o.stop(t+d+0.05);
-    },
-    tick:function(){
-      if(!this.ctx)return;
-      if(this.ctx.state==='suspended')this.ctx.resume().catch(function(){});
-      var t=this.ctx.currentTime, sd=60/this.bpm/2;
-      var i=this.step%this.mel.length, m=this.mel[i];
-      var b=this.bass[Math.floor(i/4)%this.bass.length];
-      if(m) this.note(m,t,sd*0.8,'square',0.1);
-      if(i%4===0) this.note(b,t,sd*3.5,'triangle',0.12);
-      this.step++;
-    },
-    start:function(){
-      if(!this.ensure()||this.timer)return;
-      this.tick(); var self=this;
-      this.timer=setInterval(function(){self.tick();},60000/this.bpm/2);
-    },
-    stop:function(){
-      if(this.timer){clearInterval(this.timer);this.timer=null;}
+  function tryPlayMusic(index) {
+    if (index >= MUSIC_URLS.length) {
+      alert('Не удалось воспроизвести трек. Проверьте ссылки MUSIC_URLS в коде.');
+      musicOn = false;
+      updateMusicUI();
+      stopBgSkeletons();
+      return;
     }
-  };
+    audioEl.src = MUSIC_URLS[index];
+    audioEl.play().then(function(){
+      musicOn = true;
+      currentUrlIndex = index;
+      startBgSkeletons();
+      updateMusicUI();
+    }).catch(function(err){
+      console.warn('Ссылка ' + index + ' не сработала, пробуем следующую...', err);
+      tryPlayMusic(index + 1);
+    });
+  }
 
   if($('music-toggle')){
     $('music-toggle').addEventListener('click', function(){
       if(musicOn){
-        // Выключаем
         audioEl.pause();
-        synth.stop();
         musicOn = false;
         stopBgSkeletons();
         updateMusicUI();
       } else {
-        // Включаем
-        audioEl.play().then(function(){
-          musicOn = true;
-          startBgSkeletons();
-          updateMusicUI();
-        }).catch(function(err){
-          // Если оригинал не загрузился — включаем синтезатор
-          console.warn('Archive.org недоступен, включаем синтезатор:', err);
-          synth.start();
-          musicOn = true;
-          startBgSkeletons();
-          updateMusicUI();
-        });
+        tryPlayMusic(0);
       }
     });
   }
@@ -537,15 +441,13 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   try{var sb=localStorage.getItem('mz_halloween_best');if(sb)best=parseInt(sb,10)||0;}catch(e){}
   if($('best'))$('best').textContent=best;
 
-  /* ===== ФИШКИ (30 штук) ===== */
-  // 1. Фонарь
+  /* ===== ФИШКИ ===== */
   var torch=document.createElement('div');
   torch.style.cssText='position:fixed;pointer-events:none;z-index:5;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,160,60,.10),transparent 65%);transform:translate(-50%,-50%);opacity:0;mix-blend-mode:screen;transition:opacity .3s;';
   document.body.appendChild(torch);
   document.addEventListener('mousemove',function(e){torch.style.left=e.clientX+'px';torch.style.top=e.clientY+'px';torch.style.opacity=1;});
   document.addEventListener('mouseleave',function(){torch.style.opacity=0;});
 
-  // 2. Летучие мыши
   function spawnBat(){
     var b=document.createElement('div');b.textContent=Math.random()<0.5?'🦇':'👻';
     b.style.cssText='position:fixed;z-index:6;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,98,0,.5));font-size:'+(18+Math.random()*16)+'px;';
@@ -557,7 +459,6 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   }
   setInterval(function(){if(Math.random()<.7)spawnBat();},15000);
 
-  // 3. Скелеты в игре
   var skeletons=[];
   function removeSkeletons(){skeletons.forEach(function(s){if(s.parentNode)s.parentNode.removeChild(s);});skeletons=[];}
   var st=document.createElement('style');
@@ -572,26 +473,20 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   }
   setInterval(function(){if(skelOn)spawnSkeleton();},2000);
 
-  // 4. Искры
   function sparkAt(x,y){
     var s=document.createElement('div');s.textContent=Math.random()<.5?'✨':'⭐';
     s.style.cssText='position:fixed;z-index:9;pointer-events:none;font-size:14px;left:'+x+'px;top:'+y+'px;animation:sparkFade 1s ease-out forwards;';
     document.body.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1000);
   }
 
-  // 5. Тряска
   function shakeScreen(){document.body.classList.add('shake');setTimeout(function(){document.body.classList.remove('shake');},400);}
 
-  // 6. Всплывающие очки
   function floatScore(x,y,txt,cls){
     var a=$('arena');if(!a)return;
     var f=document.createElement('div');f.textContent=txt;
     f.style.cssText='position:absolute;font-weight:900;font-size:18px;pointer-events:none;z-index:5;left:'+x+'px;top:'+y+'px;animation:floatUp .9s ease-out forwards;text-shadow:0 0 10px currentColor;color:'+(cls==='minus'?'#c0392b':(cls==='plus3'?'#ff6200':'#2ecc71'))+';';
     a.appendChild(f);setTimeout(function(){if(f.parentNode)f.parentNode.removeChild(f);},950);
   }
-
-  // 7-30. Дополнительные визуальные/звуковые эффекты (реализованы в CSS + предыдущих функциях)
-  // (параллакс, свечение, курсор, hover-звуки и т.д.)
 
   /* ===== ИГРА ===== */
   var active=false,gameLoop=null,timerLoop=null,specialTimer=null;
@@ -674,7 +569,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 
   window.addEventListener('resize',function(){if(!active||!$('pumpkin'))return;var s=arenaSize(),p=$('pumpkin');var x=parseFloat(p.style.left)||0,y=parseFloat(p.style.top)||0;if(x>s.w)p.style.left=s.w+'px';if(y>s.h)p.style.top=s.h+'px';});
 
-  /* ===== ТУР (вступительный + по обновлению) ===== */
+  /* ===== ТУР ===== */
   var tourOverlay=$('tour-overlay'),tourHighlight=$('tour-highlight'),
       tourTooltip=$('tour-tooltip'),tourTitle=$('tour-title'),
       tourContent=$('tour-content'),tourNextBtn=$('tour-next'),
@@ -699,12 +594,9 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     if(tourTooltip)tourTooltip.style.display='none';
     if(tourHighlight)tourHighlight.style.display='none';
     if(markSeen&&currentIPKey){try{localStorage.setItem(currentIPKey,'1');}catch(e){}}
-    // После закрытия вступительного тура — запускаем тур по обновлению
     if(updateTourPending){
       updateTourPending=false;
-      setTimeout(function(){
-        openTour(L[lang].tourUpdate);
-      },500);
+      setTimeout(function(){ openTour(L[lang].tourUpdate); },500);
     }
   }
   function renderTour(){
@@ -718,6 +610,43 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
       if(s.sel){
         var target=document.querySelector(s.sel);
         if(target){
-          var r=target.getB
+          var r=target.getBoundingClientRect();
+          tourHighlight.style.display='block';
+          tourHighlight.style.left=(r.left-6)+'px';
+          tourHighlight.style.top=(r.top-6)+'px';
+          tourHighlight.style.width=(r.width+12)+'px';
+          tourHighlight.style.height=(r.height+12)+'px';
+          if(tourTooltip){
+            tourTooltip.style.transform='none';
+            tourTooltip.style.left=Math.min(window.innerWidth-320,Math.max(10,r.left))+'px';
+            tourTooltip.style.top=Math.min(window.innerHeight-220,r.bottom+12)+'px';
+          }
+        }else{tourHighlight.style.display='none';centerTooltip();}
+      }else{tourHighlight.style.display='none';centerTooltip();}
+    }
+  }
+  if(tourNextBtn)tourNextBtn.addEventListener('click',function(){tourIdx++;if(tourIdx>=currentTourSteps.length)closeTour(true);else renderTour();});
+  if(tourSkipBtn)tourSkipBtn.addEventListener('click',function(){closeTour(true);});
+  if($('help-btn'))$('help-btn').addEventListener('click',openTour);
+
+  function fetchIP(){
+    return new Promise(function(resolve){
+      var done=false;var tm=setTimeout(function(){if(!done){done=true;resolve(null);}},3000);
+      try{fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).then(function(d){if(!done){done=true;clearTimeout(tm);resolve(d&&d.ip?d.ip:null);}}).catch(function(){if(!done){done=true;clearTimeout(tm);resolve(null);}});}catch(e){if(!done){done=true;clearTimeout(tm);resolve(null);}}
+    });
+  }
+
+  fetchIP().then(function(ip){
+    currentIPKey='tour_v23_seen_'+(ip||'unknown');
+    var seen=false;try{seen=localStorage.getItem(currentIPKey)==='1';}catch(e){}
+    if(!seen){
+      updateTourPending=true;
+      setTimeout(function(){ openTour(L[lang].tour); },600);
+    }
+  });
+
+  applyLang();
+})();
+</script>
 </body>
 </html>
