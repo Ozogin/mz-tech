@@ -62,16 +62,10 @@ body.theme-samhain .fog{
 .pill:hover{color:#fff;border-color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
 .pill.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
 .pill.hardcore.active{border-color:var(--red);color:var(--red);box-shadow:0 0 22px -6px var(--red);}
-#music-play.playing{border-color:var(--green);color:var(--green);box-shadow:0 0 22px -6px var(--green);}
+.pill.music.playing{border-color:var(--green);color:var(--green);box-shadow:0 0 22px -6px var(--green);}
 .lang-group{display:flex;gap:6px;padding:4px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
 .lang-btn{padding:8px 16px;border-radius:999px;border:none;background:transparent;color:#9a9aad;font-weight:700;font-size:12px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
 .lang-btn.active{background:var(--accent);color:#000;}
-.music-bar{display:flex;gap:8px;flex:1 1 320px;min-width:280px;align-items:center;}
-.music-bar input{flex:1;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.04);color:#fff;font-size:12.5px;outline:none;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border-color .25s;}
-.music-bar input:focus{border-color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
-.music-bar input::placeholder{color:#6f6f88;}
 
 .grid{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;width:100%;max-width:1200px;position:relative;z-index:10;}
 .card{position:relative;flex:1 1 420px;max-width:560px;
@@ -172,7 +166,6 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
   .card{padding:20px;flex-basis:100%;max-width:100%;}
   .arena{height:200px;}
   .stats{font-size:11px;}
-  .music-bar{flex-basis:100%;}
 }
 </style>
 </head>
@@ -203,10 +196,8 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
   <div class="pill" id="theme-toggle">
     <span id="theme-icon">🎃</span><span id="theme-label">Тема: Тыква</span>
   </div>
-  <div class="music-bar">
-    <input type="text" id="music-url" placeholder="Прямая ссылка на .mp3 / .ogg / .wav" />
-    <button class="pill" id="music-play">▶ Играть</button>
-    <button class="pill" id="music-stop">■ Стоп</button>
+  <div class="pill music" id="music-toggle">
+    <span id="music-icon">🔇</span><span id="music-label">Музыка: выкл</span>
   </div>
   <div class="pill" id="sfx-toggle">
     <span id="sfx-icon">🔔</span><span id="sfx-label">Звуки: вкл</span>
@@ -298,6 +289,7 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       a1:'❌ Охотник (10)',a2:'❌ Повелитель (25)',a3:'❌ Комбо (x5)',a4:'❌ Хардкор (10)',a5:'❌ Серия (10)',
       a1o:'🏆 Охотник!',a2o:'🏆 Повелитель!',a3o:'🏆 Комбо!',a4o:'🏆 Хардкор!',a5o:'🏆 Серия!',
       thP:'Тема: Тыква', thS:'Тема: Самайн',
+      mOff:'Музыка: выкл', mOn:'Музыка: вкл',
       sfxOn:'Звуки: вкл', sfxOff:'Звуки: выкл', hcOff:'Хардкор: выкл', hcOn:'Хардкор: вкл',
       skOn:'Скелеты: вкл', skOff:'Скелеты: выкл', combo:'Комбо x',
       shareTxt:function(v){return 'Мой рекорд: '+v+' очков! 🎃🦇';},
@@ -305,7 +297,7 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       tour:[
         {ti:'Добро пожаловать!',tx:'Короткий тур. Можно пропустить.',sel:null},
         {ti:'Язык и тема',tx:'RU/EN — язык. «Тема» — оформление.',sel:'#theme-toggle'},
-        {ti:'Музыка',tx:'Ссылка уже вставлена. Нажмите «▶ Играть».',sel:'.music-bar'},
+        {ti:'Музыка',tx:'Кнопка «Музыка» включает и выключает трек.',sel:'#music-toggle'},
         {ti:'Мониторинг',tx:'Левая карточка — статус узла.',sel:'#tour-card-info'},
         {ti:'Игра',tx:'«Старт» запускает тыкву. Бонус 🕷️ +3, проклятие 👿 −2.',sel:'#game-card'},
         {ti:'Готово!',tx:'Кнопка «?» запустит тур снова.',sel:null}
@@ -322,6 +314,7 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       a1:'❌ Hunter (10)',a2:'❌ Lord (25)',a3:'❌ Combo (x5)',a4:'❌ Hardcore (10)',a5:'❌ Streak (10)',
       a1o:'🏆 Hunter!',a2o:'🏆 Lord!',a3o:'🏆 Combo!',a4o:'🏆 Hardcore!',a5o:'🏆 Streak!',
       thP:'Theme: Pumpkin', thS:'Theme: Samhain',
+      mOff:'Music: off', mOn:'Music: on',
       sfxOn:'SFX: on', sfxOff:'SFX: off', hcOff:'Hardcore: off', hcOn:'Hardcore: on',
       skOn:'Skeletons: on', skOff:'Skeletons: off', combo:'Combo x',
       shareTxt:function(v){return 'My best: '+v+' points! 🎃🦇';},
@@ -329,7 +322,7 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       tour:[
         {ti:'Welcome!',tx:'A short tour. You can skip.',sel:null},
         {ti:'Lang & theme',tx:'RU/EN — language. "Theme" — look.',sel:'#theme-toggle'},
-        {ti:'Music',tx:'Link is pre-filled. Press "▶ Play".',sel:'.music-bar'},
+        {ti:'Music',tx:'The "Music" button toggles the track.',sel:'#music-toggle'},
         {ti:'Monitor',tx:'Left card — node status.',sel:'#tour-card-info'},
         {ti:'Game',tx:'"Start" launches pumpkin. Bonus 🕷️ +3, curse 👿 −2.',sel:'#game-card'},
         {ti:'Done!',tx:'"?" re-opens tour.',sel:null}
@@ -340,42 +333,42 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
 
   function setText(id,v){var e=$(id);if(e)e.textContent=v;}
 
-  /* ===== МУЗЫКА: ссылка по умолчанию ===== */
-  var DEFAULT_URL = 'https://archive.org/download/AndrewGoldSpookyScarySkeletons/Andrew%20Gold%20-%20Spooky%20Scary%20Skeletons.mp3';
+  /* ===== МУЗЫКА: ссылка зашита в код ===== */
+  /* Чтобы сменить трек — замените строку ниже на свою прямую ссылку на .mp3/.ogg/.wav */
+  var MUSIC_URL = 'https://archive.org/download/AndrewGoldSpookyScarySkeletons/Andrew%20Gold%20-%20Spooky%20Scary%20Skeletons.mp3';
+
   var audioEl = new Audio();
   audioEl.loop = true;
+  audioEl.preload = 'auto';
   audioEl.crossOrigin = 'anonymous';
+  audioEl.src = MUSIC_URL;
 
-  function updateMusicBtn(playing){
-    var b=$('music-play');
-    if(b){b.classList.toggle('playing',!!playing);b.textContent=playing?'❚❚ Пауза':'▶ Играть';}
+  var musicOn = false;
+  function updateMusicUI(){
+    var b=$('music-toggle');
+    if(b)b.classList.toggle('playing',musicOn);
+    var ic=$('music-icon'); if(ic)ic.textContent=musicOn?'🎵':'🔇';
+    var lb=$('music-label'); if(lb)lb.textContent=musicOn?L[lang].mOn:L[lang].mOff;
   }
-
-  if($('music-url') && !$('music-url').value) $('music-url').value = DEFAULT_URL;
-
-  if($('music-play')) $('music-play').addEventListener('click',function(){
-    var urlInput=$('music-url');
-    var url=urlInput?urlInput.value.trim():'';
-    if(audioEl.src && !audioEl.paused){audioEl.pause();updateMusicBtn(false);return;}
-    if(audioEl.src && audioEl.paused && !url){audioEl.play().then(function(){updateMusicBtn(true);}).catch(function(){});return;}
-    if(!url){alert('Вставьте прямую ссылку на .mp3/.ogg/.wav');return;}
-    if(!/^https?:\/\//i.test(url)){alert('Ссылка должна начинаться с http:// или https://');return;}
-    audioEl.src=url;audioEl.load();
-    audioEl.play().then(function(){
-      updateMusicBtn(true);
-      try{localStorage.setItem('mz_music_url',url);}catch(e){}
-    }).catch(function(err){
-      console.warn('Не удалось:',err);
-      alert('Не удалось воспроизвести. Проверьте, что это прямая ссылка на аудиофайл.');
-      updateMusicBtn(false);
+  if($('music-toggle')){
+    $('music-toggle').addEventListener('click',function(){
+      if(musicOn){
+        audioEl.pause();
+        musicOn=false;
+        updateMusicUI();
+      }else{
+        audioEl.play().then(function(){
+          musicOn=true;
+          updateMusicUI();
+        }).catch(function(err){
+          console.warn('Не удалось воспроизвести:',err);
+          musicOn=false;
+          updateMusicUI();
+          alert('Не удалось воспроизвести трек. Проверьте ссылку MUSIC_URL в коде.');
+        });
+      }
     });
-  });
-
-  if($('music-stop')) $('music-stop').addEventListener('click',function(){
-    audioEl.pause();audioEl.currentTime=0;updateMusicBtn(false);
-  });
-
-  try{var saved=localStorage.getItem('mz_music_url');if(saved&&$('music-url'))$('music-url').value=saved;}catch(e){}
+  }
 
   /* ===== SFX ===== */
   var sfxCtx=null;
@@ -393,13 +386,13 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       o.connect(g);g.connect(sfxCtx.destination);o.start(t);o.stop(t+0.22);
     }catch(e){}
   }
-  var music={
+  var sfx={
     catchSfx:function(){playBlip(700,140,0.14);},
     bonusSfx:function(){playBlip(980,1500,0.10,'sine');},
     cursedSfx:function(){playBlip(220,60,0.16,'sawtooth');}
   };
 
-  /* ===== applyLang (вызывается в самом конце) ===== */
+  /* ===== applyLang ===== */
   function applyLang(){
     var t=L[lang];
     setText('t-title1',t.t1);setText('t-sub1',t.s1);setText('t-status',t.st);
@@ -416,6 +409,7 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     setText('skel-label',skelOn?t.skOn:t.skOff);
     if($('lang-ru'))$('lang-ru').classList.toggle('active',lang==='ru');
     if($('lang-en'))$('lang-en').classList.toggle('active',lang==='en');
+    updateMusicUI();
     updateCombo();
   }
 
@@ -625,14 +619,14 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     var p=$('pumpkin');
     var x=parseFloat(p.style.left)||0,y=parseFloat(p.style.top)||0;
     var mult=hardcore?2:1;
-    if(pState==='bonus'){score+=3*mult;music.bonusSfx();floatScore(x,y,'+'+(3*mult),'plus3');setState('normal');}
+    if(pState==='bonus'){score+=3*mult;sfx.bonusSfx();floatScore(x,y,'+'+(3*mult),'plus3');setState('normal');}
     else if(pState==='cursed'){
-      score=Math.max(0,score-2);music.cursedSfx();floatScore(x,y,'-2','minus');
+      score=Math.max(0,score-2);sfx.cursedSfx();floatScore(x,y,'-2','minus');
       document.body.classList.add('shake');
       setTimeout(function(){document.body.classList.remove('shake');},400);
       setState('normal');
     }
-    else{score+=1*mult;music.catchSfx();floatScore(x,y,'+'+(1*mult),'plus');}
+    else{score+=1*mult;sfx.catchSfx();floatScore(x,y,'+'+(1*mult),'plus');}
     sparkAt(e.clientX,e.clientY);
     updateScore();evalAch();movePumpkin();
   });
@@ -732,7 +726,6 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     if(!seen)setTimeout(openTour,600);
   });
 
-  /* вызов в самом конце — когда всё объявлено */
   applyLang();
 })();
 </script>
