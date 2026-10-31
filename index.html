@@ -3,484 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель МЗ — Промышленный Хэллоуинский Монолит</title>
+    <title>Панель МЗ</title>
     <style>
-        /* ========================================================================= */
-        /* РАЗДЕЛ 1: ПОДСИСТЕМА ГЛОБАЛЬНЫХ ПЕРЕМЕННЫХ И НЕОНОВЫХ HUD-СТИЛЕЙ          */
-        /* ========================================================================= */
-        :root { 
-            --bg-dark-core: #06060c; 
-            --neon-pumpkin-orange: #ff6200; 
-            --neon-witch-purple: #8e44ad; 
-            --glass-panel-background: rgba(20, 20, 30, 0.7); 
-            --text-pure-white: #ffffff;
-            --matrix-green: #2ecc71;
-            --blood-red: #c0392b;
-            --spider-web-opacity: 0.25;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background-color: var(--bg-dark-core); 
-            color: var(--text-pure-white); 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%); 
-            user-select: none; 
-            -webkit-user-select: none;
-        }
-
-        /* ========================================================================= */
-        /* РАЗДЕЛ 2: ВЕКТОРНЫЕ ПАУТИНЫ ПО УГЛАМ ВСЕГО ЭКРАНА (SVG / CSS)             */
-        /* ========================================================================= */
-        .site-spider-web-top-left {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 250px;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .site-spider-web-top-right {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 250px;
-            height: 250px;
-            z-index: 1;
-            pointer-events: none;
-            transform: scaleX(-1);
-        }
-
-        .site-spider-web-bottom-left {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 250px;
-            height: 250px;
-            z-index: 1;
-            pointer-events: none;
-            transform: scaleY(-1);
-        }
-
-        .site-spider-web-bottom-right {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            width: 250px;
-            height: 250px;
-            z-index: 1;
-            pointer-events: none;
-            transform: scale(-1, -1);
-        }
-
-        /* АНИМИРОВАННЫЙ ПОДЗЕМНЫЙ ТУМАН */
-        .fog-ambient-layer {
-            position: fixed;
-            width: 200%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(142,68,173,0.06) 0%, transparent 60%);
-            top: 0;
-            left: -50%;
-            z-index: 0;
-            animation: coreFogEngineMovement 25s infinite linear;
-            pointer-events: none;
-        }
-
-        @keyframes coreFogEngineMovement {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(5%, 3%) scale(1.1); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
-
-        /* ========================================================================= */
-        /* РАЗДЕЛ 3: СЕТКА ИНТЕРФЕЙСА И КАРТОЧКИ МОНИТОРИНГА                        */
-        /* ========================================================================= */
-        .master-layout-container { 
-            display: flex;
-            flex-direction: row;
-            gap: 25px;
-            max-width: 950px;
-            width: 100%;
-            flex-wrap: wrap;
-            justify-content: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hud-glass-card { 
-            background: var(--glass-panel-background); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 430px;
-            text-align: center;
-            border: 1px solid rgba(255, 98, 0, 0.2); 
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        .hud-glass-card.game-node { 
-            border-color: rgba(142, 68, 173, 0.3); 
-        }
-        
-        h1 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: var(--neon-pumpkin-orange);
-            font-size: 24px;
-            text-shadow: 0 0 10px rgba(255, 98, 0, 0.3);
-        }
-
-        h2 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: var(--neon-witch-purple);
-            font-size: 24px;
-            text-shadow: 0 0 10px rgba(142, 68, 173, 0.3);
-        }
-        
-        .core-status-badge { 
-            display: inline-block;
-            padding: 5px 15px;
-            font-weight: bold;
-            border-radius: 20px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            font-size: 12px;
-            background: rgba(255, 98, 0, 0.1);
-            color: var(--neon-pumpkin-orange);
-            border: 1px solid var(--neon-pumpkin-orange);
-        }
-        
-        .hud-info-wrapper { 
-            text-align: left;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            border-radius: 12px;
-        }
-        
-        .hud-data-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-            padding-bottom: 5px;
-        }
-
-        .hud-data-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .hud-row-label {
-            color: #8e8e9f;
-        }
-
-        .hud-row-value {
-            font-weight: bold;
-            color: #ffffff;
-        }
-        
-        .credits-container {
-            margin-top: 20px;
-            font-size: 13px;
-            color: #73738c;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 10px;
-            line-height: 1.6;
-        }
-        
-        /* ========================================================================= */
-        /* РАЗДЕЛ 4: СИСТЕМА УПРАВЛЕНИЯ, КНОПКИ И ГРАФИЧЕСКИЙ ХОЛСТ                 */
-        /* ========================================================================= */
-        .game-area-viewport {
-            width: 100%;
-            height: 180px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 12px;
-            position: relative;
-            margin-top: 15px;
-            border: 1px solid rgba(142, 68, 173, 0.2);
-            overflow: hidden;
-        }
-
-        #pumpkin {
-            font-size: 40px;
-            position: absolute;
-            cursor: pointer;
-            top: 35%;
-            left: 45%;
-            user-select: none;
-            filter: drop-shadow(0 0 8px var(--neon-pumpkin-orange));
-            transition: left 0.1s ease, top 0.1s ease;
-        }
-        
-        .control-btn-layout {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .hud-action-button {
-            flex: 1;
-            background: var(--neon-witch-purple);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: background 0.2s ease;
-        }
-
-        .hud-action-button:hover {
-            background: #9b59b6;
-        }
-
-        .hud-action-button.stop-modifier {
-            background: var(--blood-red);
-        }
-
-        .hud-action-button.stop-modifier:hover {
-            background: #e74c3c;
-        }
-        
-        .master-audio-banner-panel {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 12px;
-            border-radius: 30px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            color: #a0a0b0;
-            cursor: pointer;
-            text-align: center;
-            width: 100%;
-            max-width: 885px;
-            box-sizing: border-box;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .master-audio-banner-panel:hover {
-            border-color: var(--neon-pumpkin-orange);
-            color: #fff;
-            background: rgba(255,255,255,0.05);
-        }
-        
-        /* БЛОК НАГРАД И ДОСТИЖЕНИЙ СЕССИИ */
-        .achievements-hud-panel {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 121, 0, 0.1);
-            width: 100%;
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            text-align: left;
-            box-sizing: border-box;
-        }
-
-        .achievements-panel-header {
-            font-weight: bold;
-            color: var(--neon-pumpkin-orange);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .achievement-row-node {
-            color: #8e8e9f;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 4px;
-        }
-
-        .achievement-row-node.unlocked-state {
-            color: var(--matrix-green);
-            font-weight: 600;
-        }
+        :root { --bg: #06060c; --accent: #ff6200; --accent-p: #8e44ad; --card: rgba(20,20,30,0.7); }
+        body { font-family: sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; background-image: radial-gradient(circle, #150d2a 0%, #06060c 100%); user-select: none; }
+        .site-web { position: fixed; top: 0; left: 0; width: 150px; height: 150px; z-index: 1; pointer-events: none; opacity: 0.25; }
+        .site-web.tr { right: 0; left: auto; transform: scaleX(-1); }
+        .site-web.bl { bottom: 0; top: auto; transform: scaleY(-1); }
+        .site-web.br { bottom: 0; top: auto; right: 0; left: auto; transform: scale(-1, -1); }
+        .container { display: flex; gap: 25px; max-width: 950px; width: 100%; flex-wrap: wrap; justify-content: center; position: relative; z-index: 10; }
+        .hud-card { background: var(--card); backdrop-filter: blur(10px); padding: 25px; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255,98,0,0.2); box-sizing: border-box; }
+        .hud-card.game-node { border-color: rgba(142, 68, 173, 0.3); }
+        h1 { color: var(--accent); margin: 0 0 15px 0; font-size: 24px; }
+        h2 { color: var(--accent-p); margin: 0 0 15px 0; font-size: 24px; }
+        .badge { display: inline-block; padding: 5px 15px; font-weight: bold; border-radius: 20px; background: rgba(255,98,0,0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px; font-size: 12px; }
+        .info-block { text-align: left; background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 12px; }
+        .hud-data-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 5px; }
+        .hud-data-row:last-child { border-bottom: none; margin-bottom: 0; }
+        .label { color: #8e8e9f; } .value { font-weight: bold; }
+        .credits { margin-top: 20px; font-size: 13px; color: #73738c; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; line-height: 1.6; }
+        .game-area { width: 100%; height: 180px; background: rgba(0, 0, 0, 0.6); border-radius: 12px; position: relative; margin-top: 15px; border: 1px solid rgba(142, 68, 173, 0.2); overflow: hidden; }
+        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 35%; left: 45%; filter: drop-shadow(0 0 8px var(--accent)); transition: all 0.1s ease; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; background: var(--accent-p); color: #fff; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .btn-stop { background: #c0392b; }
+        .audio-banner { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 30px; margin-bottom: 20px; font-size: 13px; color: #a0a0b0; cursor: pointer; text-align: center; width: 100%; max-width: 865px; box-sizing: border-box; font-weight: bold; }
+        .ach-panel { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 121, 0, 0.1); width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; box-sizing: border-box; }
+        .ach-title { font-weight: bold; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; }
+        .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+        .ach-item.unlocked { color: #2ecc71; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <!-- ВЕКТОРНЫЕ ПАУТИНЫ В УГЛАХ ОКОН КЛИЕНТА -->
-    <svg class="site-spider-web-top-left" viewBox="0 0 100 100">
- 🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)
-Мониторинг Технички МЗ
-● СИСТЕМА АКТИВНА
+    <svg class="site-web" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,0.3)" stroke-width="0.8" fill="none"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60" stroke="rgba(255,98,0,0.2)" stroke-width="0.6" fill="none"/></svg>
+    <svg class="site-web tr" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,0.3)" stroke-width="0.8" fill="none"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60" stroke="rgba(255,98,0,0.2)" stroke-width="0.6" fill="none"/></svg>
+    <svg class="site-web bl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,0.3)" stroke-width="0.8" fill="none"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60" stroke="rgba(255,98,0,0.2)" stroke-width="0.6" fill="none"/></svg>
+    <svg class="site-web br" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,0.3)" stroke-width="0.8" fill="none"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60" stroke="rgba(255,98,0,0.2)" stroke-width="0.6" fill="none"/></svg>
 
-Имя узла:Техничка Озогин МЗ
-Издание:Halloween Edition
-Дата создания:25.10.2026
-Время работы:0ч 0мин 0сек
-База данных:Google Таблица
-Сетевой узел:GitHub Pages live
+    <div class="audio-banner" id="audio-btn" onclick="mAudio.init()">🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)</div>
 
+    <div class="container">
+        <div class="hud-card">
+            <h1>Мониторинг Технички МЗ</h1>
+            <div class="badge">● СИСТЕМА АКТИВНА</div>
+            <div class="info-block">
+                <div class="hud-data-row"><span class="hud-row-label">Имя узла:</span><span class="hud-row-value">Техничка Озогин МЗ</span></div>
+                <div class="hud-data-row"><span class="hud-row-label">Издание:</span><span class="hud-row-value" style="color:var(--accent);">Halloween Edition</span></div>
+                <div class="hud-data-row"><span class="hud-row-label">Дата создания:</span><span class="hud-row-value">25.10.2026</span></div>
+                <div class="hud-data-row"><span class="hud-row-label">Время работы:</span><span class="hud-row-value" id="b-uptime" style="color:var(--accent); font-family:monospace;">0ч 0мин 0сек</span></div>
+                <div class="hud-data-row"><span class="hud-row-label">База данных:</span><span class="hud-row-value">Google Таблица</span></div>
+                <div class="hud-data-row"><span class="hud-row-label">Сетевой узел:</span><span class="hud-row-value">GitHub Pages live</span></div>
+            </div>
+            <div class="credits">
+                Разработчик: <span style="color:var(--accent); font-weight:bold;">Ozogin</span><br>
+                ИИ-Архитектор: <span style="color:var(--accent-p); font-weight:bold;">Алиса</span><br>
+                Спонсор: <span style="color:#2ecc71; font-weight:bold;">Alberto Pepper</span>
+            </div>
+        </div>
 
-Разработчик: Ozogin
+        <div class="hud-card game-node">
+            <h2>🦇 Хэллоуинская Игра</h2>
+            <div class="game-area">
+                <div id="pumpkin" onclick="mGame.catch()">🎃</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:bold;">
+                <div>Счет: <span id="score" style="color:var(--accent-p);">0</span></div>
+                <div>Рекорд: <span id="best" style="color:#2ecc71;">0</span></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn" id="btn-start" onclick="mGame.start()">Старт</button>
+                <button class="btn btn-stop" id="btn-stop" onclick="mGame.stop()">Стоп</button>
+            </div>
+            <div class="ach-panel">
+                <div class="ach-title">🎃 Достижения сессии:</div>
+                <div class="ach-item" id="ach-1">❌ Охотник за призраками (10 очков)</div>
+                <div class="ach-item" id="ach-2">❌ Повелитель тыкв (25 очков)</div>
+            </div>
+        </div>
+    </div>
 
-ИИ-Архитектор: Алиса
+    <script>
+        var seconds = 0, coreLoop = null, gameActive = false;
+        setInterval(function() {
+            seconds++;
+            var h = Math.floor(seconds / 3600), m = Math.floor((seconds % 3600) / 60), s = seconds % 60;
+            document.getElementById("b-uptime").innerText = h + "ч " + m + "мин " + s + "сек";
+        }, 1000);
 
-Спонсор: Alberto Pepper
+        var mAudio = {
+            ctx: null, inv: null, notes: [130.81, 155.56, 196.00, 220.00], idx: 0,
+            init: function() {
+                if (this.ctx) return;
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                var self = this;
+                this.inv = setInterval(function() {
+                    if (!self.ctx) return;
+                    var o = self.ctx.createOscillator(), g = self.ctx.createGain();
+                    o.type = "sine"; o.frequency.setValueAtTime(self.notes[self.idx], self.ctx.currentTime);
+                    g.gain.setValueAtTime(0.06, self.ctx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, self.ctx.currentTime + 1.2);
+                    o.connect(g); g.connect(self.ctx.destination);
+                    o.start(); o.stop(self.ctx.currentTime + 1.2);
+                    self.idx = (self.idx + 1) % self.notes.length;
+                }, 1000);
+                document.getElementById("audio-btn").innerText = "🔮 Фоновая хэллоуинская музыка играет!";
+            },
+            playHit: function() {
+                if (!this.ctx) return;
+                var o = this.ctx.createOscillator(), g = this.ctx.createGain();
+                o.type = "sine"; o.frequency.setValueAtTime(300, this.ctx.currentTime);
+                o.frequency.exponentialRampToValueAtTime(90, this.ctx.currentTime + 0.15);
+                g.gain.setValueAtTime(0.08, this.ctx.currentTime); g.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+                o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + 0.15);
+            }
+        };
 
-🦇 Хэллоуинская Игра
-
-🎃
-
-
-Счет: 0
-Рекорд: 0
-
-
-Старт
-Стоп
-🎃 Достижения сессии:
-❌ Охотник за призраками (10 очков)
-❌ Повелитель тыкв (25 очков)
-
-
-// ПОДСИСТЕМА 5: ИЗОЛИРОВАННЫЙ ПРОФЕССИОНАЛЬНЫЙ JAVASCRIPT-ОБЪЕКТ            //
-var totalSystemSecondsCounter = 0;
-var coreGameIntervalLoop = null;
-var isSystemGameActive = false;
-// 1. АВТОНОМНЫЙ СЧЕТЧИК АПТАЙМА
-function executeRealtimeClockTick() {
-totalSystemSecondsCounter++;
-var h = Math.floor(totalSystemSecondsCounter / 3600);
-var m = Math.floor((totalSystemSecondsCounter % 3600) / 60);
-var s = totalSystemSecondsCounter % 60;
-var clockDisplay = document.getElementById("realtime-clock-digital-display");
-if (clockDisplay) {
-clockDisplay.innerText = h + "ч " + m + "мин " + s + "сек";
-}
-}
-setInterval(executeRealtimeClockTick, 1000);
-// 2. ИЗОЛИРОВАННЫЙ МОДУЛЬ АУДИОСИСТЕМЫ
-var moduleAudioEngine = {
-context: null,
-interval: null,
-notes: [130.81, 155.56, 196.00, 220.00], // До, Ре-диез, Соль, Ля
-currentIdx: 0,
-init: function() {
-if (this.context) return;
-try {
-this.context = new (window.AudioContext || window.webkitAudioContext)();
-var self = this;
-function playMelodyStep() {
-if (!self.context) return;
-var osc = self.context.createOscillator();
-var gainNode = self.context.createGain();
-osc.type = "sine";
-osc.frequency.setValueAtTime(self.notes[self.currentIdx], self.context.currentTime);
-gainNode.gain.setValueAtTime(0.06, self.context.currentTime);
-gainNode.gain.exponentialRampToValueAtTime(0.001, self.context.currentTime + 1.2);
-osc.connect(gainNode);
-gainNode.connect(self.context.destination);
-osc.start();
-osc.stop(self.context.currentTime + 1.2);
-self.currentIdx = (self.currentIdx + 1) % self.notes.length;
-}
-playMelodyStep();
-this.interval = setInterval(playMelodyStep, 1000);
-document.getElementById("master-audio-engine-activation-button").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
-} catch(error) {
-console.error("Ошибка запуска звука:", error);
-}
-},
-playCatchSoundEffect: function() {
-if (!this.context) return;
-try {
-var osc = this.context.createOscillator();
-var gain = this.context.createGain();
-osc.type = "sine";
-osc.frequency.setValueAtTime(300, this.context.currentTime);
-osc.frequency.exponentialRampToValueAtTime(90, this.context.currentTime + 0.15);
-gain.gain.setValueAtTime(0.08, this.context.currentTime);
-gain.gain.linearRampToValueAtTime(0.001, this.context.currentTime + 0.15);
-osc.connect(gain);
-gain.connect(this.context.destination);
-osc.start();
-osc.stop(this.context.currentTime + 0.15);
-} catch(e){}
-}
-};
-// 3. ИЗОЛИРОВАННЫЙ ИГРОВОЙ МОДУЛЬ
-var moduleGameCore = {
-score: 0,
-best: 0,
-start: function() {
-moduleAudioEngine.init(); // Запуск звука при старте
-this.score = 0;
-document.getElementById("runtime-score-counter").innerText = this.score;
-isSystemGameActive = true;
-var self = this;
-if (coreGameIntervalLoop) clearInterval(coreGameIntervalLoop);
-this.movePumpkinToRandomPoint();
-coreGameIntervalLoop = setInterval(function() {
-self.movePumpkinToRandomPoint();
-}, 750);
+        var mGame = {
+            score: 0, best: 0,
+            start: function() {
+mAudio.init(); this.score = 0; document.getElementById("score").innerText = this.score;
+gameActive = true; var self = this; if (coreLoop) clearInterval(coreLoop);
+this.move(); coreLoop = setInterval(function() { self.move(); }, 750);
 },
 stop: function() {
-isSystemGameActive = false;
-if (coreGameIntervalLoop) clearInterval(coreGameIntervalLoop);
+gameActive = false; if (coreLoop) clearInterval(coreLoop);
+var p = document.getElementById("pumpkin"); p.style.left = "45%"; p.style.top = "35%";
+},
+move: function() {
+if (!gameActive) return;
 var p = document.getElementById("pumpkin");
-if (p) {
-p.style.left = "45%";
-p.style.top = "35%";
-}
+p.style.left = Math.floor(Math.random() * 320) + "px"; p.style.top = Math.floor(Math.random() * 130) + "px";
 },
-movePumpkinToRandomPoint: function() {
-if (!isSystemGameActive) return;
-var p = document.getElementById("pumpkin");
-if (p) {
-p.style.left = Math.floor(Math.random() * 320) + "px";
-p.style.top = Math.floor(Math.random() * 130) + "px";
+catch: function() {
+if (!gameActive) return;
+this.score++; document.getElementById("score").innerText = this.score;
+if (this.score > this.best) { this.best = this.score; document.getElementById("best").innerText = this.best; }
+try { mAudio.playHit(); } catch(e){}
+if (this.score >= 10) { document.getElementById("ach-1").innerText = "🏆 Охотник за призраками (Получено!)"; document.getElementById("ach-1").className = "ach-item unlocked"; }
+if (this.score >= 25) { document.getElementById("ach-2").innerText = "🏆 Повелитель тыкв (Получено!)"; document.getElementById("ach-2").className = "ach-item unlocked"; }
+this.move();
 }
-},
-catchPumpkin: function() {
-if (!isSystemGameActive) return;
-this.score++;
-document.getElementById("runtime-score-counter").innerText = this.score;
-if (this.score > this.best) {
-this.best = this.score;
-document.getElementById("historical-best-counter").innerText = this.best;
-}
-try { moduleAudioEngine.playCatchSoundEffect(); } catch(e){}
-this.evaluateAchievementsNode();
-this.movePumpkinToRandomPoint();
-},
-evaluateAchievementsNode: function() {
-if (this.score >= 10) {
-var a1 = document.getElementById("achievement-slot-1");
-if (a1) { a1.innerText = "🏆 Охотник за призраками (Получено!)"; a1.className = "achievement-row-node unlocked-state"; }
-}
-if (this.score >= 25) {
-var a2 = document.getElementById("achievement-slot-2");
-if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "achievement-row-node unlocked-state"; }
-}
-}
-};
-// Клонируем паутину по всем остальным углам экрана при загрузке
-window.onload = function() {
-var webSvgContent = document.querySelector(".site-spider-web-top-left").innerHTML;
-document.querySelector(".site-spider-web-top-right").innerHTML = webSvgContent;
-document.querySelector(".site-spider-web-bottom-left").innerHTML = webSvgContent;
-document.querySelector(".site-spider-web-bottom-right").innerHTML = webSvgContent;
-};
+}; 
