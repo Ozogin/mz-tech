@@ -70,7 +70,7 @@
         h2 { color: var(--accent-p); margin: 0 0 15px 0; font-size: 24px; text-shadow: 0 0 10px rgba(142,68,173,0.3); }
         .status { display: inline-block; padding: 5px 15px; font-weight: bold; border-radius: 20px; background: rgba(255,98,0,0.1); color: var(--accent); border: 1px solid var(--accent); margin-bottom: 15px; font-size: 12px; }
         .info-block { text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; }
-        .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 5px; }
+        .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 6px; }
         .info-item:last-child { border-bottom: none; margin-bottom: 0; }
         .label { color: #8e8e9f; } .value { font-weight: bold; }
         .credits { margin-top: 20px; font-size: 13px; color: #73738c; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; line-height: 1.6; }
@@ -90,7 +90,8 @@
 </head>
 <body>
 
-    <div class="audio-banner" id="audio-btn">🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)</div>
+    <!-- ИСПРАВЛЕНО: Прямой вызов функций через onclick гарантирует работу кликов в обход блокировок CSP -->
+    <div class="audio-banner" id="audio-btn" onclick="initMusic()">🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)</div>
 
     <div class="container">
         <div class="hud-card">
@@ -114,15 +115,15 @@
         <div class="hud-card game">
             <h2>🦇 Хэллоуинская Игра</h2>
             <div class="game-area">
-                <div id="pumpkin">🎃</div>
+                <div id="pumpkin" onclick="catchPumpkin()">🎃</div>
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:bold;">
                 <div>Счет: <span id="score" style="color:var(--accent-p);">0</span></div>
                 <div>Рекорд: <span id="best" style="color:#2ecc71;">0</span></div>
             </div>
             <div class="btn-group">
-                <button class="btn" id="btn-start">Старт</button>
-                <button class="btn btn-stop" id="btn-stop">Стоп</button>
+                <button class="btn" id="btn-start" onclick="startGame()">Старт</button>
+                <button class="btn btn-stop" id="btn-stop" onclick="stopGame()">Стоп</button>
             </div>
             
             <div class="achievements-box">
@@ -136,6 +137,7 @@
     <script>
         var score = 0, best = 0, gameInterval = null, gameActive = false, audioCtx = null, melodyInterval = null;
 
+        // Счетчик аптайма реального времени
         var seconds = 0;
         setInterval(function() {
             seconds++;
@@ -174,16 +176,15 @@
 
             playMelodyStep();
             melodyInterval = setInterval(playMelodyStep, 1000); 
-            document.getElementById("audio-btn").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
-        }
-
-        function playSound() {
-            if (!audioCtx) return;
+document.getElementById("audio-btn").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
+}
+function playSound() {
+if (!audioCtx) return;
 var o = audioCtx.createOscillator(), g = audioCtx.createGain();
 o.type = "sine"; o.frequency.setValueAtTime(300, audioCtx.currentTime);
 o.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.15);
 g.gain.setValueAtTime(0.08, audioCtx.currentTime);
-g.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+g.gain.linearRampToValueAtTime(0.001, g.currentTime + 0.15);
 o.connect(g); g.connect(audioCtx.destination);
 o.start(); o.stop(audioCtx.currentTime + 0.15);
 }
@@ -203,8 +204,8 @@ var a2 = document.getElementById("ach-2");
 if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "ach-item unlocked"; }
 }
 }
-document.getElementById("audio-btn").addEventListener("click", initMusic);
-document.getElementById("btn-start").addEventListener("click", function() {
+// Вынесли логику в именованные функции для прямого вызова через onclick
+function startGame() {
 initMusic();
 score = 0;
 document.getElementById("score").innerText = score;
@@ -212,14 +213,14 @@ gameActive = true;
 if (gameInterval) clearInterval(gameInterval);
 move();
 gameInterval = setInterval(move, 750);
-});
-document.getElementById("btn-stop").addEventListener("click", function() {
+}
+function stopGame() {
 gameActive = false;
 if (gameInterval) clearInterval(gameInterval);
 var p = document.getElementById("pumpkin");
 p.style.left = "45%"; p.style.top = "35%";
-});
-document.getElementById("pumpkin").addEventListener("click", function() {
+}
+function catchPumpkin() {
 if (!gameActive) return;
 score++;
 document.getElementById("score").innerText = score;
@@ -227,4 +228,4 @@ if (score > best) { best = score; document.getElementById("best").innerText = be
 try { playSound(); } catch(e){}
 checkAchievements();
 move();
-});
+} 
