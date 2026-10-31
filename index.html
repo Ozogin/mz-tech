@@ -20,7 +20,6 @@
         --bg-gradient: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%);
     }
 
-    /* Тема "Самайн" */
     body.theme-samhain {
         --bg-gradient: radial-gradient(circle at 50% 50%, #0b1a12 0%, #040807 100%);
         --accent: #2ecc71;
@@ -52,11 +51,9 @@
         transition: background-image 0.6s ease;
     }
 
-    /* Паутины */
     .site-spider-web-top-left, .site-spider-web-top-right,
     .site-spider-web-bottom-left, .site-spider-web-bottom-right {
-        position: fixed; width: 220px; height: 250px; z-index: 1; pointer-events: none;
-        opacity: 0.9;
+        position: fixed; width: 220px; height: 250px; z-index: 1; pointer-events: none; opacity: 0.9;
     }
     .site-spider-web-top-left { top: 0; left: 0; }
     .site-spider-web-top-right { top: 0; right: 0; transform: scaleX(-1); }
@@ -73,20 +70,18 @@
     body.theme-samhain .fog-ambient-layer {
         background: radial-gradient(circle, rgba(46,204,113,0.07) 0%, transparent 60%);
     }
-
     @keyframes coreFogEngineMovement {
         0% { transform: translate(0, 0) scale(1); }
         50% { transform: translate(5%, 3%) scale(1.1); }
         100% { transform: translate(0, 0) scale(1); }
     }
 
-    /* Верхняя панель управления */
     .top-controls {
         display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
         margin-bottom: 20px; width: 100%; max-width: 885px; position: relative; z-index: 10;
     }
 
-    .theme-switcher, .master-audio-banner-panel {
+    .theme-switcher, .master-audio-banner-panel, .synth-toggle {
         background: rgba(255,255,255,0.03);
         border: 1px solid rgba(255,255,255,0.08);
         padding: 12px 20px; border-radius: 30px;
@@ -95,20 +90,23 @@
         backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         display: flex; align-items: center; gap: 8px;
     }
-    .theme-switcher:hover, .master-audio-banner-panel:hover {
+    .theme-switcher:hover, .master-audio-banner-panel:hover, .synth-toggle:hover {
         border-color: var(--accent); color: #fff;
         background: rgba(255,255,255,0.07);
         box-shadow: 0 0 20px -5px var(--accent);
     }
-    .master-audio-banner-panel { flex: 1; min-width: 260px; justify-content: center; }
+    .master-audio-banner-panel { flex: 1; min-width: 240px; justify-content: center; }
     .master-audio-banner-panel.active {
         border-color: var(--matrix-green); color: var(--matrix-green);
         box-shadow: 0 0 20px -5px var(--matrix-green);
     }
-    .theme-switcher { min-width: 180px; justify-content: center; }
-    .theme-switcher:hover { border-color: var(--accent-2); box-shadow: 0 0 20px -5px var(--accent-2); }
+    .theme-switcher { min-width: 170px; justify-content: center; }
+    .synth-toggle { min-width: 200px; justify-content: center; }
+    .synth-toggle.active {
+        border-color: var(--accent-2); color: var(--accent-2);
+        box-shadow: 0 0 20px -5px var(--accent-2);
+    }
 
-    /* Основная сетка */
     .master-layout-container {
         display: flex; flex-direction: row; gap: 25px; max-width: 950px; width: 100%;
         flex-wrap: wrap; justify-content: center; position: relative; z-index: 10;
@@ -125,7 +123,6 @@
     }
     .hud-glass-card.game-node { border-color: var(--card-border-2); }
 
-    /* Лёгкое "дыхание" свечения карточек */
     .hud-glass-card::before {
         content: ''; position: absolute; inset: -1px; border-radius: 24px; z-index: -1;
         background: linear-gradient(135deg, var(--accent), transparent 40%, transparent 60%, var(--accent-2));
@@ -140,12 +137,12 @@
 
     h1 {
         margin: 0 0 15px; color: var(--accent); font-size: 24px;
-        text-shadow: 0 0 15px color-mix(in srgb, var(--accent) 40%, transparent);
+        text-shadow: 0 0 15px rgba(255,98,0,0.4);
         transition: color 0.6s ease;
     }
     h2 {
         margin: 0 0 15px; color: var(--accent-2); font-size: 24px;
-        text-shadow: 0 0 15px color-mix(in srgb, var(--accent-2) 40%, transparent);
+        text-shadow: 0 0 15px rgba(142,68,173,0.4);
         transition: color 0.6s ease;
     }
 
@@ -153,7 +150,7 @@
         display: inline-block; padding: 5px 15px; font-weight: bold;
         border-radius: 20px; text-transform: uppercase; margin-bottom: 15px;
         font-size: 11px; letter-spacing: 1px;
-        background: color-mix(in srgb, var(--accent) 12%, transparent);
+        background: rgba(255,98,0,0.12);
         color: var(--accent); border: 1px solid var(--accent);
         transition: all 0.6s ease;
     }
@@ -169,7 +166,6 @@
     .hud-data-row {
         display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;
         border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 5px;
-        transition: border-color 0.3s;
     }
     .hud-data-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
     .hud-row-label { color: #8e8e9f; }
@@ -182,7 +178,6 @@
         line-height: 1.7; text-align: left;
     }
 
-    /* Игровая зона */
     .game-area-viewport {
         width: 100%; height: 200px; background: rgba(0, 0, 0, 0.55);
         border-radius: 16px; position: relative; margin-top: 15px;
@@ -191,7 +186,7 @@
     }
     .game-area-viewport::after {
         content: ''; position: absolute; inset: 0; pointer-events: none;
-        background: radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--accent-2) 15%, transparent), transparent 70%);
+        background: radial-gradient(circle at 50% 120%, rgba(142,68,173,0.15), transparent 70%);
     }
 
     #pumpkin {
@@ -224,16 +219,14 @@
         flex: 1; color: #fff; border: none; padding: 11px;
         border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px;
         transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.3s ease;
-        background: linear-gradient(135deg, var(--accent-2), color-mix(in srgb, var(--accent-2) 60%, #000));
+        background: linear-gradient(135deg, var(--accent-2), #5a2a75);
     }
     .hud-action-button:hover {
         transform: translateY(-1px);
         box-shadow: 0 6px 20px -5px var(--accent-2);
     }
     .hud-action-button:active { transform: translateY(1px); }
-    .hud-action-button.stop-modifier {
-        background: linear-gradient(135deg, var(--blood-red), #7a1f15);
-    }
+    .hud-action-button.stop-modifier { background: linear-gradient(135deg, var(--blood-red), #7a1f15); }
     .hud-action-button.stop-modifier:hover { box-shadow: 0 6px 20px -5px var(--blood-red); }
     .hud-action-button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
@@ -250,7 +243,6 @@
     .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 4px; transition: color 0.3s; }
     .ach-item.unlocked { color: var(--matrix-green); font-weight: 600; }
 
-    /* YouTube модалка */
     .yt-overlay {
         position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100;
         display: none; justify-content: center; align-items: center;
@@ -271,8 +263,10 @@
         box-shadow: 0 4px 16px rgba(192,57,43,0.6);
     }
     .yt-close:hover { background: #e74c3c; }
+    .yt-note {
+        color: #8e8e9f; font-size: 12px; margin-top: 10px; text-align: center; line-height: 1.5;
+    }
 
-    /* Мобильная адаптация */
     @media (max-width: 520px) {
         body { padding: 12px; }
         .hud-glass-card { padding: 20px; }
@@ -299,7 +293,10 @@
         <span id="theme-label">Тема: Тыква</span>
     </div>
     <div class="master-audio-banner-panel" id="master-audio-engine-activation-button">
-        🎵 Включить музыку
+        🎵 Открыть музыку (YouTube)
+    </div>
+    <div class="synth-toggle" id="synth-toggle">
+        🔮 Синтез-эмбиент: выкл
     </div>
 </div>
 
@@ -317,7 +314,7 @@
         </div>
         <div class="credits-container">
             Разработчик: <span style="color:var(--accent); font-weight:bold;">Ozogin</span><br>
-            ИИ-Архитектор: <span style="color:var(--accent-2); font-weight:bold;">Алиса</span><br>
+            ИИ-Архитекторы: <span style="color:var(--accent-2); font-weight:bold;">Алиса</span> &amp; <span style="color:#2ecc71; font-weight:bold;">DeepSeek</span><br>
             Спонсор: <span style="color:#2ecc71; font-weight:bold;">Alberto Pepper</span>
         </div>
     </div>
@@ -346,30 +343,29 @@
     </div>
 </div>
 
-<!-- YouTube модалка (официальный плеер) -->
 <div class="yt-overlay" id="yt-overlay">
     <div class="yt-modal">
         <button class="yt-close" id="yt-close" aria-label="Закрыть">×</button>
         <div id="yt-player-container"></div>
+        <div class="yt-note">Официальный плеер YouTube. Закройте окно, чтобы остановить музыку.</div>
     </div>
 </div>
 
 <script>
-window.onload = function () {
+window.addEventListener('load', function () {
     'use strict';
 
-    // ================== СОСТОЯНИЕ ==================
+    /* ================== СОСТОЯНИЕ ================== */
     var totalSystemSecondsCounter = 0;
-    var coreGameIntervalLoop = null;
+    var gameLoop = null;        // интервал движения тыквы
+    var timerLoop = null;       // интервал обратного отсчёта
     var isSystemGameActive = false;
     var score = 0;
     var best = 0;
     var timerLeft = 30;
-    var comboTracker = { count: 0, lastClickTime: 0, max: 0 };
+    var combo = { count: 0, max: 0, lastClick: 0 };
     var themeMode = 'pumpkin';
-    var audioMode = 'synth'; // 'synth' | 'youtube'
 
-    // Рекорд из localStorage
     try {
         var savedBest = localStorage.getItem('mz_halloween_best');
         if (savedBest) best = parseInt(savedBest, 10) || 0;
@@ -377,31 +373,30 @@ window.onload = function () {
     var bestEl = document.getElementById('historical-best-counter');
     if (bestEl) bestEl.innerText = best;
 
-    // ================== ПАУТИНЫ ==================
+    /* ================== ПАУТИНЫ ================== */
     var webSvgContent = document.querySelector(".site-spider-web-top-left").innerHTML;
     document.querySelector(".site-spider-web-top-right").innerHTML = webSvgContent;
     document.querySelector(".site-spider-web-bottom-left").innerHTML = webSvgContent;
     document.querySelector(".site-spider-web-bottom-right").innerHTML = webSvgContent;
 
-    // ================== ЧАСЫ ==================
-    function executeRealtimeClockTick() {
+    /* ================== ЧАСЫ ================== */
+    setInterval(function () {
         totalSystemSecondsCounter++;
         var h = Math.floor(totalSystemSecondsCounter / 3600);
         var m = Math.floor((totalSystemSecondsCounter % 3600) / 60);
         var s = totalSystemSecondsCounter % 60;
         var clockDisplay = document.getElementById("realtime-clock-digital-display");
         if (clockDisplay) clockDisplay.innerText = h + "ч " + m + "мин " + s + "сек";
-    }
-    setInterval(executeRealtimeClockTick, 1000);
+    }, 1000);
 
-    // ================== ТЕМЫ ==================
+    /* ================== ТЕМЫ ================== */
     var themeToggle = document.getElementById('theme-toggle');
     var themeIcon = document.getElementById('theme-icon');
     var themeLabel = document.getElementById('theme-label');
 
-    function applyTheme(mode) {
-        themeMode = mode;
-        if (mode === 'samhain') {
+    themeToggle.addEventListener('click', function () {
+        themeMode = (themeMode === 'pumpkin') ? 'samhain' : 'pumpkin';
+        if (themeMode === 'samhain') {
             document.body.classList.add('theme-samhain');
             themeIcon.textContent = '🌿';
             themeLabel.textContent = 'Тема: Самайн';
@@ -410,173 +405,134 @@ window.onload = function () {
             themeIcon.textContent = '🎃';
             themeLabel.textContent = 'Тема: Тыква';
         }
-    }
-
-    themeToggle.addEventListener('click', function () {
-        applyTheme(themeMode === 'pumpkin' ? 'samhain' : 'pumpkin');
     });
 
-    // ================== АУДИО-ДВИЖОК (СИНТЕЗ) ==================
-    var moduleAudioEngine = {
-        context: null,
+    /* ================== АУДИО: СИНТЕЗ-ЭМБИЕНТ ================== */
+    var Audio = {
+        ctx: null,
         interval: null,
-        // Мрачная самайновская гамма: Dm-подобная, редкие высокие "колокольчики"
+        isOn: false,
         notes: [146.83, 174.61, 220.00, 261.63, 174.61, 146.83, 116.54, 146.83],
-        bellNotes: [880, 1174.66, 1046.50],
-        currentIdx: 0,
+        bells: [880, 1174.66, 1046.50],
+        idx: 0,
         bellIdx: 0,
-        isPlaying: false,
 
-        unlock: function () {
-            if (!this.context) {
+        ensureCtx: function () {
+            if (!this.ctx) {
                 try {
-                    this.context = new (window.AudioContext || window.webkitAudioContext)();
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
                 } catch (e) {
-                    console.error("Web Audio API не поддерживается:", e);
+                    console.error('Web Audio не поддерживается:', e);
                     return false;
                 }
             }
-            if (this.context.state === "suspended") {
-                this.context.resume().catch(function (err) {
-                    console.error("Не удалось возобновить AudioContext:", err);
-                });
+            if (this.ctx.state === 'suspended') {
+                this.ctx.resume().catch(function () {});
             }
             return true;
         },
 
-        playDroneStep: function () {
-            if (!this.context || !this.isPlaying) return;
-            if (this.context.state === "suspended") this.context.resume().catch(function(){});
+        step: function () {
+            if (!this.ctx || !this.isOn) return;
+            if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
+            var t = this.ctx.currentTime;
             var self = this;
-            var t = this.context.currentTime;
 
-            // Основной дрон — низкий треугольник с длинным затуханием
-            var osc = this.context.createOscillator();
-            var gainNode = this.context.createGain();
-            osc.type = "triangle";
-            osc.frequency.setValueAtTime(this.notes[this.currentIdx], t);
-            // Легкий pitch-дрейф для "мистичности"
-            osc.frequency.linearRampToValueAtTime(this.notes[this.currentIdx] * 0.985, t + 2.4);
-            gainNode.gain.setValueAtTime(0.0001, t);
-            gainNode.gain.linearRampToValueAtTime(0.18, t + 0.4);
-            gainNode.gain.linearRampToValueAtTime(0.0001, t + 2.6);
-            osc.connect(gainNode);
-            gainNode.connect(this.context.destination);
+            var osc = this.ctx.createOscillator();
+            var g = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(this.notes[this.idx], t);
+            osc.frequency.linearRampToValueAtTime(this.notes[this.idx] * 0.985, t + 2.4);
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.linearRampToValueAtTime(0.16, t + 0.4);
+            g.gain.linearRampToValueAtTime(0.0001, t + 2.6);
+            osc.connect(g);
+            g.connect(this.ctx.destination);
             osc.start(t);
             osc.stop(t + 2.7);
 
-            // Редкий высокий "колокольчик" — каждый 3-й шаг
-            if (this.currentIdx % 3 === 0) {
-                var bell = this.context.createOscillator();
-                var bellGain = this.context.createGain();
-                bell.type = "sine";
-                bell.frequency.setValueAtTime(this.bellNotes[this.bellIdx % this.bellNotes.length], t + 0.2);
-                bellGain.gain.setValueAtTime(0.0001, t + 0.2);
-                bellGain.gain.linearRampToValueAtTime(0.09, t + 0.25);
-                bellGain.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-                bell.connect(bellGain);
-                bellGain.connect(this.context.destination);
+            if (this.idx % 3 === 0) {
+                var bell = this.ctx.createOscillator();
+                var bg = this.ctx.createGain();
+                bell.type = 'sine';
+                bell.frequency.setValueAtTime(this.bells[this.bellIdx % this.bells.length], t + 0.2);
+                bg.gain.setValueAtTime(0.0001, t + 0.2);
+                bg.gain.linearRampToValueAtTime(0.08, t + 0.25);
+                bg.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+                bell.connect(bg);
+                bg.connect(this.ctx.destination);
                 bell.start(t + 0.2);
                 bell.stop(t + 1.7);
                 this.bellIdx++;
             }
-
-            this.currentIdx = (this.currentIdx + 1) % this.notes.length;
+            this.idx = (this.idx + 1) % this.notes.length;
         },
 
-        init: function () {
-            if (audioMode !== 'synth') return; // если включён YouTube — синтез не нужен
-            if (!this.unlock()) return;
+        start: function () {
+            if (!this.ensureCtx()) return;
             if (this.interval) return;
-            this.isPlaying = true;
+            this.isOn = true;
             var self = this;
-            this.playDroneStep();
-            this.interval = setInterval(function () { self.playDroneStep(); }, 1400);
-
-            var btn = document.getElementById("master-audio-engine-activation-button");
-            btn.innerText = "🔮 Мистическая музыка играет (синтез)";
-            btn.classList.add("active");
+            this.step();
+            this.interval = setInterval(function () { self.step(); }, 1400);
         },
 
         stop: function () {
-            this.isPlaying = false;
+            this.isOn = false;
             if (this.interval) { clearInterval(this.interval); this.interval = null; }
-            var btn = document.getElementById("master-audio-engine-activation-button");
-            if (btn) { btn.classList.remove("active"); }
         },
 
-        playCatchSoundEffect: function () {
-            if (!this.context || audioMode !== 'synth') return;
-            if (this.context.state === "suspended") this.context.resume().catch(function(){});
+        blip: function (type, freqStart, freqEnd, vol) {
+            if (!this.ctx || !this.isOn) return;
+            if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
             try {
-                var t = this.context.currentTime;
-                var osc = this.context.createOscillator();
-                var gain = this.context.createGain();
-                osc.type = "square";
-                osc.frequency.setValueAtTime(600, t);
-                osc.frequency.exponentialRampToValueAtTime(120, t + 0.18);
-                gain.gain.setValueAtTime(0.15, t);
-                gain.gain.linearRampToValueAtTime(0.001, t + 0.2);
-                osc.connect(gain);
-                gain.connect(this.context.destination);
+                var t = this.ctx.currentTime;
+                var osc = this.ctx.createOscillator();
+                var g = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freqStart, t);
+                osc.frequency.exponentialRampToValueAtTime(freqEnd, t + 0.18);
+                g.gain.setValueAtTime(vol, t);
+                g.gain.linearRampToValueAtTime(0.001, t + 0.2);
+                osc.connect(g);
+                g.connect(this.ctx.destination);
                 osc.start(t);
-                osc.stop(t + 0.2);
+                osc.stop(t + 0.22);
             } catch (e) {}
         },
 
-        playBonusSound: function () {
-            if (!this.context || audioMode !== 'synth') return;
-            if (this.context.state === "suspended") this.context.resume().catch(function(){});
-            try {
-                var t = this.context.currentTime;
-                [523.25, 659.25, 783.99].forEach(function (freq, i) {
-                    var osc = moduleAudioEngine.context.createOscillator();
-                    var gain = moduleAudioEngine.context.createGain();
-                    osc.type = "sine";
-                    osc.frequency.setValueAtTime(freq, t + i * 0.07);
-                    gain.gain.setValueAtTime(0.12, t + i * 0.07);
-                    gain.gain.linearRampToValueAtTime(0.001, t + i * 0.07 + 0.25);
-                    osc.connect(gain);
-                    gain.connect(moduleAudioEngine.context.destination);
-                    osc.start(t + i * 0.07);
-                    osc.stop(t + i * 0.07 + 0.3);
-                });
-            } catch (e) {}
-        },
-
-        playCursedSound: function () {
-            if (!this.context || audioMode !== 'synth') return;
-            if (this.context.state === "suspended") this.context.resume().catch(function(){});
-            try {
-                var t = this.context.currentTime;
-                var osc = this.context.createOscillator();
-                var gain = this.context.createGain();
-                osc.type = "sawtooth";
-                osc.frequency.setValueAtTime(200, t);
-                osc.frequency.exponentialRampToValueAtTime(50, t + 0.4);
-                gain.gain.setValueAtTime(0.18, t);
-                gain.gain.linearRampToValueAtTime(0.001, t + 0.45);
-                osc.connect(gain);
-                gain.connect(this.context.destination);
-                osc.start(t);
-                osc.stop(t + 0.5);
-            } catch (e) {}
-        }
+        catchSound: function () { this.blip('square', 600, 120, 0.15); },
+        bonusSound: function () { this.blip('sine', 880, 1320, 0.12); },
+        cursedSound: function () { this.blip('sawtooth', 200, 50, 0.16); }
     };
 
-    // ================== YOUTUBE ПЛЕЕР ==================
+    var synthToggle = document.getElementById('synth-toggle');
+    synthToggle.addEventListener('click', function () {
+        if (Audio.isOn) {
+            Audio.stop();
+            synthToggle.classList.remove('active');
+            synthToggle.textContent = '🔮 Синтез-эмбиент: выкл';
+        } else {
+            Audio.start();
+            if (Audio.isOn) {
+                synthToggle.classList.add('active');
+                synthToggle.textContent = '🔮 Синтез-эмбиент: вкл';
+            }
+        }
+    });
+
+    /* ================== YOUTUBE ПЛЕЕР ================== */
     var ytOverlay = document.getElementById('yt-overlay');
     var ytClose = document.getElementById('yt-close');
     var ytContainer = document.getElementById('yt-player-container');
     var ytIframe = null;
-    var YT_VIDEO_ID = 'RaDa7m76uXY'; // трек из ссылки
+    var YT_VIDEO_ID = 'RaDa7m76uXY';
 
-    function openYouTubePlayer() {
+    function openYouTube() {
         ytOverlay.classList.add('open');
         if (!ytIframe) {
             ytIframe = document.createElement('iframe');
-            ytIframe.src = 'https://www.youtube.com/embed/' + YT_VIDEO_ID +
-                '?autoplay=1&rel=0&modestbranding=1';
+            ytIframe.src = 'https://www.youtube.com/embed/' + YT_VIDEO_ID + '?autoplay=1&rel=0&modestbranding=1';
             ytIframe.allow = 'autoplay; encrypted-media; picture-in-picture';
             ytIframe.allowFullscreen = true;
             ytIframe.title = 'Хэллоуинская музыка';
@@ -584,14 +540,87 @@ window.onload = function () {
         }
     }
 
-    function closeYouTubePlayer() {
+    function closeYouTube() {
         ytOverlay.classList.remove('open');
-        // Останавливаем видео, уничтожая iframe (иначе продолжится звук)
-        if (ytIframe) {
-            ytIframe.remove();
-            ytIframe = null;
+        if (ytIframe) { ytIframe.remove(); ytIframe = null; }
+    }
+
+    document.getElementById('master-audio-engine-activation-button').addEventListener('click', openYouTube);
+    ytClose.addEventListener('click', closeYouTube);
+    ytOverlay.addEventListener('click', function (e) {
+        if (e.target === ytOverlay) closeYouTube();
+    });
+
+    /* ================== ИГРА ================== */
+    var pumpkinEl = document.getElementById('pumpkin');
+    var scoreEl = document.getElementById('runtime-score-counter');
+    var timerEl = document.getElementById('game-timer-display');
+    var comboEl = document.getElementById('combo-display');
+    var startBtn = document.getElementById('game-start-trigger');
+    var stopBtn = document.getElementById('game-stop-trigger');
+    var area = document.querySelector('.game-area-viewport');
+
+    var pumpkinState = 'normal'; // normal | bonus | cursed
+    var bonusTimeout = null;
+
+    function areaSize() {
+        return { w: area.clientWidth - 50, h: area.clientHeight - 50 };
+    }
+
+    function movePumpkin() {
+        if (!isSystemGameActive) return;
+        var size = areaSize();
+        var x = Math.max(0, Math.floor(Math.random() * size.w));
+        var y = Math.max(0, Math.floor(Math.random() * size.h));
+        pumpkinEl.style.left = x + 'px';
+        pumpkinEl.style.top = y + 'px';
+    }
+
+    function setPumpkinState(state) {
+        pumpkinState = state;
+        pumpkinEl.classList.remove('bonus', 'cursed');
+        if (state === 'bonus') {
+            pumpkinEl.classList.add('bonus');
+            pumpkinEl.textContent = '🕷️';
+        } else if (state === 'cursed') {
+            pumpkinEl.classList.add('cursed');
+            pumpkinEl.textContent = '👿';
+        } else {
+            pumpkinEl.textContent = '🎃';
         }
     }
 
-    ytClose.addEventListener('click', closeYouTubePlayer);
-    ytOverlay.addEventListener('click', function (
+    function scheduleSpecial() {
+        clearTimeout(bonusTimeout);
+        if (!isSystemGameActive) return;
+        var delay = 2500 + Math.random() * 3000;
+        bonusTimeout = setTimeout(function () {
+            if (!isSystemGameActive) return;
+            var roll = Math.random();
+            if (roll < 0.4) setPumpkinState('bonus');
+            else if (roll < 0.6) setPumpkinState('cursed');
+            else setPumpkinState('normal');
+            scheduleSpecial();
+        }, delay);
+    }
+
+    function resetPumpkinPosition() {
+        pumpkinEl.style.left = '45%';
+        pumpkinEl.style.top = '35%';
+    }
+
+    function updateScoreUI() {
+        scoreEl.innerText = score;
+        if (score > best) {
+            best = score;
+            bestEl.innerText = best;
+            try { localStorage.setItem('mz_halloween_best', best); } catch (e) {}
+        }
+    }
+
+    function evaluateAchievements() {
+        var a1 = document.getElementById('achievement-slot-1');
+        var a2 = document.getElementById('achievement-slot-2');
+        var a3 = document.getElementById('achievement-slot-3');
+        if (score >= 10) { a1.innerText = '🏆 Охотник за призраками (Получено!)'; a1.className = 'ach-item unlocked'; }
+        if (score >= 25) { a2.innerText
