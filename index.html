@@ -83,6 +83,7 @@
 
         .master-audio-banner-panel { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 30px; margin-bottom: 20px; font-size: 13px; color: #a0a0b0; cursor: pointer; text-align: center; width: 100%; max-width: 885px; box-sizing: border-box; font-weight: bold; transition: all 0.3s; }
         .master-audio-banner-panel:hover { border-color: var(--neon-pumpkin-orange); color: #fff; background: rgba(255,255,255,0.05); }
+        .master-audio-banner-panel.active { border-color: var(--matrix-green); color: var(--matrix-green); }
 
         .achievements-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 121, 0, 0.1); width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; box-sizing: border-box; }
         .ach-title { font-weight: bold; color: var(--neon-pumpkin-orange); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -172,51 +173,82 @@
             }
             setInterval(executeRealtimeClockTick, 1000);
 
+            // === ИСПРАВЛЕННЫЙ АУДИО-ДВИЖОК ===
             var moduleAudioEngine = {
                 context: null,
                 interval: null,
-                notes: [130.81, 155.56, 196.00, 220.00],
+                notes: [130.81, 155.56, 196.00, 220.00], // До, Ре-диез, Соль, Ля
                 currentIdx: 0,
-                init: function () {
-                    if (this.context) return;
-                    try {
-                        this.context = new (window.AudioContext || window.webkitAudioContext)();
-                        var self = this;
-                        function playMelodyStep() {
-                            if (!self.context) return;
-                            var osc = self.context.createOscillator();
-                            var gainNode = self.context.createGain();
-                            osc.type = "sine";
-                            osc.frequency.setValueAtTime(self.notes[self.currentIdx], self.context.currentTime);
-                            gainNode.gain.setValueAtTime(0.06, self.context.currentTime);
-                            gainNode.gain.exponentialRampToValueAtTime(0.001, self.context.currentTime + 1.2);
-                            osc.connect(gainNode);
-                            gainNode.connect(self.context.destination);
-                            osc.start();
-                            osc.stop(self.context.currentTime + 1.2);
-                            self.currentIdx = (self.currentIdx + 1) % self.notes.length;
+                // Разблокировка контекста по жесту пользователя
+                unlock: function () {
+                    if (!this.context) {
+                        try {
+                            this.context = new (window.AudioContext || window.webkitAudioContext)();
+                        } catch (e) {
+                            console.error("Web Audio API не поддерживается:", e);
+                            return false;
                         }
-                        playMelodyStep();
-                        this.interval = setInterval(playMelodyStep, 1000);
-                        document.getElementById("master-audio-engine-activation-button").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
-                    } catch (error) {
-                        console.error("Ошибка инициализации аудио ядра:", error);
                     }
+                    // Ключевой фикс: resume() возвращает Promise, ждём его
+                    if (this.context.state === "suspended") {
+                        this.context.resume().catch(function (err) {
+                            console.error("Не удалось возобновить AudioContext:", err);
+                        });
+                    }
+                    return true;
+                },
+                init: function () {
+                    if (!this.unlock()) return;
+                    if (this.interval) return; // уже играет
+                    var self = this;
+
+                    function playMelodyStep() {
+                        if (!self.context) return;
+                        // На случай, если контекст снова уснул (вкладка была в фоне)
+                        if (self.context.state === "suspended") {
+                            self.context.resume().catch(function(){});
+                        }
+                        var t = self.context.currentTime;
+                        var osc = self.context.createOscillator();
+                        var gainNode = self.context.createGain();
+                        osc.type = "triangle"; // triangle слышно заметно лучше, чем sine
+                        osc.frequency.setValueAtTime(self.notes[self.currentIdx], t);
+                        // Громкость: подняли с 0.06 до 0.25
+                        gainNode.gain.setValueAtTime(0.25, t);
+                        // Плавное затухание, но не мгновенное — линейно за 1.5 сек
+                        gainNode.gain.linearRampToValueAtTime(0.0, t + 1.5);
+                        osc.connect(gainNode);
+                        gainNode.connect(self.context.destination);
+                        osc.start(t);
+                        osc.stop(t + 1.5);
+                        self.currentIdx = (self.currentIdx + 1) % self.notes.length;
+                    }
+
+                    playMelodyStep();
+                    this.interval = setInterval(playMelodyStep, 1200);
+
+                    var btn = document.getElementById("master-audio-engine-activation-button");
+                    btn.innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
+                    btn.classList.add("active");
                 },
                 playCatchSoundEffect: function () {
                     if (!this.context) return;
+                    if (this.context.state === "suspended") {
+                        this.context.resume().catch(function(){});
+                    }
                     try {
+                        var t = this.context.currentTime;
                         var osc = this.context.createOscillator();
                         var gain = this.context.createGain();
-                        osc.type = "sine";
-                        osc.frequency.setValueAtTime(300, this.context.currentTime);
-                        osc.frequency.exponentialRampToValueAtTime(90, this.context.currentTime + 0.15);
-                        gain.gain.setValueAtTime(0.08, this.context.currentTime);
-                        gain.gain.linearRampToValueAtTime(0.001, this.context.currentTime + 0.15);
+                        osc.type = "square"; // square громче и "щелчок" слышнее
+                        osc.frequency.setValueAtTime(600, t);
+                        osc.frequency.exponentialRampToValueAtTime(120, t + 0.18);
+                        gain.gain.setValueAtTime(0.2, t);
+                        gain.gain.linearRampToValueAtTime(0.001, t + 0.2);
                         osc.connect(gain);
                         gain.connect(this.context.destination);
-                        osc.start();
-                        osc.stop(this.context.currentTime + 0.15);
+                        osc.start(t);
+                        osc.stop(t + 0.2);
                     } catch (e) {}
                 }
             };
@@ -249,7 +281,6 @@
                 moduleAudioEngine.init();
                 score = 0;
                 document.getElementById("runtime-score-counter").innerText = score;
-                // Сброс достижений при новом старте
                 var a1 = document.getElementById("achievement-slot-1");
                 var a2 = document.getElementById("achievement-slot-2");
                 a1.innerText = "❌ Охотник за призраками (10 очков)"; a1.className = "ach-item";
