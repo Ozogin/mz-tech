@@ -30,6 +30,9 @@ body{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   overflow-x:hidden; user-select:none; -webkit-user-select:none;
 }
+body.shake{animation:shake .35s ease;}
+@keyframes shake{0%,100%{transform:translate(0,0);}25%{transform:translate(-6px,3px);}50%{transform:translate(6px,-3px);}75%{transform:translate(-3px,-2px);}}
+
 .fog{
   position:fixed; inset:-20%; z-index:0; pointer-events:none;
   background:radial-gradient(circle at 30% 30%,rgba(142,68,173,.10),transparent 55%),
@@ -42,6 +45,13 @@ body.theme-samhain .fog{
 }
 @keyframes fogMove{0%{transform:translate(0,0) scale(1);}100%{transform:translate(3%,2%) scale(1.08);}}
 
+/* Гирлянда тыкв сверху */
+.garland{position:fixed;top:0;left:0;right:0;height:34px;z-index:4;pointer-events:none;display:flex;justify-content:space-around;padding:0 20px;}
+.garland span{font-size:18px;animation:sway 2.4s ease-in-out infinite;transform-origin:top center;filter:drop-shadow(0 0 6px rgba(255,98,0,.6));}
+.garland span:nth-child(2n){animation-delay:.3s;}
+.garland span:nth-child(3n){animation-delay:.6s;}
+@keyframes sway{0%,100%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}}
+
 .web{position:fixed;width:200px;height:230px;z-index:1;pointer-events:none;opacity:.85;}
 .web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);}
 .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
@@ -49,6 +59,7 @@ body.theme-samhain .fog{
 .topbar{
   width:100%; max-width:960px; display:flex; flex-wrap:wrap; gap:10px;
   justify-content:center; margin-bottom:22px; position:relative; z-index:10;
+  margin-top:30px;
 }
 .pill{
   display:flex; align-items:center; gap:8px; padding:11px 18px; border-radius:999px;
@@ -58,8 +69,10 @@ body.theme-samhain .fog{
   transition:all .25s ease;
 }
 .pill:hover{color:#fff;border-color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
-.pill.music{flex:1;min-width:230px;justify-content:center;}
+.pill.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
+.pill.music{flex:1;min-width:180px;justify-content:center;}
 .pill.music.playing{border-color:var(--green);color:var(--green);box-shadow:0 0 22px -6px var(--green);}
+.pill.hardcore.active{border-color:var(--red);color:var(--red);box-shadow:0 0 22px -6px var(--red);}
 .lang-group{display:flex;gap:6px;padding:4px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
 .lang-btn{padding:8px 16px;border-radius:999px;border:none;background:transparent;color:#9a9aad;font-weight:700;font-size:12px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
 .lang-btn.active{background:var(--accent);color:#000;}
@@ -75,6 +88,7 @@ body.theme-samhain .fog{
 }
 .card:hover{transform:translateY(-2px);}
 .card.game{border-color:var(--border-2);}
+.card.game.active{border-color:var(--accent);box-shadow:0 0 30px -10px var(--accent),var(--shadow);}
 .card::before{
   content:''; position:absolute; inset:-1px; border-radius:var(--radius); z-index:-1;
   background:linear-gradient(135deg,var(--accent),transparent 45%,transparent 55%,var(--accent-2));
@@ -122,11 +136,22 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
 #pumpkin.bonus{filter:drop-shadow(0 0 16px var(--green));}
 #pumpkin.cursed{filter:drop-shadow(0 0 16px var(--red)) saturate(1.8);}
 
+/* призрачный след */
+.ghost-trail{position:absolute;font-size:28px;opacity:.25;pointer-events:none;z-index:1;transition:opacity .6s linear;}
+
+/* всплывающие очки */
+.float-score{position:absolute;font-weight:900;font-size:18px;pointer-events:none;z-index:5;animation:floatUp .9s ease-out forwards;text-shadow:0 0 10px currentColor;}
+.float-score.plus{color:var(--green);}
+.float-score.plus3{color:var(--accent);}
+.float-score.minus{color:var(--red);}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-50px) scale(1.3);}}
+
 .stats{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-weight:700;font-size:14px;}
 .stats .val{font-variant-numeric:tabular-nums;}
 #score{color:var(--accent-2);transition:color .5s;}
 #timer{color:var(--accent);transition:color .5s;}
 #best{color:var(--green);}
+#streak{color:#f39c12;}
 #combo{min-height:18px;margin-top:6px;text-align:center;font-size:12.5px;font-weight:700;color:var(--green);opacity:0;transition:opacity .3s;}
 #combo.show{opacity:1;}
 
@@ -140,12 +165,25 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
 .btn:active{transform:translateY(1px);}
 .btn.stop{background:linear-gradient(135deg,var(--red),#7a1f15);}
 .btn.stop:hover{box-shadow:0 8px 24px -8px var(--red);}
+.btn.share{background:linear-gradient(135deg,var(--accent),#a83e00);font-size:12px;}
+.btn.share:hover{box-shadow:0 8px 24px -8px var(--accent);}
 
 .ach{margin-top:16px;padding:13px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);font-size:12px;text-align:left;}
 .ach-title{font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;transition:color .5s;font-size:11px;}
 .ach-item{color:#8e8ea3;margin-bottom:5px;transition:color .3s;}
 .ach-item:last-child{margin-bottom:0;}
 .ach-item.on{color:var(--green);font-weight:600;}
+
+/* фонарь за курсором */
+.torch{position:fixed;pointer-events:none;z-index:5;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,160,60,.10),transparent 65%);
+  transform:translate(-50%,-50%);opacity:0;mix-blend-mode:screen;transition:opacity .3s;}
+
+/* летучие мыши */
+.bat{position:fixed;z-index:6;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,98,0,.5));}
+
+/* кости дождя */
+.bone{position:fixed;z-index:7;pointer-events:none;}
 
 @media (max-width:560px){
   body{padding:14px;}
@@ -157,6 +195,12 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
 <body>
 
 <div class="fog"></div>
+
+<div class="garland">
+  <span>🎃</span><span>🦇</span><span>💀</span><span>🕷️</span><span>🎃</span>
+  <span>🦇</span><span>👻</span><span>🎃</span><span>🕸️</span><span>💀</span>
+</div>
+
 <svg class="web tl" viewBox="0 0 100 100">
   <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.22)" stroke-width="0.8" fill="none"/>
   <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" stroke="rgba(255,98,0,.16)" stroke-width="0.6" fill="none"/>
@@ -175,6 +219,15 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
   </div>
   <div class="pill music" id="music-toggle">
     <span id="music-icon">🔇</span><span id="music-label">Музыка: выкл</span>
+  </div>
+  <div class="pill" id="voice-toggle">
+    <span id="voice-icon">🗣️</span><span id="voice-label">Голос: вкл</span>
+  </div>
+  <div class="pill" id="sfx-toggle">
+    <span id="sfx-icon">🔔</span><span id="sfx-label">Звуки: вкл</span>
+  </div>
+  <div class="pill hardcore" id="hardcore-toggle">
+    <span id="hardcore-icon">💀</span><span id="hardcore-label">Хардкор: выкл</span>
   </div>
 </div>
 
@@ -198,19 +251,23 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     </div>
   </div>
 
-  <div class="card game">
+  <div class="card game" id="game-card">
     <h2 id="t-title2">🦇 Хэллоуинская Игра</h2>
     <div class="subtitle" id="t-sub2">Лови тыквы, избегай проклятий</div>
     <div class="arena" id="arena"><div id="pumpkin">🎃</div></div>
     <div class="stats">
       <div><span id="t-score">Счет</span>: <span class="val" id="score">0</span></div>
       <div><span id="t-time">Время</span>: <span class="val" id="timer">30</span></div>
+      <div><span id="t-streak">Серия</span>: <span class="val" id="streak">0</span></div>
       <div><span id="t-best">Рекорд</span>: <span class="val" id="best">0</span></div>
     </div>
     <div id="combo"></div>
     <div class="btns">
       <button class="btn" id="start-btn">Старт</button>
       <button class="btn stop" id="stop-btn">Стоп</button>
+    </div>
+    <div class="btns">
+      <button class="btn share" id="share-btn">📤 Поделиться рекордом</button>
     </div>
     <div class="ach">
       <div class="ach-title" id="t-ach">🎃 Достижения сессии</div>
@@ -231,9 +288,12 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     langRu: $('lang-ru'), langEn: $('lang-en'),
     themeToggle: $('theme-toggle'), themeIcon: $('theme-icon'), themeLabel: $('theme-label'),
     musicToggle: $('music-toggle'), musicIcon: $('music-icon'), musicLabel: $('music-label'),
-    pumpkin: $('pumpkin'), arena: $('arena'),
-    score: $('score'), timer: $('timer'), best: $('best'), combo: $('combo'),
-    startBtn: $('start-btn'), stopBtn: $('stop-btn'),
+    voiceToggle: $('voice-toggle'), voiceIcon: $('voice-icon'), voiceLabel: $('voice-label'),
+    sfxToggle: $('sfx-toggle'), sfxIcon: $('sfx-icon'), sfxLabel: $('sfx-label'),
+    hardcoreToggle: $('hardcore-toggle'), hardcoreIcon: $('hardcore-icon'), hardcoreLabel: $('hardcore-label'),
+    pumpkin: $('pumpkin'), arena: $('arena'), gameCard: $('game-card'),
+    score: $('score'), timer: $('timer'), best: $('best'), streak: $('streak'), combo: $('combo'),
+    startBtn: $('start-btn'), stopBtn: $('stop-btn'), shareBtn: $('share-btn'),
     ach1: $('ach1'), ach2: $('ach2'), ach3: $('ach3')
   };
 
@@ -245,13 +305,20 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       k1: 'Имя узла', k2: 'Издание', k3: 'Дата создания', k4: 'Время работы', k5: 'База данных', k6: 'Сетевой узел',
       v2: 'Halloween Edition', dev: 'Разработчик', ai: 'ИИ-Архитекторы', sponsor: 'Спонсор',
       title2: '🦇 Хэллоуинская Игра', sub2: 'Лови тыквы, избегай проклятий',
-      score: 'Счет', time: 'Время', best: 'Рекорд', start: 'Старт', stop: 'Стоп',
+      score: 'Счет', time: 'Время', best: 'Рекорд', streak: 'Серия', start: 'Старт', stop: 'Стоп',
+      share: '📤 Поделиться рекордом',
       ach: '🎃 Достижения сессии',
       ach1: '❌ Охотник за призраками (10)', ach2: '❌ Повелитель тыкв (25)', ach3: '❌ Комбо-мастер (x5)',
       ach1on: '🏆 Охотник за призраками (Получено!)', ach2on: '🏆 Повелитель тыкв (Получено!)', ach3on: '🏆 Комбо-мастер (Получено!)',
       themePumpkin: 'Тема: Тыква', themeSamhain: 'Тема: Самайн',
       musicOff: 'Музыка: выкл', musicOn: 'Музыка: вкл',
-      combo: 'Комбо x', clockFmt: function (h, m, s) { return h + 'ч ' + m + 'мин ' + s + 'сек'; }
+      voiceOn: 'Голос: вкл', voiceOff: 'Голос: выкл',
+      sfxOn: 'Звуки: вкл', sfxOff: 'Звуки: выкл',
+      hardcoreOff: 'Хардкор: выкл', hardcoreOn: 'Хардкор: вкл',
+      combo: 'Комбо x',
+      shareText: function (s) { return 'Мой рекорд в хэллоуинской игре: ' + s + ' очков! 🎃🦇'; },
+      copied: 'Скопировано!',
+      clockFmt: function (h, m, s) { return h + 'ч ' + m + 'мин ' + s + 'сек'; }
     },
     en: {
       title1: 'MZ Tech Node Monitor', sub1: 'Industrial Halloween Monolith',
@@ -259,13 +326,20 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       k1: 'Node name', k2: 'Edition', k3: 'Created', k4: 'Uptime', k5: 'Database', k6: 'Network node',
       v2: 'Halloween Edition', dev: 'Developer', ai: 'AI Architects', sponsor: 'Sponsor',
       title2: '🦇 Halloween Game', sub2: 'Catch pumpkins, avoid curses',
-      score: 'Score', time: 'Time', best: 'Best', start: 'Start', stop: 'Stop',
+      score: 'Score', time: 'Time', best: 'Best', streak: 'Streak', start: 'Start', stop: 'Stop',
+      share: '📤 Share best score',
       ach: '🎃 Session achievements',
       ach1: '❌ Ghost hunter (10)', ach2: '❌ Pumpkin lord (25)', ach3: '❌ Combo master (x5)',
       ach1on: '🏆 Ghost hunter (Unlocked!)', ach2on: '🏆 Pumpkin lord (Unlocked!)', ach3on: '🏆 Combo master (Unlocked!)',
       themePumpkin: 'Theme: Pumpkin', themeSamhain: 'Theme: Samhain',
       musicOff: 'Music: off', musicOn: 'Music: on',
-      combo: 'Combo x', clockFmt: function (h, m, s) { return h + 'h ' + m + 'm ' + s + 's'; }
+      voiceOn: 'Voice: on', voiceOff: 'Voice: off',
+      sfxOn: 'SFX: on', sfxOff: 'SFX: off',
+      hardcoreOff: 'Hardcore: off', hardcoreOn: 'Hardcore: on',
+      combo: 'Combo x',
+      shareText: function (s) { return 'My best score in the Halloween game: ' + s + ' points! 🎃🦇'; },
+      copied: 'Copied!',
+      clockFmt: function (h, m, s) { return h + 'h ' + m + 'm ' + s + 's'; }
     }
   };
   var lang = 'ru';
@@ -278,18 +352,22 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     setText('t-k4', t.k4); setText('t-k5', t.k5); setText('t-k6', t.k6);
     setText('t-v2', t.v2); setText('t-dev', t.dev); setText('t-ai', t.ai); setText('t-sponsor', t.sponsor);
     setText('t-title2', t.title2); setText('t-sub2', t.sub2);
-    setText('t-score', t.score); setText('t-time', t.time); setText('t-best', t.best);
-    setText('start-btn', t.start); setText('stop-btn', t.stop); setText('t-ach', t.ach);
+    setText('t-score', t.score); setText('t-time', t.time); setText('t-best', t.best); setText('t-streak', t.streak);
+    setText('start-btn', t.start); setText('stop-btn', t.stop); setText('share-btn', t.share); setText('t-ach', t.ach);
     if (el.ach1 && !el.ach1.classList.contains('on')) el.ach1.textContent = t.ach1;
     if (el.ach2 && !el.ach2.classList.contains('on')) el.ach2.textContent = t.ach2;
     if (el.ach3 && !el.ach3.classList.contains('on')) el.ach3.textContent = t.ach3;
     el.themeLabel.textContent = (theme === 'pumpkin') ? t.themePumpkin : t.themeSamhain;
     el.musicLabel.textContent = music.on ? t.musicOn : t.musicOff;
+    el.voiceLabel.textContent = voiceOn ? t.voiceOn : t.voiceOff;
+    el.sfxLabel.textContent = sfxOn ? t.sfxOn : t.sfxOff;
+    el.hardcoreLabel.textContent = hardcore ? t.hardcoreOn : t.hardcoreOff;
     el.langRu.classList.toggle('active', lang === 'ru');
     el.langEn.classList.toggle('active', lang === 'en');
+    updateCombo();
   }
-  if (el.langRu) el.langRu.addEventListener('click', function () { lang = 'ru'; applyLang(); music.voice = music.pickVoice(); });
-  if (el.langEn) el.langEn.addEventListener('click', function () { lang = 'en'; applyLang(); music.voice = music.pickVoice(); });
+  if (el.langRu) el.langRu.addEventListener('click', function () { lang = 'ru'; music.voice = music.pickVoice(); applyLang(); });
+  if (el.langEn) el.langEn.addEventListener('click', function () { lang = 'en'; music.voice = music.pickVoice(); applyLang(); });
 
   /* ================== ЧАСЫ ================== */
   var sec = 0;
@@ -305,10 +383,31 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     theme = (theme === 'pumpkin') ? 'samhain' : 'pumpkin';
     document.body.classList.toggle('theme-samhain', theme === 'samhain');
     el.themeIcon.textContent = (theme === 'samhain') ? '🌿' : '🎃';
-    el.themeLabel.textContent = (theme === 'samhain') ? LANG[lang].themeSamhain : LANG[lang].themePumpkin;
+    applyLang();
   });
 
-  /* ================== МУЗЫКА (СИНТЕЗ, БЕЗ ФАЙЛОВ) ================== */
+  /* ================== ТУМБЛЕРЫ ================== */
+  var voiceOn = true, sfxOn = true, hardcore = false;
+  if (el.voiceToggle) el.voiceToggle.addEventListener('click', function () {
+    voiceOn = !voiceOn;
+    el.voiceToggle.classList.toggle('active', voiceOn);
+    el.voiceIcon.textContent = voiceOn ? '🗣️' : '🔇';
+    applyLang();
+  });
+  if (el.sfxToggle) el.sfxToggle.addEventListener('click', function () {
+    sfxOn = !sfxOn;
+    el.sfxToggle.classList.toggle('active', sfxOn);
+    el.sfxIcon.textContent = sfxOn ? '🔔' : '🔕';
+    applyLang();
+  });
+  if (el.hardcoreToggle) el.hardcoreToggle.addEventListener('click', function () {
+    hardcore = !hardcore;
+    el.hardcoreToggle.classList.toggle('active', hardcore);
+    el.hardcoreIcon.textContent = hardcore ? '☠️' : '💀';
+    applyLang();
+  });
+
+  /* ================== МУЗЫКА ================== */
   var music = {
     ctx: null, master: null, timer: null, on: false, step: 0,
     bpm: 128,
@@ -317,6 +416,12 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       293.66, 293.66, 349.23, 293.66, 392.00, 349.23, 293.66, 0
     ],
     bass: [73.42, 73.42, 87.31, 87.31, 73.42, 73.42, 65.41, 65.41],
+    lyrics: [
+      { beat: 0,  ru: 'Спаки, жуткий скелет', en: 'Spooky, scary skeleton' },
+      { beat: 4,  ru: 'По спине холодок',     en: 'Shivers down your spine' },
+      { beat: 8,  ru: 'Тени шепчут в ночи',   en: 'Shadows whisper tonight' },
+      { beat: 12, ru: 'Хэллоуин близок',      en: 'Halloween is near' }
+    ],
     voice: null,
 
     ensure: function () {
@@ -374,6 +479,19 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       src.start(start);
     },
 
+    speak: function (text) {
+      if (!voiceOn || !('speechSynthesis' in window) || !text) return;
+      try {
+        var u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.9;
+        u.pitch = 0.4;
+        u.volume = 0.55;
+        if (this.voice) u.voice = this.voice;
+        u.lang = (lang === 'ru') ? 'ru-RU' : 'en-US';
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    },
+
     tick: function () {
       if (!this.on || !this.ctx) return;
       if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
@@ -388,6 +506,11 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       if (i % 2 === 0) this.note(b, t, stepDur * 1.5, 'sawtooth', 0.07);
       if (i % 8 === 0 && m) this.note(m * 2, t, 1.0, 'sine', 0.05);
 
+      for (var k = 0; k < this.lyrics.length; k++) {
+        if (this.lyrics[k].beat === i) {
+          this.speak(lang === 'ru' ? this.lyrics[k].ru : this.lyrics[k].en);
+        }
+      }
       this.step++;
     },
 
@@ -401,19 +524,20 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       this.timer = setInterval(function () { self.tick(); }, 60000 / this.bpm / 2);
       el.musicToggle.classList.add('playing');
       el.musicIcon.textContent = '🎵';
-      el.musicLabel.textContent = LANG[lang].musicOn;
+      applyLang();
     },
 
     stop: function () {
       this.on = false;
       if (this.timer) { clearInterval(this.timer); this.timer = null; }
+      if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch (e) {} }
       el.musicToggle.classList.remove('playing');
       el.musicIcon.textContent = '🔇';
-      el.musicLabel.textContent = LANG[lang].musicOff;
+      applyLang();
     },
 
     blip: function (f1, f2, vol, type) {
-      if (!this.ctx) return;
+      if (!sfxOn || !this.ctx) return;
       if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
       try {
         var t = this.ctx.currentTime;
@@ -436,10 +560,69 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     if (music.on) music.stop(); else music.start();
   });
 
+  /* ================== ФИШКИ: ФОНАРЬ, МЫШИ, ДОЖДЬ ================== */
+  // Фонарь
+  var torch = document.createElement('div');
+  torch.className = 'torch';
+  document.body.appendChild(torch);
+  document.addEventListener('mousemove', function (e) {
+    torch.style.left = e.clientX + 'px';
+    torch.style.top = e.clientY + 'px';
+    torch.style.opacity = 1;
+  });
+  document.addEventListener('mouseleave', function () { torch.style.opacity = 0; });
+
+  // Мыши
+  function spawnBat() {
+    var bat = document.createElement('div');
+    bat.className = 'bat';
+    bat.textContent = '🦇';
+    var startY = Math.random() * window.innerHeight * 0.6;
+    var dir = Math.random() < 0.5 ? 1 : -1;
+    var startX = dir === 1 ? -60 : window.innerWidth + 60;
+    bat.style.fontSize = (18 + Math.random() * 16) + 'px';
+    bat.style.top = startY + 'px';
+    bat.style.left = startX + 'px';
+    bat.style.transition = 'left 8s linear, top 8s linear';
+    document.body.appendChild(bat);
+    requestAnimationFrame(function () {
+      bat.style.left = (dir === 1 ? window.innerWidth + 60 : -60) + 'px';
+      bat.style.top = (startY + (Math.random() * 200 - 100)) + 'px';
+    });
+    setTimeout(function () { if (bat.parentNode) bat.parentNode.removeChild(bat); }, 8200);
+  }
+  setInterval(function () { if (Math.random() < 0.7) spawnBat(); }, 18000);
+
+  // Костяной дождь
+  var boneRainUsed = false;
+  function boneRain() {
+    for (var i = 0; i < 18; i++) {
+      (function (idx) {
+        setTimeout(function () {
+          var b = document.createElement('div');
+          b.className = 'bone';
+          b.textContent = Math.random() < 0.5 ? '🦴' : '💀';
+          var x = Math.random() * window.innerWidth;
+          b.style.fontSize = (14 + Math.random() * 14) + 'px';
+          b.style.left = x + 'px';
+          b.style.top = '-30px';
+          b.style.transition = 'top 1.6s ease-in, transform 1.6s linear, opacity 1.6s';
+          document.body.appendChild(b);
+          requestAnimationFrame(function () {
+            b.style.top = (window.innerHeight + 40) + 'px';
+            b.style.transform = 'rotate(' + (Math.random() * 720 - 360) + 'deg)';
+          });
+          setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 1700);
+        }, idx * 60);
+      })(i);
+    }
+  }
+
   /* ================== ИГРА ================== */
   var active = false, gameLoop = null, timerLoop = null, specialTimer = null;
   var score = 0, best = 0, timeLeft = 30;
   var combo = { count: 0, max: 0, last: 0 };
+  var streak = 0, streakTimer = null;
   var pState = 'normal';
 
   try { var sb = localStorage.getItem('mz_halloween_best'); if (sb) best = parseInt(sb, 10) || 0; } catch (e) {}
@@ -449,12 +632,31 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     if (!el.arena) return { w: 300, h: 150 };
     return { w: Math.max(10, el.arena.clientWidth - 50), h: Math.max(10, el.arena.clientHeight - 50) };
   }
+
+  function ghostTrail(x, y, ch) {
+    if (!el.arena) return;
+    var g = document.createElement('div');
+    g.className = 'ghost-trail';
+    g.textContent = ch || '🎃';
+    g.style.left = x + 'px';
+    g.style.top = y + 'px';
+    el.arena.appendChild(g);
+    setTimeout(function () { g.style.opacity = 0; }, 30);
+    setTimeout(function () { if (g.parentNode) g.parentNode.removeChild(g); }, 700);
+  }
+
   function movePumpkin() {
     if (!active || !el.pumpkin) return;
     var s = arenaSize();
-    el.pumpkin.style.left = Math.floor(Math.random() * s.w) + 'px';
-    el.pumpkin.style.top = Math.floor(Math.random() * s.h) + 'px';
+    var oldX = parseFloat(el.pumpkin.style.left) || 0;
+    var oldY = parseFloat(el.pumpkin.style.top) || 0;
+    ghostTrail(oldX, oldY, pState === 'bonus' ? '🕷️' : (pState === 'cursed' ? '👿' : '🎃'));
+    var newX = Math.floor(Math.random() * s.w);
+    var newY = Math.floor(Math.random() * s.h);
+    el.pumpkin.style.left = newX + 'px';
+    el.pumpkin.style.top = newY + 'px';
   }
+
   function setState(st) {
     pState = st;
     if (!el.pumpkin) return;
@@ -463,9 +665,11 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     else if (st === 'cursed') { el.pumpkin.classList.add('cursed'); el.pumpkin.textContent = '👿'; }
     else el.pumpkin.textContent = '🎃';
   }
+
   function scheduleSpecial() {
     clearTimeout(specialTimer);
     if (!active) return;
+    var base = hardcore ? 4000 : 2500;
     specialTimer = setTimeout(function () {
       if (!active) return;
       var r = Math.random();
@@ -473,8 +677,20 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       else if (r < 0.55) setState('cursed');
       else setState('normal');
       scheduleSpecial();
-    }, 2500 + Math.random() * 3000);
+    }, base + Math.random() * 3000);
   }
+
+  function floatScore(x, y, txt, cls) {
+    if (!el.arena) return;
+    var f = document.createElement('div');
+    f.className = 'float-score ' + cls;
+    f.textContent = txt;
+    f.style.left = x + 'px';
+    f.style.top = y + 'px';
+    el.arena.appendChild(f);
+    setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, 950);
+  }
+
   function updateScore() {
     if (el.score) el.score.textContent = score;
     if (score > best) {
@@ -483,52 +699,73 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
       try { localStorage.setItem('mz_halloween_best', best); } catch (e) {}
     }
   }
+
+  function updateStreakUI() {
+    if (el.streak) el.streak.textContent = streak;
+  }
+
+  function bumpStreak() {
+    streak++;
+    updateStreakUI();
+    clearTimeout(streakTimer);
+    streakTimer = setTimeout(function () { streak = 0; updateStreakUI(); }, 1500);
+  }
+
   function evalAch() {
     var t = LANG[lang];
     if (score >= 10 && el.ach1) { el.ach1.textContent = t.ach1on; el.ach1.classList.add('on'); }
     if (score >= 25 && el.ach2) { el.ach2.textContent = t.ach2on; el.ach2.classList.add('on'); }
     if (combo.max >= 5 && el.ach3) { el.ach3.textContent = t.ach3on; el.ach3.classList.add('on'); }
   }
+
   function updateCombo() {
     if (!el.combo) return;
-    if (combo.count >= 2) {
-      el.combo.textContent = LANG[lang].combo + combo.count + '!';
-      el.combo.classList.add('show');
-    } else el.combo.classList.remove('show');
+    if (combo.count >= 2) { el.combo.textContent = LANG[lang].combo + combo.count + '!'; el.combo.classList.add('show'); }
+    else el.combo.classList.remove('show');
   }
+
   function registerClick() {
     var n = Date.now();
     if (n - combo.last < 900) combo.count++; else combo.count = 1;
     combo.last = n;
     if (combo.count > combo.max) combo.max = combo.count;
     updateCombo();
+    if (combo.count === 5 && !boneRainUsed) { boneRainUsed = true; boneRain(); }
   }
+
   function resetUI() {
-    score = 0; timeLeft = 30;
+    score = 0; timeLeft = 30; streak = 0; boneRainUsed = false;
     combo = { count: 0, max: 0, last: 0 };
     if (el.score) el.score.textContent = '0';
     if (el.timer) el.timer.textContent = '30';
+    if (el.streak) el.streak.textContent = '0';
     if (el.combo) { el.combo.textContent = ''; el.combo.classList.remove('show'); }
     var t = LANG[lang];
     if (el.ach1) { el.ach1.textContent = t.ach1; el.ach1.classList.remove('on'); }
     if (el.ach2) { el.ach2.textContent = t.ach2; el.ach2.classList.remove('on'); }
     if (el.ach3) { el.ach3.textContent = t.ach3; el.ach3.classList.remove('on'); }
   }
+
   function stopGame() {
     active = false;
     if (gameLoop) { clearInterval(gameLoop); gameLoop = null; }
     if (timerLoop) { clearInterval(timerLoop); timerLoop = null; }
     clearTimeout(specialTimer); specialTimer = null;
+    clearTimeout(streakTimer);
+    if (el.gameCard) el.gameCard.classList.remove('active');
     setState('normal');
     if (el.pumpkin) { el.pumpkin.style.left = '45%'; el.pumpkin.style.top = '35%'; }
   }
+
   function startGame() {
     stopGame();
     resetUI();
     active = true;
+    if (el.gameCard) el.gameCard.classList.add('active');
     setState('normal');
     movePumpkin();
-    gameLoop = setInterval(movePumpkin, 750);
+    var speed = hardcore ? 375 : 750;
+    gameLoop = setInterval(movePumpkin, speed);
     timerLoop = setInterval(function () {
       timeLeft--;
       if (el.timer) el.timer.textContent = timeLeft;
@@ -536,18 +773,42 @@ h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:co
     }, 1000);
     scheduleSpecial();
   }
+
   if (el.startBtn) el.startBtn.addEventListener('click', startGame);
   if (el.stopBtn) el.stopBtn.addEventListener('click', stopGame);
 
-  if (el.pumpkin) el.pumpkin.addEventListener('click', function () {
+  if (el.pumpkin) el.pumpkin.addEventListener('click', function (e) {
     if (!active) return;
     registerClick();
-    if (pState === 'bonus') { score += 3; music.bonusSfx(); setState('normal'); }
-    else if (pState === 'cursed') { score = Math.max(0, score - 2); music.cursedSfx(); setState('normal'); }
-    else { score += 1; music.catchSfx(); }
+    bumpStreak();
+    var x = parseFloat(el.pumpkin.style.left) || 0;
+    var y = parseFloat(el.pumpkin.style.top) || 0;
+    var mult = hardcore ? 2 : 1;
+    if (pState === 'bonus') {
+      score += 3 * mult; music.bonusSfx(); floatScore(x, y, '+' + (3 * mult), 'plus3'); setState('normal');
+    } else if (pState === 'cursed') {
+      score = Math.max(0, score - 2); music.cursedSfx(); floatScore(x, y, '-2', 'minus');
+      document.body.classList.add('shake');
+      setTimeout(function () { document.body.classList.remove('shake'); }, 400);
+      setState('normal');
+    } else {
+      score += 1 * mult; music.catchSfx(); floatScore(x, y, '+' + (1 * mult), 'plus');
+    }
     updateScore();
     evalAch();
     movePumpkin();
+  });
+
+  if (el.shareBtn) el.shareBtn.addEventListener('click', function () {
+    var txt = LANG[lang].shareText(best);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () {
+        el.shareBtn.textContent = LANG[lang].copied;
+        setTimeout(function () { el.shareBtn.textContent = LANG[lang].share; }, 1500);
+      }).catch(function () {});
+    } else {
+      try { prompt('Ctrl+C:', txt); } catch (e) {}
+    }
   });
 
   window.addEventListener('resize', function () {
