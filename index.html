@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель МЗ — Halloween Monolith v4.0</title>
+<title>Панель МЗ — Halloween Monolith v4.1</title>
 <style>
 :root{--bg:#06060c;--panel:rgba(20,20,32,.55);--text:#fff;--muted:#8e8ea3;--accent:#ff6200;--accent-2:#8e44ad;--green:#2ecc71;--red:#c0392b;--gold:#f39c12;--border:rgba(255,98,0,.18);--border-2:rgba(142,68,173,.25);--bg-grad:radial-gradient(circle at 50% 20%,#1a0f2e 0%,#06060c 70%);--shadow:0 10px 40px -10px rgba(0,0,0,.6);--radius:22px;}
 body.theme-samhain{--bg-grad:radial-gradient(circle at 50% 20%,#0b1a12 0%,#040807 70%);--accent:#2ecc71;--accent-2:#c0392b;--border:rgba(46,204,113,.22);--border-2:rgba(192,57,43,.28);}
@@ -38,7 +38,8 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
 .arena{position:relative;width:100%;height:230px;margin-top:14px;border-radius:16px;background:rgba(0,0,0,.55);border:1px solid var(--border-2);overflow:hidden;cursor:crosshair;}
 #pumpkin{position:absolute;top:38%;left:45%;font-size:42px;cursor:pointer;z-index:3;filter:drop-shadow(0 0 10px var(--accent));transition:left .12s,top .12s,transform .08s;}
 #pumpkin:active{transform:scale(.85);}#pumpkin.bonus{filter:drop-shadow(0 0 16px var(--gold));}#pumpkin.cursed{filter:drop-shadow(0 0 16px var(--red)) saturate(1.8);}#pumpkin.golden{filter:drop-shadow(0 0 20px var(--gold)) saturate(2);}
-#snitch{position:absolute;font-size:22px;cursor:pointer;z-index:3;display:none;filter:drop-shadow(0 0 10px #f1c40f);transition:left .1s linear,top .1s linear;}
+#snitch{position:absolute;font-size:28px;cursor:pointer;z-index:4;display:none;filter:drop-shadow(0 0 15px #f1c40f);animation:float 1s infinite alternate;}
+@keyframes float{0%{transform:translateY(0) rotate(-10deg);}100%{transform:translateY(-10px) rotate(10deg);}}
 .stats{display:flex;justify-content:space-between;gap:6px;margin-top:14px;font-weight:700;font-size:12.5px;flex-wrap:wrap;}
 #score{color:var(--accent-2);}#timer{color:var(--accent);}#best{color:var(--green);}#streak{color:var(--gold);}
 #combo{min-height:18px;margin-top:6px;text-align:center;font-size:12.5px;font-weight:700;color:var(--green);opacity:0;transition:opacity .3s;}#combo.show{opacity:1;}
@@ -67,10 +68,17 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
 <div class="background-skeletons" id="bg-skeletons"></div>
 <div class="fog"></div>
 <div class="garland"><span>🎃</span><span>🦇</span><span>💀</span><span>🕷️</span><span>🎃</span><span>🦇</span><span>👻</span><span>🎃</span><span>🕸️</span><span>💀</span></div>
-<svg class="web tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.22)" stroke-width="0.8" fill="none"/></svg>
-<svg class="web tr" viewBox="0 0 100 100"></svg><svg class="web bl" viewBox="0 0 100 100"></svg><svg class="web br" viewBox="0 0 100 100"></svg>
-<button class="help-btn" id="help-btn" title="Обучение">?</button>
 
+<!-- ПАУТИНА ВОЗВРАЩЕНА -->
+<svg class="web tl" viewBox="0 0 100 100">
+  <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.22)" stroke-width="0.8" fill="none"/>
+  <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" stroke="rgba(255,98,0,.16)" stroke-width="0.6" fill="none"/>
+</svg>
+<svg class="web tr" viewBox="0 0 100 100"></svg>
+<svg class="web bl" viewBox="0 0 100 100"></svg>
+<svg class="web br" viewBox="0 0 100 100"></svg>
+
+<button class="help-btn" id="help-btn" title="Обучение">?</button>
 <div class="topbar">
   <div class="lang-group"><button class="lang-btn active" id="lang-ru">RU</button><button class="lang-btn" id="lang-en">EN</button></div>
   <div class="pill" id="theme-toggle"><span id="theme-icon">🎃</span><span id="theme-label">Тема: Тыква</span></div>
@@ -79,12 +87,10 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
   <div class="pill hardcore" id="hardcore-toggle"><span id="hardcore-icon">💀</span><span id="hardcore-label">Хардкор: выкл</span></div>
   <div class="pill" id="skeleton-toggle"><span id="skel-icon">💃</span><span id="skel-label">Скелеты: вкл</span></div>
 </div>
-
 <div class="tabs">
   <button class="tab-btn active" id="tab-main-btn">🎮 Основное</button>
   <button class="tab-btn" id="tab-vers-btn">📜 Версия и изменения</button>
 </div>
-
 <div class="tab-content active" id="tab-main">
   <div class="grid">
     <div class="card" id="tour-card-info">
@@ -128,14 +134,12 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
     </div>
   </div>
 </div>
-
 <div class="tab-content" id="tab-vers">
   <div class="changelog">
     <h3>📜 История версий — Halloween Monolith</h3>
     <ul id="changelog-list"></ul>
   </div>
 </div>
-
 <div class="tour-overlay" id="tour-overlay"></div>
 <div class="tour-highlight" id="tour-highlight"></div>
 <div class="tour-tooltip" id="tour-tooltip">
@@ -154,16 +158,16 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
       t2:'🦇 Хэллоуинская Игра',s2:'Лови тыквы, лови снитч!', sc:'Счет',tm:'Время',bs:'Рекорд',str:'Серия',go:'Старт',stop:'Стоп', share:'📤 Поделиться', copied:'Скопировано!', ach:'🎃 Достижения', a1:'❌ Охотник (10)',a2:'❌ Повелитель (25)',a3:'❌ Комбо (x5)',a4:'❌ Ловец Снитча',
       a1o:'🏆 Охотник!',a2o:'🏆 Повелитель!',a3o:'🏆 Комбо!',a4o:'🏆 Ловец Снитча!', thP:'Тема: Тыква', thS:'Тема: Самайн', mOff:'Музыка: выкл', mOn:'Музыка: вкл', sfxOn:'Звуки: вкл', sfxOff:'Звуки: выкл', hcOff:'Хардкор: выкл', hcOn:'Хардкор: вкл', skOn:'Скелеты: вкл', skOff:'Скелеты: выкл', combo:'Комбо x',
       shareTxt:function(v){return 'Мой рекорд: '+v+' очков!';}, clk:function(h,m,s){return h+'ч '+m+'мин '+s+'сек';},
-      tour:[{ti:'Добро пожаловать!',tx:'Это панель.',sel:null},{ti:'Вкладки',tx:'Смотри историю.',sel:'.tabs'},{ti:'Музыка',tx:'Включает трек.',sel:'#music-toggle'},{ti:'Игра',tx:'Лови тыквы!',sel:'#game-card'},{ti:'Готово!',tx:'Кнопка «?» запустит тур.',sel:null}],
-      tourUpdate:[{ti:'🎉 Обновление v4.0!',tx:'Пинг, снитч, мыши и 30 фишек.',sel:null},{ti:'Пинг',tx:'Проверка скорости.',sel:'#ping-display'},{ti:'История',tx:'Список версий.',sel:'.tabs'},{ti:'Приятной игры!',tx:'Спонсор с нами.',sel:null}]
+      tour:[{ti:'Добро пожаловать!',tx:'Это панель.',sel:null},{ti:'Вкладки',tx:'Смотри историю.',sel:'.tabs'},{ti:'Музыка',tx:'Включает трек.',sel:'#music-toggle'},{ti:'Игра',tx:'Лови тыквы и снитч!',sel:'#game-card'},{ti:'Готово!',tx:'Кнопка «?» запустит тур.',sel:null}],
+      tourUpdate:[{ti:'🎉 Обновление v4.1!',tx:'Снитч, мыши и 30 фишек.',sel:null},{ti:'Пинг',tx:'Проверка скорости.',sel:'#ping-display'},{ti:'История',tx:'Список версий.',sel:'.tabs'},{ti:'Приятной игры!',tx:'Спонсор с нами.',sel:null}]
     },
     en: {
       t1:'MZ Tech Node Monitor', s1:'Industrial Halloween Monolith', st:'System active', k1:'Node name',k2:'Edition',k3:'Date',k4:'Uptime',k5:'Database',k6:'Ping', v2:'Halloween Edition',dev:'Developer',ai:'AI',sp:'Sponsor',
       t2:'🦇 Halloween Game',s2:'Catch pumpkins, catch snitch!', sc:'Score',tm:'Time',bs:'Best',str:'Streak',go:'Start',stop:'Stop', share:'📤 Share', copied:'Copied!', ach:'🎃 Achievements', a1:'❌ Hunter (10)',a2:'❌ Lord (25)',a3:'❌ Combo (x5)',a4:'❌ Snitch Catcher',
       a1o:'🏆 Hunter!',a2o:'🏆 Lord!',a3o:'🏆 Combo!',a4o:'🏆 Snitch Catcher!', thP:'Theme: Pumpkin', thS:'Theme: Samhain', mOff:'Music: off', mOn:'Music: on', sfxOn:'SFX: on', sfxOff:'SFX: off', hcOff:'Hardcore: off', hcOn:'Hardcore: on', skOn:'Skeletons: on', skOff:'Skeletons: off', combo:'Combo x',
       shareTxt:function(v){return 'My best: '+v+' points!';}, clk:function(h,m,s){return h+'h '+m+'m '+s+'s';},
-      tour:[{ti:'Welcome!',tx:'Panel.',sel:null},{ti:'Tabs',tx:'Check history.',sel:'.tabs'},{ti:'Music',tx:'Toggles track.',sel:'#music-toggle'},{ti:'Game',tx:'Catch!',sel:'#game-card'},{ti:'Done!',tx:'"?" re-opens.',sel:null}],
-      tourUpdate:[{ti:'🎉 Update v4.0!',tx:'Ping, snitch, bats, 30 features.',sel:null},{ti:'Ping',tx:'Speed check.',sel:'#ping-display'},{ti:'History',tx:'Versions.',sel:'.tabs'},{ti:'Enjoy!',tx:'Sponsor is back.',sel:null}]
+      tour:[{ti:'Welcome!',tx:'Panel.',sel:null},{ti:'Tabs',tx:'Check history.',sel:'.tabs'},{ti:'Music',tx:'Toggles track.',sel:'#music-toggle'},{ti:'Game',tx:'Catch pumpkins and snitch!',sel:'#game-card'},{ti:'Done!',tx:'"?" re-opens.',sel:null}],
+      tourUpdate:[{ti:'🎉 Update v4.1!',tx:'Snitch, bats, 30 features.',sel:null},{ti:'Ping',tx:'Speed check.',sel:'#ping-display'},{ti:'History',tx:'Versions.',sel:'.tabs'},{ti:'Enjoy!',tx:'Sponsor is back.',sel:null}]
     }
   };
   var lang='ru', theme='pumpkin', sfxOn=true, hardcore=false, skelOn=true;
@@ -172,7 +176,7 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
   if($('tab-main-btn')) $('tab-main-btn').addEventListener('click', function(){ $('tab-main').classList.add('active'); $('tab-vers').classList.remove('active'); this.classList.add('active'); $('tab-vers-btn').classList.remove('active'); });
   if($('tab-vers-btn')) $('tab-vers-btn').addEventListener('click', function(){ $('tab-main').classList.remove('active'); $('tab-vers').classList.add('active'); this.classList.add('active'); $('tab-main-btn').classList.remove('active'); });
 
-  var versions = [{v:'1.0', text:'Первый релиз.'},{v:'2.0', text:'Вкладки, тур.'},{v:'3.0', text:'YouTube музыка, скелеты.'},{v:'4.0', text:'Пинг, Снитч, Летучие мыши, 30 фишек.'}];
+  var versions = [{v:'1.0', text:'Первый релиз.'},{v:'2.0', text:'Вкладки, тур.'},{v:'3.0', text:'Музыка, скелеты.'},{v:'4.0', text:'Пинг, Снитч, Летучие мыши, 30 фишек.'}];
   var list = $('changelog-list'); if (list) { list.innerHTML = ''; versions.forEach(function(item) { var li = document.createElement('li'); li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; list.appendChild(li); }); }
 
   /* ПИНГ */
@@ -293,7 +297,6 @@ h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}h1{color:var(--accent)
     if(!active || !snitchActive) return;
     score+=25; snitchActive=false; this.style.display='none';
     sfx.bonusSfx(); sparkAt(e.clientX,e.clientY); updateScore(); evalAch();
-    // Дополнительный дождь искр
     for(var i=0;i<5;i++){ setTimeout(function(){ sparkAt(e.clientX+Math.random()*50-25, e.clientY+Math.random()*50-25); }, i*100); }
   });
 
