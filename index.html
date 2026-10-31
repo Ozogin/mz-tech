@@ -81,20 +81,33 @@
         .dev-name { color: var(--accent); font-weight: bold; }
         .ai-name { color: var(--accent-purple); font-weight: bold; }
         .sponsor-name { color: #2ecc71; font-weight: bold; }
+        
+        /* Игровая зона HUD */
         .game-area { width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 12px; position: relative; margin-top: 15px; overflow: hidden; border: 1px solid rgba(142, 68, 173, 0.3); }
-        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 40%; left: 45%; filter: drop-shadow(0 0 8px var(--accent)); transition: all 0.1s ease; }
-        .score-board { font-size: 18px; margin-top: 15px; font-weight: 700; color: #fff; }
+        #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 40%; left: 45%; filter: drop-shadow(0 0 8px var(--accent)); transition: all 0.1s ease; z-index: 10; }
+        .score-board { font-size: 16px; margin-top: 15px; font-weight: 700; color: #fff; display: flex; justify-content: space-between; width: 100%; padding: 0 10px; box-sizing: border-box; }
         .btn-group { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
-        .btn { flex: 1; background: var(--accent-purple); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .btn { flex: 1; background: var(--accent-purple); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s ease; }
+        .btn:hover { background: #9b59b6; transform: translateY(-1px); }
         .btn-stop { background: #c0392b; }
-        .audio-banner { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 10px 20px; border-radius: 30px; margin-bottom: 25px; font-size: 13px; color: #a0a0b0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .btn-stop:hover { background: #e74c3c; }
+        .audio-banner { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 12px 20px; border-radius: 30px; margin-bottom: 25px; font-size: 13px; color: #a0a0b0; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s; text-shadow: 0 0 5px rgba(0,0,0,0.5); }
+        .audio-banner:hover { background: rgba(255,255,255,0.08); border-color: var(--accent); color: #fff; }
+        
+        /* Новая фишка: Панель хэллоуинских достижений */
+        .achievements-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,121,0,0.1); width: 100%; margin-top: 15px; padding: 10px; border-radius: 8px; font-size: 12px; text-align: left; }
+        .ach-title { font-weight: bold; color: var(--accent); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+        .ach-item.unlocked { color: #2ecc71; font-weight: 600; }
     </style>
 </head>
 <body>
     <div class="fog"></div>
+
     <div class="audio-banner" id="audio-btn">
         🎵 Нажми сюда, чтобы включить громкую хэллоуинскую музыку
     </div>
+
     <div class="container">
         <div class="hud-card">
             <h1>Мониторинг Технички МЗ</h1>
@@ -113,96 +126,163 @@
                 Официальный Спонсор: <span class="sponsor-name">Alberto Pepper</span>
             </div>
         </div>
+
         <div class="hud-card game">
             <h2>🦇 Хэллоуинская Игра</h2>
             <p style="font-size: 13px; color: #8e8e9f; margin: 0;">Поймай летящую неоновую тыкву!</p>
-            <div class="game-area">
+            <div class="game-area" id="g-area">
                 <div id="pumpkin">🎃</div>
             </div>
-            <div class="score-board">Поймано тыкв: <span id="score" style="color: var(--accent-purple);">0</span></div>
+            <div class="score-board">
+                <div>Счет: <span id="score" style="color: var(--accent-purple);">0</span> <span id="multiplier" style="color: var(--accent); font-size:12px;"></span></div>
+                <div>Рекорд: <span id="best-score" style="color: #2ecc71;">0</span></div>
+            </div>
             <div class="btn-group">
                 <button class="btn" id="btn-start">Старт</button>
                 <button class="btn btn-stop" id="btn-stop">Стоп</button>
             </div>
+            
+            <!-- Новая фишка: Блок наград -->
+            <div class="achievements-box">
+                <div class="ach-title">🎃 Достижения сессии:</div>
+                <div class="ach-item" id="ach-1">❌ Охотник за призраками (10 очков)</div>
+                <div class="ach-item" id="ach-2">❌ Повелитель тыкв (25 очков)</div>
+            </div>
         </div>
     </div>
+
     <script>
+        // ГЛОБАЛЬНЫЙ КОРРЕКТНЫЙ ИНЖЕНЕРНЫЙ СКРИПТ
         var score = 0;
+        var bestScore = 0;
         var gameInterval = null;
         var gameActive = false;
         var audioCtx = null;
         var ambientOsc = null;
+        var combo = 0;
 
+        // 1. Сверхточный независимый счетчик аптайма реального времени
         var secondsPassed = 0;
         function runRealtimeClock() {
             secondsPassed++;
             var h = Math.floor(secondsPassed / 3600);
             var m = Math.floor((secondsPassed % 3600) / 60);
             var s = secondsPassed % 60;
-            document.getElementById("b-uptime").innerText = h + "ч " + m + "мин " + s + "сек";
+            var uptimeElement = document.getElementById("b-uptime");
+            if (uptimeElement) {
+                uptimeElement.innerText = h + "ч " + m + "мин " + s + "сек";
+            }
         }
         setInterval(runRealtimeClock, 1000);
 
+        // 2. Аудиодвижок: Громкий атмосферный хоррор-эмбиент
         function initAtmosphere() {
             if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            ambientOsc = audioCtx.createOscillator();
-            var ambientGain = audioCtx.createGain();
-            ambientOsc.type = "triangle";
-            ambientOsc.frequency.setValueAtTime(65.41, audioCtx.currentTime); 
-            ambientGain.gain.setValueAtTime(0.06, audioCtx.currentTime); 
-            ambientOsc.connect(ambientGain);
-            ambientGain.connect(audioCtx.destination);
-            ambientOsc.start();
-            document.getElementById("audio-btn").innerText = "🔮 Атмосферная фоновая музыка успешно включена!";
-        }
-
-        function playCatchSound() {
-            if(!audioCtx) return;
-            var osc = audioCtx.createOscillator();
-            var gainNode = audioCtx.createGain();
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.2);
-            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
-        }
-
-        function movePumpkin() {
-            if(!gameActive) return;
-            var p = document.getElementById("pumpkin");
-            var x = Math.floor(Math.random() * 320);
-            var y = Math.floor(Math.random() * 140);
-            p.style.left = x + "px";
-            p.style.top = y + "px";
-        }
-
-        document.getElementById("audio-btn").addEventListener("click", initAtmosphere);
-        
-        document.getElementById("btn-start").addEventListener("click", function() {
-            score = 0;
-            document.getElementById("score").innerText = score;
-            gameActive = true;
-            if(gameInterval) clearInterval(gameInterval);
-            movePumpkin();
-            gameInterval = setInterval(movePumpkin, 750);
-        });
-
-        document.getElementById("btn-stop").addEventListener("click", function() {
-            gameActive = false;
-if(gameInterval) clearInterval(gameInterval);
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                ambientOsc = audioCtx.createOscillator();
+                var ambientGain = audioCtx.createGain();
+                
+ambientOsc.type = "triangle";
+// Сделали частоту чуть ниже для более зловещего хэллоуинского баса
+ambientOsc.frequency.setValueAtTime(55.00, audioCtx.currentTime);
+// Громкость зафиксирована на высоком уровне
+ambientGain.gain.setValueAtTime(0.07, audioCtx.currentTime);
+ambientOsc.connect(ambientGain);
+ambientGain.connect(audioCtx.destination);
+ambientOsc.start();
+document.getElementById("audio-btn").innerText = "🔮 Атмосферный хоррор-эмбиент успешно запущен!";
+document.getElementById("audio-btn").style.borderColor = "#ff6200";
+} catch(e) {
+console.error("Ошибка аудио:", e);
+}
+}
+// Синтезатор звука успешного клика
+function playCatchSound() {
+if (!audioCtx) return;
+try {
+var osc = audioCtx.createOscillator();
+var gainNode = audioCtx.createGain();
+osc.type = "sine";
+osc.frequency.setValueAtTime(280, audioCtx.currentTime);
+osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.15);
+gainNode.gain.setValueAtTime(0.07, audioCtx.currentTime);
+gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+osc.connect(gainNode);
+gainNode.connect(audioCtx.destination);
+osc.start();
+osc.stop(audioCtx.currentTime + 0.15);
+} catch(e){}
+}
+// 3. Механика движения тыквы
+function movePumpkin() {
+if (!gameActive) return;
 var p = document.getElementById("pumpkin");
+if (!p) return;
+// Вычисляем случайные координаты внутри игровой карточки
+var x = Math.floor(Math.random() * 320);
+var y = Math.floor(Math.random() * 140);
+p.style.left = x + "px";
+p.style.top = y + "px";
+}
+// Проверка и обновление достижений
+function checkAchievements() {
+if (score >= 10) {
+var a1 = document.getElementById("ach-1");
+if (a1) { a1.innerText = "🏆 Охотник за призраками (Получено!)"; a1.className = "ach-item unlocked"; }
+}
+if (score >= 25) {
+var a2 = document.getElementById("ach-2");
+if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "ach-item unlocked"; }
+}
+}
+// 4. Прямая и железобетонная привязка слушателей событий по системным ID кнопок
+document.getElementById("audio-btn").addEventListener("click", initAtmosphere);
+document.getElementById("btn-start").addEventListener("click", function() {
+initAtmosphere(); // Запускаем музыку при старте игры автоматически
+score = 0;
+combo = 0;
+document.getElementById("score").innerText = score;
+document.getElementById("multiplier").innerText = "";
+gameActive = true;
+if (gameInterval) clearInterval(gameInterval);
+movePumpkin();
+gameInterval = setInterval(movePumpkin, 750); // Скорость прыжков тыквы
+});
+document.getElementById("btn-stop").addEventListener("click", function() {
+gameActive = false;
+if (gameInterval) clearInterval(gameInterval);
+var p = document.getElementById("pumpkin");
+if (p) {
 p.style.left = "45%";
 p.style.top = "40%";
+}
+combo = 0;
+document.getElementById("multiplier").innerText = "";
 });
 document.getElementById("pumpkin").addEventListener("click", function() {
-if(!gameActive) return;
-score++;
+if (!gameActive) return;
+// Комбо-множитель
+combo++;
+var pointsGained = 1;
+if (combo >= 5) {
+pointsGained = 2;
+document.getElementById("multiplier").innerText = "x2 Комбо!";
+}
+score += pointsGained;
 document.getElementById("score").innerText = score;
+// Расчет лучшего рекорда
+if (score > bestScore) {
+bestScore = score;
+document.getElementById("best-score").innerText = bestScore;
+}
+// Визуальная неоновая вспышка при поимке
+var area = document.getElementById("g-area");
+if (area) {
+area.style.borderColor = "#ff6200";
+setTimeout(function(){ area.style.borderColor = "rgba(142, 68, 173, 0.3)"; }, 100);
+}
 try { playCatchSound(); } catch(e){}
+checkAchievements();
 movePumpkin();
 });
