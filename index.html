@@ -3,138 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MZ CORE — Halloween Breach (v5.0)</title>
+<title>МЗ: Проклятие Технички (v6.0)</title>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#030308;--panel:rgba(10,10,18,.75);--text:#fff;--muted:#7a7a90;--accent:#ff4d00;--accent-2:#a020f0;--green:#0f0;--red:#f00;--gold:#f1c40f;--border:rgba(255,77,0,.3);--glow:0 0 20px rgba(255,77,0,.4);--radius:12px;}
-body.theme-samhain{--bg:#040a06;--accent:#00ffcc;--accent-2:#cc0000;--border:rgba(0,255,204,.3);--glow:0 0 20px rgba(0,255,204,.4);}
-*{box-sizing:border-box;}
-html,body{height:100%;margin:0;overflow-x:hidden;font-family:'Courier New',Courier,monospace;color:var(--text);background:var(--bg);user-select:none;}
-body{display:flex;flex-direction:column;align-items:center;padding:20px;background-image:radial-gradient(circle at 50% 0%,rgba(255,77,0,.1) 0%,transparent 50%);transition:background .5s;}
-body.theme-samhain{background-image:radial-gradient(circle at 50% 0%,rgba(0,255,204,.1) 0%,transparent 50%);}
-body.shake{animation:shake .3s ease;}
-@keyframes shake{0%,100%{transform:translate(0,0);}25%{transform:translate(-5px,5px);}50%{transform:translate(5px,-5px);}75%{transform:translate(-5px,-5px);}}
+:root{
+  --bg:#08050c; --panel:rgba(20,10,30,.7);
+  --text:#fff; --muted:#9d8ca1;
+  --accent:#ff6200; --accent-2:#8e44ad; --green:#2ecc71; --red:#e74c3c; --gold:#f1c40f;
+  --border:rgba(255,98,0,.4); --border-2:rgba(142,68,173,.5);
+  --glow-orange:0 0 20px rgba(255,98,0,.5); --glow-purple:0 0 20px rgba(142,68,173,.5);
+}
+body.theme-samhain{--bg:#050a07;--accent:#2ecc71;--accent-2:#c0392b;--border:rgba(46,204,113,.4);--border-2:rgba(192,57,43,.5);--glow-orange:0 0 20px rgba(46,204,113,.5);--glow-purple:0 0 20px rgba(192,57,43,.5);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-x:hidden;transition:background .5s;user-select:none;}
+h1,h2{font-family:'Creepster',cursive;letter-spacing:2px;text-shadow:var(--glow-orange);}
+h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;text-shadow:var(--glow-purple);}
 
-/* Матричный дождь */
-#matrix-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.15;pointer-events:none;}
+/* Фоновые эффекты */
+.fog{position:fixed;inset:0;background:url('https://www.transparenttextures.com/patterns/foggy-birds.png');opacity:.3;z-index:0;pointer-events:none;animation:fogMove 60s linear infinite;}
+@keyframes fogMove{0%{background-position:0 0;}100%{background-position:1000px 1000px;}}
 
-/* Сканер-линия */
-.scanline{position:fixed;top:0;left:0;width:100%;height:4px;background:rgba(255,255,255,.1);z-index:999;pointer-events:none;animation:scan 6s linear infinite;box-shadow:0 0 15px var(--accent);}
-@keyframes scan{0%{top:-10px;}100%{top:100%;}}
+/* Свечи/паутина по углам */
+.web{position:fixed;width:220px;height:250px;z-index:1;pointer-events:none;opacity:0.8;}
+.web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);} .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
+.web path{stroke:var(--accent);filter:drop-shadow(0 0 5px var(--accent));}
 
-/* Терминал */
-.terminal{position:fixed;bottom:20px;left:20px;width:320px;height:200px;background:rgba(0,0,0,.85);border:1px solid var(--accent);border-radius:var(--radius);z-index:100;display:flex;flex-direction:column;box-shadow:var(--glow);font-size:12px;overflow:hidden;transition:transform .3s;}
-.terminal-header{padding:5px 10px;background:var(--accent);color:#000;font-weight:bold;display:flex;justify-content:space-between;}
-.terminal-body{flex:1;padding:10px;overflow-y:auto;color:var(--green);line-height:1.4;}
-.terminal-input{display:flex;padding:5px;border-top:1px solid #333;}
-.terminal-input input{flex:1;background:transparent;border:none;color:#fff;outline:none;padding:5px;font-family:monospace;font-size:12px;}
+/* Верхнее меню */
+.topbar{width:100%;max-width:1100px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;z-index:10;}
+.pill{padding:10px 20px;border-radius:30px;background:rgba(0,0,0,.6);border:1px solid var(--border);color:var(--text);font-weight:bold;font-size:13px;cursor:pointer;transition:all .3s;backdrop-filter:blur(5px);}
+.pill:hover{background:var(--accent);color:#000;box-shadow:var(--glow-orange);}
+.pill.active{border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 10px var(--accent);}
+.tabs{width:100%;max-width:1100px;display:flex;gap:10px;margin-bottom:20px;z-index:10;}
+.tab-btn{flex:1;padding:12px;background:rgba(0,0,0,.6);border:1px solid #333;color:#aaa;font-weight:bold;font-family:'Montserrat';cursor:pointer;border-radius:10px;transition:all .3s;}
+.tab-btn.active{background:var(--accent-2);color:#fff;border-color:var(--accent-2);box-shadow:var(--glow-purple);}
+.tab-content{display:none;width:100%;max-width:1100px;z-index:10;}
+.tab-content.active{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;animation:fadeIn .4s;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-/* Верхняя панель и кнопки */
-.topbar{width:100%;max-width:1200px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;z-index:10;}
-.pill{padding:8px 16px;border-radius:4px;background:rgba(255,255,255,.03);border:1px solid #333;color:#aaa;font-size:12px;cursor:pointer;transition:all .2s;font-weight:bold;text-transform:uppercase;}
-.pill:hover{background:var(--accent);color:#000;border-color:var(--accent);box-shadow:var(--glow);}
-.pill.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 10px var(--accent) inset;}
-.lang-group{display:flex;gap:2px;border:1px solid #333;padding:2px;border-radius:4px;}
-.lang-btn{padding:6px 12px;background:transparent;border:none;color:#aaa;cursor:pointer;font-weight:bold;}
-.lang-btn.active{background:#333;color:#fff;}
-
-/* Основная сетка */
-.grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;width:100%;max-width:1200px;z-index:10;}
-.card{position:relative;flex:1 1 450px;max-width:560px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:25px;backdrop-filter:blur(12px);box-shadow:0 10px 30px rgba(0,0,0,.8),inset 0 0 20px rgba(255,77,0,.05);transition:transform .1s ease-out,box-shadow .3s;transform-style:preserve-3d;}
-.card:hover{box-shadow:0 15px 40px rgba(0,0,0,.9),inset 0 0 30px rgba(255,77,0,.1);}
-h1,h2{margin:0 0 15px 0;font-size:24px;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 10px var(--accent);}
-h1{color:var(--accent);} h2{color:var(--accent-2);}
+/* Карточки */
+.card{flex:1 1 400px;max-width:520px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:25px;backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.8);position:relative;}
+.card::before{content:'';position:absolute;inset:0;border-radius:20px;pointer-events:none;box-shadow:inset 0 0 30px rgba(255,98,0,.05);}
+.card.game{border-color:var(--border-2);}
 
 /* Данные */
-.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.1);font-size:13px;}
-.row:last-child{border:none;}.k{color:var(--muted);}.v{color:#fff;font-weight:bold;}.v.accent{color:var(--accent);}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.1);font-size:14px;}
+.row:last-child{border:none;}.k{color:var(--muted);font-size:12px;text-transform:uppercase;}.v{font-weight:bold;}.v.accent{color:var(--accent);}
+.credits{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.8;color:#ccc;}
 
-/* Игровое поле */
-.arena{position:relative;width:100%;height:250px;background:#000;border:1px solid var(--border);border-radius:8px;margin-top:15px;overflow:hidden;cursor:crosshair;box-shadow:inset 0 0 50px rgba(0,0,0,1);}
-#pumpkin{position:absolute;font-size:40px;cursor:pointer;z-index:3;filter:drop-shadow(0 0 10px var(--accent));transition:left .15s,top .15s,transform .1s;}
-#pumpkin:active{transform:scale(.8);}
-#snitch{position:absolute;font-size:26px;cursor:pointer;z-index:4;display:none;filter:drop-shadow(0 0 15px var(--gold));animation:float 1s infinite alternate;}
-@keyframes float{0%{transform:translateY(0);}100%{transform:translateY(-10px);}}
-
-/* Статистика игры */
-.stats{display:flex;justify-content:space-between;margin-top:15px;font-size:14px;font-weight:bold;}
+/* Игра (Котёл) */
+.game-area{position:relative;width:100%;height:300px;background:radial-gradient(circle at 50% 100%, #2a0b36 0%, #0a0510 100%);border:2px solid var(--border-2);border-radius:15px;margin-top:15px;overflow:hidden;box-shadow:inset 0 0 50px #000;cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🪄</text></svg>'), auto;}
+#cauldron{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:60px;z-index:5;filter:drop-shadow(0 0 15px var(--green));transition:left .1s;}
+.falling-item{position:absolute;font-size:35px;z-index:4;pointer-events:none;filter:drop-shadow(0 0 10px #fff);transition:top 0.05s linear;}
+.stats{display:flex;justify-content:space-between;margin-top:15px;font-weight:900;font-size:16px;}
 .stats span{color:var(--accent);}
-
-/* Кнопки */
 .btns{display:flex;gap:10px;margin-top:15px;}
-.btn{flex:1;padding:12px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-weight:bold;font-family:inherit;cursor:pointer;text-transform:uppercase;transition:all .2s;border-radius:4px;}
-.btn:hover{background:var(--accent);color:#000;box-shadow:var(--glow);}
-.btn.stop{border-color:var(--red);color:var(--red);}
-.btn.stop:hover{background:var(--red);color:#000;box-shadow:0 0 20px var(--red);}
+.btn{flex:1;padding:14px;background:linear-gradient(135deg,var(--accent),#a03d00);border:none;border-radius:10px;color:#fff;font-weight:900;font-size:15px;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Montserrat';}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--glow-orange);}
+.btn.stop{background:linear-gradient(135deg,var(--red),#8b1a1a);}
+
+/* Changelog */
+.changelog{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:25px;width:100%;text-align:left;}
+.changelog ul{list-style:none;padding:0;}
+.changelog li{margin-bottom:12px;padding-left:20px;position:relative;color:#ddd;font-size:14px;line-height:1.5;}
+.changelog li::before{content:'🎃';position:absolute;left:0;top:2px;}
+.changelog li b{color:var(--accent);font-size:15px;}
 
 /* Тур */
 .tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;backdrop-filter:blur(5px);}
 .tour-overlay.open{display:block;}
-.tour-highlight{position:fixed;z-index:201;border:2px solid var(--accent);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.7),0 0 30px var(--accent);pointer-events:none;display:none;}
-.tour-tooltip{position:fixed;z-index:202;background:#111;border:1px solid var(--accent);border-radius:8px;padding:20px;max-width:320px;box-shadow:0 10px 50px #000;display:none;}
-.tour-tooltip h3{margin:0 0 10px;color:var(--accent);text-transform:uppercase;}
-.tour-tooltip p{margin:0 0 15px;color:#ccc;font-size:13px;line-height:1.5;}
+.tour-highlight{position:fixed;z-index:201;border:2px solid var(--accent);border-radius:15px;box-shadow:0 0 0 9999px rgba(0,0,0,.7),0 0 30px var(--accent);pointer-events:none;display:none;transition:all .3s;}
+.tour-tooltip{position:fixed;z-index:202;background:#1a0b24;border:2px solid var(--accent-2);border-radius:15px;padding:20px;max-width:300px;box-shadow:var(--glow-purple);display:none;}
+.tour-tooltip h3{margin:0 0 10px;color:var(--accent);font-family:'Creepster';font-size:24px;letter-spacing:1px;}
+.tour-tooltip p{margin:0 0 15px;color:#ddd;font-size:13px;line-height:1.5;}
 .tour-btns{display:flex;gap:10px;justify-content:flex-end;}
-.tour-btns button{padding:8px 15px;border:none;font-weight:bold;cursor:pointer;border-radius:4px;}
+.tour-btns button{padding:8px 15px;border:none;font-weight:bold;cursor:pointer;border-radius:8px;font-family:'Montserrat';}
 .tour-next{background:var(--accent);color:#000;}
-.tour-skip{background:#333;color:#fff;}
+.tour-skip{background:#444;color:#fff;}
 
-.help-btn{position:fixed;bottom:20px;right:20px;z-index:50;width:50px;height:50px;border-radius:50%;background:var(--accent);color:#000;font-size:24px;font-weight:bold;border:none;cursor:pointer;box-shadow:var(--glow);}
-
-/* Фоновые эффекты */
-.fog-layer{position:fixed;top:0;left:0;width:100%;height:100%;background:url('https://www.transparenttextures.com/patterns/stardust.png');opacity:.2;z-index:1;pointer-events:none;}
+.help-btn{position:fixed;bottom:20px;right:20px;z-index:50;width:50px;height:50px;border-radius:50%;background:var(--accent-2);color:#fff;font-size:24px;font-weight:bold;border:none;cursor:pointer;box-shadow:var(--glow-purple);}
 </style>
 </head>
 <body>
-<canvas id="matrix-canvas"></canvas>
-<div class="scanline"></div>
-<div class="fog-layer"></div>
+<div class="fog"></div>
+
+<svg class="web tl" viewBox="0 0 100 100">
+  <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" fill="none" stroke-width="1"/>
+  <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" fill="none" stroke-width="0.8"/>
+</svg>
+<svg class="web tr" viewBox="0 0 100 100"></svg>
+<svg class="web bl" viewBox="0 0 100 100"></svg>
+<svg class="web br" viewBox="0 0 100 100"></svg>
 
 <div class="topbar">
-  <div class="lang-group"><button class="lang-btn active" id="lang-ru">RU</button><button class="lang-btn" id="lang-en">EN</button></div>
-  <div class="pill" id="theme-toggle">🎃 ТЕМА</div>
-  <div class="pill" id="music-toggle">🔇 МУЗЫКА</div>
-  <div class="pill active" id="hardcore-toggle">💀 ХАРДКОР</div>
+  <button class="pill active" id="lang-ru">RU</button>
+  <button class="pill" id="lang-en">EN</button>
+  <button class="pill" id="theme-toggle">🎃 Тема: Тыква</button>
+  <button class="pill" id="music-toggle">🔇 Музыка: выкл</button>
 </div>
 
-<div class="grid">
+<div class="tabs">
+  <button class="tab-btn active" id="tab-main-btn">🎮 Основное</button>
+  <button class="tab-btn" id="tab-vers-btn">📜 История обновлений</button>
+</div>
+
+<div class="tab-content active" id="tab-main">
   <div class="card" id="card-info">
-    <h1>MZ CORE / SYSTEM</h1>
-    <div class="row"><span class="k">NODE</span><span class="v">OZOGIN-MZ-01</span></div>
-    <div class="row"><span class="k">STATUS</span><span class="v accent">ONLINE</span></div>
-    <div class="row"><span class="k">UPTIME</span><span class="v" id="clock">00:00:00</span></div>
-    <div class="row"><span class="k">PING</span><span class="v accent" id="ping-display">...</span></div>
-    <div class="row"><span class="k">ENCRYPTION</span><span class="v">AES-256</span></div>
+    <h1>Техничка МЗ</h1>
+    <div class="row"><span class="k">Имя узла</span><span class="v">Ozogin-MZ-01</span></div>
+    <div class="row"><span class="k">Издание</span><span class="v accent">Halloween Edition</span></div>
+    <div class="row"><span class="k">Время работы</span><span class="v accent" id="clock">00:00:00</span></div>
+    <div class="row"><span class="k">Пинг</span><span class="v accent" id="ping-display">...</span></div>
+    <div class="credits">
+      <b>Разработчик:</b> <span style="color:var(--accent)">Ozogin</span><br>
+      <b>ИИ-Архитекторы:</b> <span style="color:var(--accent-2)">Алиса & DeepSeek</span><br>
+      <b>Спонсор:</b> <span style="color:var(--green)">Alberto Pepper</span>
+    </div>
   </div>
 
-  <div class="card" id="card-game">
-    <h2>HACK THE PUMPKIN</h2>
-    <div class="arena" id="arena">
-      <div id="pumpkin">🎃</div>
-      <div id="snitch">✨</div>
+  <div class="card game" id="card-game">
+    <h2>Варка Зелий</h2>
+    <div class="game-area" id="game-area">
+      <div id="cauldron">🍲</div>
     </div>
     <div class="stats">
-      <div>SCORE: <span id="score">0</span></div>
-      <div>TIME: <span id="timer">30</span></div>
-      <div>BEST: <span id="best">0</span></div>
+      <div>СЧЕТ: <span id="score">0</span></div>
+      <div>ЖИЗНИ: <span id="lives">3</span></div>
+      <div>РЕКОРД: <span id="best">0</span></div>
     </div>
     <div class="btns">
-      <button class="btn" id="start-btn">INITIALIZE</button>
-      <button class="btn stop" id="stop-btn">TERMINATE</button>
+      <button class="btn" id="start-btn">Старт</button>
+      <button class="btn stop" id="stop-btn">Стоп</button>
     </div>
   </div>
 </div>
 
-<!-- Терминал -->
-<div class="terminal">
-  <div class="terminal-header"><span>ROOT@MZ-CORE:~#</span><span>_</span></div>
-  <div class="terminal-body" id="term-body">
-    <div>Connecting to server...</div>
-    <div>Access granted.</div>
-    <div>Type /help for commands.</div>
-  </div>
-  <div class="terminal-input">
-    <span style="color:var(--accent);padding:5px;">></span>
-    <input type="text" id="term-input" placeholder="Enter command..." autocomplete="off">
+<div class="tab-content" id="tab-vers">
+  <div class="changelog">
+    <h2 style="margin-bottom:20px;">История версий</h2>
+    <ul id="changelog-list"></ul>
   </div>
 </div>
 
@@ -142,7 +148,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 <div class="tour-highlight" id="tour-highlight"></div>
 <div class="tour-tooltip" id="tour-tooltip">
   <h3 id="tour-title"></h3><p id="tour-content"></p>
-  <div class="tour-btns"><button class="tour-skip" id="tour-skip">SKIP</button><button class="tour-next" id="tour-next">NEXT</button></div>
+  <div class="tour-btns"><button class="tour-skip" id="tour-skip">Пропустить</button><button class="tour-next" id="tour-next">Далее</button></div>
 </div>
 <button class="help-btn" id="help-btn">?</button>
 <div id="yt-audio-container" style="display:none;"></div>
@@ -152,170 +158,192 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   var $ = function (id) { return document.getElementById(id); };
 
   var L = {
-    ru: { t1:'MZ CORE / SYSTEM', t2:'HACK THE PUMPKIN', go:'INITIALIZE', stop:'TERMINATE', thP:'Тема: Тыква', thS:'Тема: Самайн', mOff:'Музыка: выкл', mOn:'Музыка: вкл', hcOff:'Хардкор: выкл', hcOn:'Хардкор: вкл' },
-    en: { t1:'MZ CORE / SYSTEM', t2:'HACK THE PUMPKIN', go:'INITIALIZE', stop:'TERMINATE', thP:'Theme: Pumpkin', thS:'Theme: Samhain', mOff:'Music: off', mOn:'Music: on', hcOff:'Hardcore: off', hcOn:'Hardcore: on' }
+    ru: {
+      t1:'Мониторинг Технички МЗ', t2:'Варка Зелий', st:'Система активна', k1:'Имя узла',k2:'Издание',k3:'Дата',k4:'Время работы',k5:'База',k6:'Пинг',
+      v2:'Halloween Edition',dev:'Разработчик',ai:'ИИ',sp:'Спонсор',
+      sc:'Счет', lv:'Жизни', bs:'Рекорд', go:'Старт', stop:'Стоп',
+      thP:'🎃 Тема: Тыква', thS:'🌿 Тема: Самайн', mOff:'🔇 Музыка: выкл', mOn:'🎵 Музыка: вкл',
+      clk:function(h,m,s){return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+    },
+    en: {
+      t1:'MZ Tech Node Monitor', t2:'Potion Brewing', st:'System active', k1:'Node name',k2:'Edition',k3:'Date',k4:'Uptime',k5:'Database',k6:'Ping',
+      v2:'Halloween Edition',dev:'Developer',ai:'AI',sp:'Sponsor',
+      sc:'Score', lv:'Lives', bs:'Best', go:'Start', stop:'Stop',
+      thP:'🎃 Theme: Pumpkin', thS:'🌿 Theme: Samhain', mOff:'🔇 Music: off', mOn:'🎵 Music: on',
+      clk:function(h,m,s){return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+    }
   };
-  var lang='ru', theme='pumpkin', sfxOn=true, hardcore=true;
+  var lang='ru', theme='pumpkin', sfxOn=true, musicOn=false;
   function setText(id,v){var e=$(id);if(e)e.textContent=v;}
 
-  /* ===== МАТРИЧНЫЙ ДОЖДЬ ===== */
-  var canvas = document.getElementById('matrix-canvas');
-  var ctx = canvas.getContext('2d');
-  var width = canvas.width = window.innerWidth;
-  var height = canvas.height = window.innerHeight;
-  var cols = Math.floor(width / 20) + 1;
-  var ypos = Array(cols).fill(0);
-  var chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ🎃🦇💀'.split('');
+  if($('tab-main-btn')) $('tab-main-btn').addEventListener('click', function(){ $('tab-main').classList.add('active'); $('tab-vers').classList.remove('active'); this.classList.add('active'); $('tab-vers-btn').classList.remove('active'); });
+  if($('tab-vers-btn')) $('tab-vers-btn').addEventListener('click', function(){ $('tab-main').classList.remove('active'); $('tab-vers').classList.add('active'); this.classList.add('active'); $('tab-main-btn').classList.remove('active'); });
 
-  function matrix() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = theme === 'pumpkin' ? '#ff4d00' : '#00ffcc';
-    ctx.font = '15pt monospace';
-    ypos.forEach(function(y, i) {
-      var text = chars[Math.floor(Math.random() * chars.length)];
-      ctx.fillText(text, i * 20, y);
-      if (y > 100 + Math.random() * 10000) ypos[i] = 0;
-      else ypos[i] = y + 20;
-    });
-  }
-  setInterval(matrix, 50);
-  window.addEventListener('resize', function(){ width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
+  var versions = [
+    {v:'1.0', text:'Первый релиз. Базовая игра.'},
+    {v:'2.0', text:'Вкладки, переработанный тур.'},
+    {v:'3.0', text:'YouTube музыка, скелеты.'},
+    {v:'4.0', text:'Пинг, Снитч, Летучие мыши.'},
+    {v:'6.0', text:'Глобальный редизайн. Игра «Варка Зелий». Хэллоуинский неон.'}
+  ];
+  var list = $('changelog-list'); if (list) { list.innerHTML = ''; versions.forEach(function(item) { var li = document.createElement('li'); li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; list.appendChild(li); }); }
 
-  /* ===== 3D ПАРАЛЛАКС КАРТОЧЕК ===== */
-  document.querySelectorAll('.card').forEach(function(card) {
-    card.addEventListener('mousemove', function(e) {
-      var r = card.getBoundingClientRect();
-      var x = e.clientX - r.left - r.width / 2;
-      var y = e.clientY - r.top - r.height / 2;
-      card.style.transform = 'perspective(1000px) rotateY(' + (x / 20) + 'deg) rotateX(' + (-y / 20) + 'deg) scale3d(1.02, 1.02, 1.02)';
-    });
-    card.addEventListener('mouseleave', function() {
-      card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) scale3d(1, 1, 1)';
-    });
-  });
-
-  /* ===== ТЕРМИНАЛ ===== */
-  var termInput = $('term-input');
-  var termBody = $('term-body');
-  if(termInput) {
-    termInput.addEventListener('keypress', function(e) {
-      if(e.key === 'Enter') {
-        var cmd = this.value.trim().toLowerCase();
-        this.value = '';
-        var p = document.createElement('div');
-        p.innerHTML = '<span style="color:#fff">> ' + cmd + '</span>';
-        termBody.appendChild(p);
-
-        var res = document.createElement('div');
-        if(cmd === '/help') res.textContent = 'Commands: /clear, /matrix, /spawn, /ip, /theme, /music';
-        else if(cmd === '/clear') { termBody.innerHTML = ''; res.textContent = 'Console cleared.'; }
-        else if(cmd === '/matrix') { document.body.classList.toggle('theme-samhain'); res.textContent = 'Matrix mode toggled.'; }
-        else if(cmd === '/spawn') {
-          for(var i=0;i<20;i++){ setTimeout(function(){ spawnBat(); }, i*100); }
-          res.textContent = 'Spawning entities...';
-        }
-        else if(cmd === '/ip') res.textContent = 'Your IP is hidden. Ping: ' + $('ping-display').textContent;
-        else if(cmd === '/theme') { $('theme-toggle').click(); res.textContent = 'Theme changed.'; }
-        else if(cmd === '/music') { $('music-toggle').click(); res.textContent = 'Music toggled.'; }
-        else res.textContent = 'Unknown command. Type /help.';
-
-        res.style.color = 'var(--accent)';
-        termBody.appendChild(res);
-        termBody.scrollTop = termBody.scrollHeight;
-      }
-    });
-  }
-
-  /* ===== ПИНГ ===== */
+  /* ПИНГ */
   var pingStart = Date.now();
   fetch('https://api.ipify.org?format=json').then(function(){
-    var ping = Date.now() - pingStart;
-    if($('ping-display')) $('ping-display').textContent = ping + ' ms';
-  }).catch(function(){
-    if($('ping-display')) $('ping-display').textContent = 'ERR';
-  });
+    if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms';
+  }).catch(function(){ if($('ping-display')) $('ping-display').textContent = 'err'; });
 
-  /* ===== КНОПКИ ЯЗЫКА / ТЕМЫ ===== */
-  function applyLang(){
-    var t = L[lang];
-    setText('t-title1', t.t1); setText('t-title2', t.t2);
-    setText('start-btn', t.go); setText('stop-btn', t.stop);
-    setText('theme-toggle', theme === 'pumpkin' ? '🎃 ' + t.thP : '🌿 ' + t.thS);
-    setText('music-toggle', musicOn ? '🎵 ' + t.mOn : '🔇 ' + t.mOff);
-    setText('hardcore-toggle', hardcore ? '☠️ ' + t.hcOn : '💀 ' + t.hcOff);
-  }
-  if($('lang-ru'))$('lang-ru').addEventListener('click',function(){lang='ru';applyLang();this.classList.add('active');$('lang-en').classList.remove('active');});
-  if($('lang-en'))$('lang-en').addEventListener('click',function(){lang='en';applyLang();this.classList.add('active');$('lang-ru').classList.remove('active');});
-  if($('theme-toggle'))$('theme-toggle').addEventListener('click',function(){ theme=(theme==='pumpkin')?'samhain':'pumpkin'; document.body.classList.toggle('theme-samhain',theme==='samhain'); applyLang(); });
-  if($('hardcore-toggle'))$('hardcore-toggle').addEventListener('click',function(){ hardcore=!hardcore; this.classList.toggle('active', hardcore); applyLang(); });
-
-  /* ===== МУЗЫКА ===== */
-  var YT_ID = 'RaDa7m76uXY'; var ytPlayer = null; var musicOn = false; var bgSkeletons = $('bg-skeletons');
+  /* МУЗЫКА */
+  var YT_ID = 'RaDa7m76uXY'; var ytPlayer = null; 
   var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   window.onYouTubeIframeAPIReady = function() { ytPlayer = new YT.Player('yt-audio-container', { height: '0', width: '0', videoId: YT_ID, playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': YT_ID } }); };
   if($('music-toggle')){ $('music-toggle').addEventListener('click', function(){ if(!ytPlayer) return; if(musicOn){ ytPlayer.pauseVideo(); musicOn = false; } else { ytPlayer.playVideo(); musicOn = true; } applyLang(); }); }
 
-  /* ===== ЛЕТУЧИЕ МЫШИ ===== */
-  function spawnBat(){ var b=document.createElement('div'); b.textContent=Math.random()<0.5?'🦇':'👻'; b.style.cssText='position:fixed;z-index:6;pointer-events:none;filter:drop-shadow(0 0 6px rgba(255,77,0,.8));font-size:'+(18+Math.random()*16)+'px;'; var y=Math.random()*window.innerHeight*.6,dir=Math.random()<.5?1:-1; b.style.top=y+'px';b.style.left=(dir===1?-60:window.innerWidth+60)+'px';b.style.transition='left 8s linear, top 8s linear'; document.body.appendChild(b); requestAnimationFrame(function(){b.style.left=(dir===1?window.innerWidth+60:-60)+'px';b.style.top=(y+(Math.random()*200-100))+'px';}); setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},8200); }
-  setInterval(function(){if(Math.random()<.7)spawnBat();},10000);
+  function applyLang(){
+    var t=L[lang];
+    setText('card-info', ''); // Сбрасываем (чтобы не дублировать)
+    // Просто обновляем кнопки и заголовки
+    setText('theme-toggle', theme==='pumpkin'?t.thP:t.thS);
+    setText('music-toggle', musicOn?t.mOn:t.mOff);
+    setText('start-btn', t.go); setText('stop-btn', t.stop);
+    // Обновляем заголовки карточек
+    var h1 = document.querySelector('#card-info h1'); if(h1) h1.textContent = t.t1;
+    var h2 = document.querySelector('#card-game h2'); if(h2) h2.textContent = t.t2;
+    // Статы
+    var sc = document.querySelector('.stats div:nth-child(1)'); if(sc) sc.innerHTML = t.sc + ': <span id="score">0</span>';
+    var lv = document.querySelector('.stats div:nth-child(2)'); if(lv) lv.innerHTML = t.lv + ': <span id="lives">3</span>';
+    var bs = document.querySelector('.stats div:nth-child(3)'); if(bs) bs.innerHTML = t.bs + ': <span id="best">0</span>';
+  }
+  
+  if($('lang-ru'))$('lang-ru').addEventListener('click',function(){lang='ru';applyLang();this.classList.add('active');$('lang-en').classList.remove('active');});
+  if($('lang-en'))$('lang-en').addEventListener('click',function(){lang='en';applyLang();this.classList.add('active');$('lang-ru').classList.remove('active');});
+  if($('theme-toggle'))$('theme-toggle').addEventListener('click',function(){ theme=(theme==='pumpkin')?'samhain':'pumpkin'; document.body.classList.toggle('theme-samhain',theme==='samhain'); applyLang(); });
 
-  /* ===== ЧАСЫ ===== */
-  var sec=0; setInterval(function(){sec++;var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;var c=$('clock');if(c)c.textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;},1000);
+  var sec=0; setInterval(function(){sec++;var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;var c=$('clock');if(c)c.textContent=L[lang].clk(h,m,s);},1000);
 
-  /* ===== ИГРА ===== */
-  var active=false,gameLoop=null,timerLoop=null,snitchTimer=null,specialTimer=null;
-  var score=0,timeLeft=30,best=0,snitchActive=false,pState='normal';
+  /* ===== ИГРА ВАРКА ЗЕЛИЙ ===== */
+  var active=false, gameLoop=null;
+  var score=0, lives=3, best=0;
+  var cauldronX = 50; // %
+  var items = [];
+  var gameArea = $('game-area');
+  var cauldron = $('cauldron');
+  var itemTimer = null;
+
   try{var sb=localStorage.getItem('mz_halloween_best');if(sb)best=parseInt(sb,10)||0;}catch(e){} if($('best'))$('best').textContent=best;
 
-  function arenaSize(){var a=$('arena');if(!a)return{w:300,h:150};return{w:Math.max(10,a.clientWidth-50),h:Math.max(10,a.clientHeight-50)};}
-  function movePumpkin(){if(!active)return;var p=$('pumpkin');if(!p)return;var s=arenaSize();p.style.left=Math.floor(Math.random()*s.w)+'px';p.style.top=Math.floor(Math.random()*s.h)+'px';}
-  function setState(st){pState=st;var p=$('pumpkin');if(!p)return;p.style.filter='drop-shadow(0 0 10px var(--accent))';if(st==='bonus'){p.textContent='🕷️';p.style.filter='drop-shadow(0 0 15px var(--gold))';}else if(st==='cursed'){p.textContent='👿';p.style.filter='drop-shadow(0 0 15px var(--red))';}else if(st==='golden'){p.textContent='🌟';p.style.filter='drop-shadow(0 0 20px var(--gold))';}else p.textContent='🎃';}
-  
-  function scheduleSpecial(){clearTimeout(specialTimer);if(!active)return;specialTimer=setTimeout(function(){if(!active)return;var r=Math.random();if(r<.25)setState('bonus');else if(r<.45)setState('cursed');else if(r<.55)setState('golden');else setState('normal');scheduleSpecial();},hardcore?2000:3500);}
-  
-  function moveSnitch(){ if(!active || !snitchActive) return; var sn=$('snitch'); if(!sn) return; var s=arenaSize(); sn.style.left=Math.floor(Math.random()*s.w)+'px'; sn.style.top=Math.floor(Math.random()*s.h)+'px'; }
-  function scheduleSnitch(){ clearTimeout(snitchTimer); if(!active) return; snitchTimer=setTimeout(function(){ if(!active) return; snitchActive=true; var sn=$('snitch'); if(sn) { sn.style.display='block'; moveSnitch(); } setTimeout(function(){ snitchActive=false; if(sn) sn.style.display='none'; }, 4000); scheduleSnitch(); }, 8000 + Math.random()*8000); }
-
-  function updateScore(){if($('score'))$('score').textContent=score;if(score>best){best=score;if($('best'))$('best').textContent=best;try{localStorage.setItem('mz_halloween_best',best);}catch(e){}}}
-
-  function startGame(){ 
-    stopGame(); score=0; timeLeft=30; if($('score'))$('score').textContent='0'; if($('timer'))$('timer').textContent='30';
-    active=true; setState('normal'); movePumpkin(); 
-    gameLoop=setInterval(movePumpkin,hardcore?300:600); 
-    timerLoop=setInterval(function(){ timeLeft--; if($('timer'))$('timer').textContent=timeLeft; if(timeLeft<=0){ stopGame(); } },1000); 
-    scheduleSpecial(); scheduleSnitch(); 
-  }
-  
-  function stopGame(){ 
-    active=false; if(gameLoop)clearInterval(gameLoop); if(timerLoop)clearInterval(timerLoop); clearTimeout(specialTimer); clearTimeout(snitchTimer);
-    snitchActive=false; if($('snitch'))$('snitch').style.display='none'; setState('normal');
-  }
-
-  if($('start-btn'))$('start-btn').addEventListener('click',startGame);
-  if($('stop-btn'))$('stop-btn').addEventListener('click',stopGame);
-
-  if($('pumpkin'))$('pumpkin').addEventListener('click',function(e){
-    if(!active)return;
-    var mult=hardcore?2:1;
-    if(pState==='golden'){score+=10*mult;}
-    else if(pState==='bonus'){score+=3*mult;}
-    else if(pState==='cursed'){score=Math.max(0,score-2); document.body.classList.add('shake'); setTimeout(function(){document.body.classList.remove('shake');},300);}
-    else{score+=1*mult;}
-    setState('normal'); updateScore(); movePumpkin();
+  document.addEventListener('mousemove', function(e){
+    if(!active || !gameArea) return;
+    var rect = gameArea.getBoundingClientRect();
+    if(e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
+      cauldronX = ((e.clientX - rect.left) / rect.width) * 100;
+      cauldronX = Math.max(10, Math.min(90, cauldronX)); // Ограничиваем краями
+      cauldron.style.left = cauldronX + '%';
+    }
   });
 
-  if($('snitch'))$('snitch').addEventListener('click',function(e){
-    if(!active || !snitchActive) return;
-    score+=25; snitchActive=false; this.style.display='none'; updateScore();
-  });
+  function spawnItem() {
+    if(!active) return;
+    var r = Math.random();
+    var type, emoji, points;
+    
+    if(r < 0.15) { type = 'bomb'; emoji = '💣'; points = -1; } // Бомба (отнять жизнь)
+    else if(r < 0.35) { type = 'gold'; emoji = '🌟'; points = 5; } // Золотой
+    else { type = 'normal'; emoji = ['🎃','🦴','👁️','🧪','🕷️'][Math.floor(Math.random()*5)]; points = 1; }
+
+    var el = document.createElement('div');
+    el.className = 'falling-item';
+    el.textContent = emoji;
+    if(type === 'bomb') el.style.filter = 'drop-shadow(0 0 10px red)';
+    if(type === 'gold') el.style.filter = 'drop-shadow(0 0 15px gold)';
+    
+    var x = Math.random() * 90 + 5; // От 5% до 95%
+    el.style.left = x + '%';
+    el.style.top = '-50px';
+    gameArea.appendChild(el);
+    
+    var obj = { el: el, x: x, y: -50, speed: 2 + Math.random() * 2 + (score * 0.05), points: points, type: type };
+    items.push(obj);
+  }
+
+  function updateGame() {
+    if(!active) return;
+    
+    for(var i = items.length - 1; i >= 0; i--) {
+      var item = items[i];
+      item.y += item.speed;
+      item.el.style.top = item.y + 'px';
+      
+      var rect = gameArea.getBoundingClientRect();
+      var cauldronWidthPerc = 15; // Примерная ширина котла в %
+      var cauldronLeft = cauldronX - (cauldronWidthPerc / 2);
+      var cauldronRight = cauldronX + (cauldronWidthPerc / 2);
+      
+      // Проверка на столкновение (по Y и X)
+      if(item.y > rect.height - 100 && item.y < rect.height - 40) {
+        if(item.x > cauldronLeft && item.x < cauldronRight) {
+          // Поймали!
+          if(item.type === 'bomb') {
+            lives--;
+            if($('lives')) $('lives').textContent = lives;
+            document.body.classList.add('shake');
+            setTimeout(function(){document.body.classList.remove('shake');}, 300);
+            if(lives <= 0) {
+              stopGame();
+            }
+          } else {
+            score += item.points;
+            if($('score')) $('score').textContent = score;
+            if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_halloween_best',best);}catch(e){} }
+          }
+          if(item.el.parentNode) item.el.parentNode.removeChild(item.el);
+          items.splice(i, 1);
+          continue;
+        }
+      }
+      
+      // Если упал ниже поля
+      if(item.y > rect.height) {
+        if(item.el.parentNode) item.el.parentNode.removeChild(item.el);
+        items.splice(i, 1);
+      }
+    }
+  }
+
+  function startGame() {
+    stopGame();
+    score=0; lives=3; items=[];
+    if($('score')) $('score').textContent = '0';
+    if($('lives')) $('lives').textContent = '3';
+    gameArea.innerHTML = '';
+    var c = document.createElement('div'); c.id = 'cauldron'; c.textContent = '🍲'; gameArea.appendChild(c);
+    cauldron = $('cauldron');
+    cauldronX = 50; cauldron.style.left = '50%';
+    
+    active = true;
+    gameLoop = setInterval(updateGame, 1000/60); // 60 FPS
+    itemTimer = setInterval(spawnItem, 800); // Спавн каждые 0.8 сек
+  }
+
+  function stopGame() {
+    active = false;
+    if(gameLoop) clearInterval(gameLoop);
+    if(itemTimer) clearInterval(itemTimer);
+    items.forEach(function(i){ if(i.el.parentNode) i.el.parentNode.removeChild(i.el); });
+    items = [];
+  }
+
+  if($('start-btn')) $('start-btn').addEventListener('click', startGame);
+  if($('stop-btn')) $('stop-btn').addEventListener('click', stopGame);
 
   /* ===== ТУРЫ ===== */
   var tourOverlay=$('tour-overlay'),tourHighlight=$('tour-highlight'),tourTooltip=$('tour-tooltip');
   var tourTitle=$('tour-title'),tourContent=$('tour-content'),tourNextBtn=$('tour-next'),tourSkipBtn=$('tour-skip');
   var tSteps=[], tIdx=0, tActive=false;
-  var tourWelcome = [{t:'WELCOME TO MZ CORE',d:'New global design, Matrix rain, and 3D cards.'},{t:'TERMINAL',d:'Use the black box in the bottom left. Type /help.',sel:'.terminal'},{t:'THE GAME',d:'Catch pumpkins. Watch out for the golden snitch!',sel:'#card-game'}];
-  var tourUpdate = [{t:'UPDATE v5.0',d:'Global redesign. Matrix rain, terminal, 3D parallax, and new game physics.'},{t:'TERMINAL',d:'Type /help to see the magic.',sel:'.terminal'},{t:'PING',d:'Live server ping is now in the system card.'}];
+  
+  var tourWelcome = [{t:'Добро пожаловать!',d:'Новый глобальный дизайн и новая игра.'},{t:'Варка Зелий',d:'Двигай котёл мышкой и лови ингредиенты. Избегай бомб!',sel:'#card-game'},{t:'История',d:'Все обновления записываются во вкладке.',sel:'.tabs'}];
+  var tourUpdate = [{t:'🎉 Обновление v6.0',d:'Глобальный редизайн. Неоновый Хэллоуин. Игра «Варка Зелий» с физикой падения.'},{t:'Варка Зелий',d:'Двигай котёл мышкой. Лови тыквы и глаза, избегай бомб.',sel:'#card-game'}];
 
   function openTour(steps){ tSteps=steps.slice(); tIdx=0; tActive=true; if(tourOverlay)tourOverlay.classList.add('open'); if(tourTooltip)tourTooltip.style.display='block'; renderTour(); }
   function closeTour(){ tActive=false; if(tourOverlay)tourOverlay.classList.remove('open'); if(tourTooltip)tourTooltip.style.display='none'; if(tourHighlight)tourHighlight.style.display='none'; }
@@ -323,7 +351,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   function renderTour(){
     if(!tActive)return; var s=tSteps[tIdx]; if(!s){closeTour();return;}
     if(tourTitle)tourTitle.textContent=s.t; if(tourContent)tourContent.textContent=s.d;
-    if(tourNextBtn)tourNextBtn.textContent=(tIdx===tSteps.length-1)?'DONE':'NEXT';
+    if(tourNextBtn)tourNextBtn.textContent=(tIdx===tSteps.length-1)?'Готово':'Далее';
     if(tourHighlight){
       if(s.sel){
         var target=document.querySelector(s.sel);
@@ -344,8 +372,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   function fetchIP(){ return new Promise(function(resolve){ var done=false;var tm=setTimeout(function(){if(!done){done=true;resolve('unknown');}},3000); try{fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).then(function(d){if(!done){done=true;clearTimeout(tm);resolve(d&&d.ip?d.ip:'unknown');}}).catch(function(){if(!done){done=true;clearTimeout(tm);resolve('unknown');}});}catch(e){if(!done){done=true;clearTimeout(tm);resolve('unknown');}} }); }
 
   fetchIP().then(function(ip){
-    var keyWelcome = 'tour_welcome_v5_' + ip;
-    var keyUpdate = 'tour_update_v5_' + ip;
+    var keyWelcome = 'tour_welcome_v6_' + ip;
+    var keyUpdate = 'tour_update_v6_' + ip;
     var seenWelcome = false; var seenUpdate = false;
     try { seenWelcome = localStorage.getItem(keyWelcome) === '1'; seenUpdate = localStorage.getItem(keyUpdate) === '1'; } catch(e) {}
     
