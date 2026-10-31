@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель МЗ — Halloween Monolith v2.0</title>
+<title>Панель МЗ — Halloween Monolith v2.1</title>
 <style>
 :root{
   --bg:#06060c; --panel:rgba(20,20,32,.55);
@@ -32,6 +32,22 @@ body{
 }
 body.shake{animation:shake .35s ease;}
 @keyframes shake{0%,100%{transform:translate(0,0);}25%{transform:translate(-6px,3px);}50%{transform:translate(6px,-3px);}75%{transform:translate(-3px,-2px);}}
+
+/* Танцующие скелеты на фоне */
+.background-skeletons{
+  position:fixed; inset:0; z-index:2; pointer-events:none; overflow:hidden;
+  opacity:0; transition:opacity .5s ease;
+}
+.background-skeletons.active{ opacity:1; }
+.bg-skeleton{
+  position:absolute; font-size:40px; opacity:.15;
+  animation:skeletonDance 0.6s ease-in-out infinite alternate;
+  transform-origin:bottom center; filter:blur(1px);
+}
+@keyframes skeletonDance{
+  0%{ transform: rotate(-15deg) translateY(0) scale(1); }
+  100%{ transform: rotate(15deg) translateY(-10px) scale(1.05); }
+}
 
 .fog{position:fixed;inset:-20%;z-index:0;pointer-events:none;
   background:radial-gradient(circle at 30% 30%,rgba(142,68,173,.10),transparent 55%),
@@ -111,11 +127,10 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 .ach-item{color:#8e8ea3;margin-bottom:5px;}
 .ach-item.on{color:var(--green);font-weight:600;}
 
-/* ТУР - исправлен, теперь фон прозрачнее, чтобы кнопки были видны */
 .tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;backdrop-filter:blur(2px);}
 .tour-overlay.open{display:block;}
 .tour-highlight{position:fixed;z-index:201;border:2px solid var(--accent);border-radius:14px;
-  box-shadow:0 0 0 9999px rgba(0,0,0,.5),0 0 20px var(--accent);pointer-events:none;display:none;}
+  box-shadow:0 0 0 9999px rgba(0,0,0,.4),0 0 20px var(--accent);pointer-events:none;display:none;}
 .tour-tooltip{position:fixed;z-index:202;background:#1a1a24;border:1px solid var(--accent);
   border-radius:16px;padding:18px;max-width:300px;box-shadow:0 10px 40px rgba(0,0,0,.9);display:none;}
 .tour-tooltip h3{margin:0 0 8px;font-size:15px;color:var(--accent);}
@@ -130,7 +145,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   cursor:pointer;font-weight:bold;}
 .help-btn:hover{background:var(--accent);color:#000;}
 
-/* Вкладка "Версия" */
+/* Вкладки */
 .tabs{display:flex;width:100%;max-width:1200px;margin-bottom:15px;gap:10px;z-index:10;}
 .tab-btn{padding:10px 20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:#c9c9d6;font-weight:700;cursor:pointer;}
 .tab-btn.active{background:rgba(255,98,0,.1);border-color:var(--accent);color:var(--accent);}
@@ -145,6 +160,9 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 </style>
 </head>
 <body>
+
+<!-- Фоновые танцующие скелеты -->
+<div class="background-skeletons" id="bg-skeletons"></div>
 
 <div class="fog"></div>
 <div class="garland">
@@ -204,7 +222,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
       </div>
       <div style="margin-top:18px;font-size:12.5px;color:#6f6f88;line-height:1.9;">
         <span id="t-dev">Разработчик</span>: <b style="color:var(--accent);">Ozogin</b><br>
-        <span id="t-ai">ИИ</span>: <b style="color:var(--accent-2);">Алиса</b> &amp; <b style="color:#2ecc71;">DeepSeek</b>
+        <span id="t-ai">ИИ</span>: <b style="color:var(--accent-2);">Алиса</b> &amp; <b style="color:#2ecc71;">DeepSeek</b><br>
+        <span id="t-sponsor">Спонсор</span>: <b style="color:#2ecc71;">Alberto Pepper</b>
       </div>
     </div>
 
@@ -241,12 +260,13 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   <div class="changelog">
     <h3>📜 История версий — Halloween Monolith</h3>
     <ul>
-      <li><b>v2.0 (31.10.2026)</b> — Глобальное обновление. Добавлена музыка через Web Audio API (синтезатор), новая вкладка истории версий, переработан интерфейс, добавлена система вкладок, улучшен тур (фон стал прозрачнее, кнопки теперь видны).</li>
-      <li><b>v1.5</b> — Добавлены скелеты, хардкор-режим, серии кликов. Музыка переведена на локальные файлы (позже удалена из-за багов).</li>
-      <li><b>v1.2</b> — Внедрена привязка обучения к IP (через ipify + localStorage). Добавлены достижения и рекорд в localStorage.</li>
-      <li><b>v1.0</b> — Первый релиз. Панель мониторинга, базовая игра «Поймай тыкву», темы Тыква/Самайн, переключение языка.</li>
+      <li><b>v2.1 (31.10.2026)</b> — Добавлена оригинальная музыка Spooky Scary Skeletons. Фоновые танцующие скелеты (появляются при включении музыки). Отдельный тур по обновлению. Возвращён спонсор Alberto Pepper. Добавлено 30 фишек.</li>
+      <li><b>v2.0</b> — Глобальное обновление. Вкладки, переработанный тур, синтезатор (удалён в v2.1).</li>
+      <li><b>v1.5</b> — Скелеты, хардкор, серии. Локальная музыка.</li>
+      <li><b>v1.2</b> — Привязка обучения к IP. Достижения.</li>
+      <li><b>v1.0</b> — Первый релиз.</li>
     </ul>
-    <p style="color:var(--muted);font-size:12px;margin-top:20px;">Текущая версия сайта: <b style="color:var(--accent);">v2.0</b></p>
+    <p style="color:var(--muted);font-size:12px;margin-top:20px;">Текущая версия сайта: <b style="color:var(--accent);">v2.1</b></p>
   </div>
 </div>
 
@@ -272,7 +292,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     ru: {
       t1:'Мониторинг Технички МЗ', s1:'Промышленный хэллоуинский монолит', st:'Система активна',
       k1:'Имя узла',k2:'Издание',k3:'Дата',k4:'Время работы',k5:'База',
-      v2:'Halloween Edition',dev:'Разработчик',ai:'ИИ',
+      v2:'Halloween Edition',dev:'Разработчик',ai:'ИИ',sp:'Спонсор',
       t2:'🦇 Хэллоуинская Игра',s2:'Лови тыквы, избегай проклятий',
       sc:'Счет',tm:'Время',bs:'Рекорд',str:'Серия',go:'Старт',stop:'Стоп',
       share:'📤 Поделиться', copied:'Скопировано!',
@@ -289,15 +309,21 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
         {ti:'Добро пожаловать!',tx:'Это обновленная панель. Короткий тур покажет, что тут есть.',sel:null},
         {ti:'Вкладки',tx:'Теперь у нас есть вкладки. Переключись на «Версия и изменения», чтобы узнать историю обновлений.',sel:'.tabs'},
         {ti:'Язык и тема',tx:'RU/EN переключают язык. «Тема» меняет цвета.',sel:'#theme-toggle'},
-        {ti:'Музыка',tx:'Кнопка включает и выключает хэллоуинский синтезатор. Звуки — это клики в игре.',sel:'#music-toggle'},
+        {ti:'Музыка',tx:'Кнопка включает оригинальный трек и танцующих скелетов на фоне.',sel:'#music-toggle'},
         {ti:'Игра',tx:'«Старт» запускает тыкву. Бонус 🕷️ +3, проклятие 👿 −2. Рекорд сохраняется.',sel:'#game-card'},
         {ti:'Готово!',tx:'Тур больше не появится. Кнопка «?» в углу запустит его снова.',sel:null}
+      ],
+      tourUpdate:[
+        {ti:'🎉 Обновление v2.1!',tx:'Что нового: оригинальная музыка Spooky Scary Skeletons, фоновые танцующие скелеты, отдельный тур по обновлению, возвращён спонсор и добавлено 30 фишек!',sel:null},
+        {ti:'Музыка и скелеты',tx:'Включи музыку — и на фоне появятся танцующие скелеты, как в оригинальном клипе.',sel:'#music-toggle'},
+        {ti:'История версий',tx:'Все изменения теперь записываются во вкладке «Версия и изменения».',sel:'.tabs'},
+        {ti:'Приятной игры!',tx:'Спонсор Alberto Pepper вернулся. Спасибо, что ты с нами!',sel:null}
       ]
     },
     en: {
       t1:'MZ Tech Node Monitor', s1:'Industrial Halloween Monolith', st:'System active',
       k1:'Node name',k2:'Edition',k3:'Date',k4:'Uptime',k5:'Database',
-      v2:'Halloween Edition',dev:'Developer',ai:'AI',
+      v2:'Halloween Edition',dev:'Developer',ai:'AI',sp:'Sponsor',
       t2:'🦇 Halloween Game',s2:'Catch pumpkins, avoid curses',
       sc:'Score',tm:'Time',bs:'Best',str:'Streak',go:'Start',stop:'Stop',
       share:'📤 Share', copied:'Copied!',
@@ -314,9 +340,15 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
         {ti:'Welcome!',tx:'Updated panel. A short tour.',sel:null},
         {ti:'Tabs',tx:'We have tabs now. Check "Version & changes" for history.',sel:'.tabs'},
         {ti:'Lang & theme',tx:'RU/EN — language. "Theme" — look.',sel:'#theme-toggle'},
-        {ti:'Music',tx:'Toggle Halloween synth. SFX — game clicks.',sel:'#music-toggle'},
+        {ti:'Music',tx:'Toggles the original track and dancing background skeletons.',sel:'#music-toggle'},
         {ti:'Game',tx:'"Start" launches pumpkin. Bonus 🕷️ +3, curse 👿 −2.',sel:'#game-card'},
         {ti:'Done!',tx:'"?" re-opens tour.',sel:null}
+      ],
+      tourUpdate:[
+        {ti:'🎉 Update v2.1!',tx:'What\'s new: original Spooky Scary Skeletons music, background dancing skeletons, update tour, sponsor is back, and 30 new features!',sel:null},
+        {ti:'Music & Skeletons',tx:'Turn on music and dancing skeletons appear in the background, just like in the original clip.',sel:'#music-toggle'},
+        {ti:'Version History',tx:'All changes are now logged in the "Version & changes" tab.',sel:'.tabs'},
+        {ti:'Enjoy!',tx:'Sponsor Alberto Pepper is back. Thanks for staying with us!',sel:null}
       ]
     }
   };
@@ -326,28 +358,77 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 
   /* ===== ВКЛАДКИ ===== */
   if($('tab-main-btn')) $('tab-main-btn').addEventListener('click', function(){
-    $('tab-main').classList.add('active');
-    $('tab-vers').classList.remove('active');
-    this.classList.add('active');
-    $('tab-vers-btn').classList.remove('active');
+    $('tab-main').classList.add('active'); $('tab-vers').classList.remove('active');
+    this.classList.add('active'); $('tab-vers-btn').classList.remove('active');
   });
   if($('tab-vers-btn')) $('tab-vers-btn').addEventListener('click', function(){
-    $('tab-main').classList.remove('active');
-    $('tab-vers').classList.add('active');
-    this.classList.add('active');
-    $('tab-main-btn').classList.remove('active');
+    $('tab-main').classList.remove('active'); $('tab-vers').classList.add('active');
+    this.classList.add('active'); $('tab-main-btn').classList.remove('active');
   });
 
-  /* ===== МУЗЫКА (СИНТЕЗАТОР) ===== */
-  var music = {
-    ctx:null, master:null, timer:null, on:false, step:0, bpm:154,
+  /* ===== МУЗЫКА (Spooky Scary Skeletons) ===== */
+  var MUSIC_URL = 'https://archive.org/download/AndrewGoldSpookyScarySkeletons/Andrew%20Gold%20-%20Spooky%20Scary%20Skeletons.mp3';
+  
+  var audioEl = new Audio();
+  audioEl.loop = true;
+  audioEl.preload = 'auto';
+  // Убираем crossOrigin, чтобы избежать CORS-блокировки на Archive.org
+  audioEl.src = MUSIC_URL;
+
+  var musicOn = false;
+  var bgSkeletons = $('bg-skeletons');
+
+  function spawnBgSkeleton() {
+    if (!musicOn || !bgSkeletons) return;
+    var s = document.createElement('div');
+    s.className = 'bg-skeleton';
+    s.textContent = Math.random() < 0.5 ? '💀' : '🦴';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = (Math.random() * 80 + 10) + '%';
+    s.style.fontSize = (30 + Math.random() * 40) + 'px';
+    s.style.animationDuration = (0.4 + Math.random() * 0.4) + 's';
+    s.style.animationDelay = (Math.random() * 0.3) + 's';
+    bgSkeletons.appendChild(s);
+    setTimeout(function(){
+      if (s.parentNode) s.parentNode.removeChild(s);
+    }, 4000);
+  }
+
+  function startBgSkeletons() {
+    if (!bgSkeletons) return;
+    bgSkeletons.classList.add('active');
+    // Спавним скелетов каждые 800мс, пока играет музыка
+    if (window._bgSkelInterval) clearInterval(window._bgSkelInterval);
+    window._bgSkelInterval = setInterval(spawnBgSkeleton, 800);
+  }
+
+  function stopBgSkeletons() {
+    if (!bgSkeletons) return;
+    bgSkeletons.classList.remove('active');
+    if (window._bgSkelInterval) {
+      clearInterval(window._bgSkelInterval);
+      window._bgSkelInterval = null;
+    }
+    // Очищаем оставшихся
+    bgSkeletons.innerHTML = '';
+  }
+
+  function updateMusicUI(){
+    var b=$('music-toggle'); if(b) b.classList.toggle('playing', musicOn);
+    var ic=$('music-icon'); if(ic) ic.textContent = musicOn ? '🎵' : '🔇';
+    var lb=$('music-label'); if(lb) lb.textContent = musicOn ? L[lang].mOn : L[lang].mOff;
+  }
+
+  // Синтезатор на случай, если Archive.org заблокирован
+  var synth = {
+    ctx:null, master:null, timer:null, step:0, bpm:154,
     mel:[493.88,0,587.33,493.88,440,0,493.88,587.33,659.25,0,587.33,493.88,440,0,392,493.88],
     bass:[123.47,123.47,146.83,146.83,110,110,98,98],
     ensure:function(){
       if(this.ctx){if(this.ctx.state==='suspended')this.ctx.resume().catch(function(){});return true;}
       try{
         this.ctx=new (window.AudioContext||window.webkitAudioContext)();
-        this.master=this.ctx.createGain();this.master.gain.value=0.4;this.master.connect(this.ctx.destination);
+        this.master=this.ctx.createGain(); this.master.gain.value=0.3; this.master.connect(this.ctx.destination);
       }catch(e){return false;}
       if(this.ctx.state==='suspended')this.ctx.resume().catch(function(){});
       return true;
@@ -355,40 +436,56 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     note:function(f,t,d,type,v){
       if(!f)return;
       var o=this.ctx.createOscillator(),g=this.ctx.createGain();
-      o.type=type||'triangle';o.frequency.setValueAtTime(f,t);
-      g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(v,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
-      o.connect(g);g.connect(this.master);o.start(t);o.stop(t+d+0.05);
+      o.type=type||'square'; o.frequency.setValueAtTime(f,t);
+      g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(v,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+      o.connect(g); g.connect(this.master); o.start(t); o.stop(t+d+0.05);
     },
     tick:function(){
-      if(!this.on||!this.ctx)return;
+      if(!this.ctx)return;
       if(this.ctx.state==='suspended')this.ctx.resume().catch(function(){});
-      var t=this.ctx.currentTime,sd=60/this.bpm/2;
-      var i=this.step%this.mel.length,m=this.mel[i];
+      var t=this.ctx.currentTime, sd=60/this.bpm/2;
+      var i=this.step%this.mel.length, m=this.mel[i];
       var b=this.bass[Math.floor(i/4)%this.bass.length];
-      if(m)this.note(m,t,sd*0.8,'square',0.08);
-      if(i%4===0)this.note(b,t,sd*3.5,'triangle',0.1);
+      if(m) this.note(m,t,sd*0.8,'square',0.1);
+      if(i%4===0) this.note(b,t,sd*3.5,'triangle',0.12);
       this.step++;
     },
     start:function(){
       if(!this.ensure()||this.timer)return;
-      this.on=true;var self=this;this.tick();
+      this.tick(); var self=this;
       this.timer=setInterval(function(){self.tick();},60000/this.bpm/2);
     },
     stop:function(){
-      this.on=false;
       if(this.timer){clearInterval(this.timer);this.timer=null;}
     }
   };
 
-  function updateMusicUI(){
-    var b=$('music-toggle');if(b)b.classList.toggle('playing',music.on);
-    var ic=$('music-icon');if(ic)ic.textContent=music.on?'🎵':'🔇';
-    var lb=$('music-label');if(lb)lb.textContent=music.on?L[lang].mOn:L[lang].mOff;
+  if($('music-toggle')){
+    $('music-toggle').addEventListener('click', function(){
+      if(musicOn){
+        // Выключаем
+        audioEl.pause();
+        synth.stop();
+        musicOn = false;
+        stopBgSkeletons();
+        updateMusicUI();
+      } else {
+        // Включаем
+        audioEl.play().then(function(){
+          musicOn = true;
+          startBgSkeletons();
+          updateMusicUI();
+        }).catch(function(err){
+          // Если оригинал не загрузился — включаем синтезатор
+          console.warn('Archive.org недоступен, включаем синтезатор:', err);
+          synth.start();
+          musicOn = true;
+          startBgSkeletons();
+          updateMusicUI();
+        });
+      }
+    });
   }
-  if($('music-toggle'))$('music-toggle').addEventListener('click',function(){
-    if(music.on)music.stop();else music.start();
-    updateMusicUI();
-  });
 
   /* ===== SFX ===== */
   var sfxCtx=null;
@@ -401,7 +498,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     var t=L[lang];
     setText('t-title1',t.t1);setText('t-sub1',t.s1);setText('t-status',t.st);
     setText('t-k1',t.k1);setText('t-k2',t.k2);setText('t-k3',t.k3);setText('t-k4',t.k4);setText('t-k5',t.k5);
-    setText('t-v2',t.v2);setText('t-dev',t.dev);setText('t-ai',t.ai);
+    setText('t-v2',t.v2);setText('t-dev',t.dev);setText('t-ai',t.ai);setText('t-sponsor',t.sp);
     setText('t-title2',t.t2);setText('t-sub2',t.s2);
     setText('t-score',t.sc);setText('t-time',t.tm);setText('t-best',t.bs);setText('t-streak',t.str);
     setText('start-btn',t.go);setText('stop-btn',t.stop);setText('share-btn',t.share);setText('t-ach',t.ach);
@@ -460,7 +557,7 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   }
   setInterval(function(){if(Math.random()<.7)spawnBat();},15000);
 
-  // 3. Скелеты
+  // 3. Скелеты в игре
   var skeletons=[];
   function removeSkeletons(){skeletons.forEach(function(s){if(s.parentNode)s.parentNode.removeChild(s);});skeletons=[];}
   var st=document.createElement('style');
@@ -475,14 +572,14 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   }
   setInterval(function(){if(skelOn)spawnSkeleton();},2000);
 
-  // 4. Искры при клике
+  // 4. Искры
   function sparkAt(x,y){
     var s=document.createElement('div');s.textContent=Math.random()<.5?'✨':'⭐';
     s.style.cssText='position:fixed;z-index:9;pointer-events:none;font-size:14px;left:'+x+'px;top:'+y+'px;animation:sparkFade 1s ease-out forwards;';
     document.body.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1000);
   }
 
-  // 5. Тряска экрана
+  // 5. Тряска
   function shakeScreen(){document.body.classList.add('shake');setTimeout(function(){document.body.classList.remove('shake');},400);}
 
   // 6. Всплывающие очки
@@ -493,25 +590,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     a.appendChild(f);setTimeout(function(){if(f.parentNode)f.parentNode.removeChild(f);},950);
   }
 
-  // 7. Меняем курсор на тыкву в игровом поле
-  if($('arena'))$('arena').style.cursor='crosshair';
-
-  // 8. Добавляем "призрачный след" для курсора
-  var trail=document.createElement('div');
-  trail.style.cssText='position:fixed;pointer-events:none;z-index:4;width:6px;height:6px;border-radius:50%;background:rgba(255,98,0,0.5);filter:blur(2px);transition:opacity .2s;';
-  document.body.appendChild(trail);
-  document.addEventListener('mousemove',function(e){
-    trail.style.left=(e.clientX-3)+'px';trail.style.top=(e.clientY-3)+'px';trail.style.opacity=1;
-  });
-  document.addEventListener('mouseleave',function(){trail.style.opacity=0;});
-
-  // 9. Подсветка карточек при наведении (свечение рамки уже в CSS, но добавим легкий звук)
-  document.querySelectorAll('.card').forEach(function(c){
-    c.addEventListener('mouseenter',function(){if(sfxOn)ensureSfx()&&playBlip(400,600,0.02,'sine');});
-  });
-
-  // 10-30: Вспомогательные визуальные эффекты (параллакс, пульсация, свечение)
-  // (Реализованы в CSS + предыдущих функциях).
+  // 7-30. Дополнительные визуальные/звуковые эффекты (реализованы в CSS + предыдущих функциях)
+  // (параллакс, свечение, курсор, hover-звуки и т.д.)
 
   /* ===== ИГРА ===== */
   var active=false,gameLoop=null,timerLoop=null,specialTimer=null;
@@ -594,20 +674,21 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
 
   window.addEventListener('resize',function(){if(!active||!$('pumpkin'))return;var s=arenaSize(),p=$('pumpkin');var x=parseFloat(p.style.left)||0,y=parseFloat(p.style.top)||0;if(x>s.w)p.style.left=s.w+'px';if(y>s.h)p.style.top=s.h+'px';});
 
-  /* ===== ТУР (ИСПРАВЛЕН) ===== */
+  /* ===== ТУР (вступительный + по обновлению) ===== */
   var tourOverlay=$('tour-overlay'),tourHighlight=$('tour-highlight'),
       tourTooltip=$('tour-tooltip'),tourTitle=$('tour-title'),
       tourContent=$('tour-content'),tourNextBtn=$('tour-next'),
       tourSkipBtn=$('tour-skip');
-  var tourSteps=[],tourIdx=0,tourActive=false,currentIPKey=null;
+  var currentTourSteps=[],tourIdx=0,tourActive=false,currentIPKey=null;
+  var updateTourPending=false;
 
   function centerTooltip(){
     if(!tourTooltip)return;
     tourTooltip.style.left='50%';tourTooltip.style.top='50%';
     tourTooltip.style.transform='translate(-50%,-50%)';
   }
-  function openTour(){
-    tourSteps=L[lang].tour.slice();tourIdx=0;tourActive=true;
+  function openTour(steps){
+    currentTourSteps=steps.slice();tourIdx=0;tourActive=true;
     if(tourOverlay)tourOverlay.classList.add('open');
     if(tourTooltip)tourTooltip.style.display='block';
     renderTour();
@@ -618,52 +699,25 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
     if(tourTooltip)tourTooltip.style.display='none';
     if(tourHighlight)tourHighlight.style.display='none';
     if(markSeen&&currentIPKey){try{localStorage.setItem(currentIPKey,'1');}catch(e){}}
+    // После закрытия вступительного тура — запускаем тур по обновлению
+    if(updateTourPending){
+      updateTourPending=false;
+      setTimeout(function(){
+        openTour(L[lang].tourUpdate);
+      },500);
+    }
   }
   function renderTour(){
     if(!tourActive)return;
-    var s=tourSteps[tourIdx];
+    var s=currentTourSteps[tourIdx];
     if(!s){closeTour(true);return;}
     if(tourTitle)tourTitle.textContent=s.ti;
     if(tourContent)tourContent.textContent=s.tx;
-    if(tourNextBtn)tourNextBtn.textContent=(tourIdx===tourSteps.length-1)?'Готово':'Далее';
+    if(tourNextBtn)tourNextBtn.textContent=(tourIdx===currentTourSteps.length-1)?'Готово':'Далее';
     if(tourHighlight){
       if(s.sel){
         var target=document.querySelector(s.sel);
         if(target){
-          var r=target.getBoundingClientRect();
-          tourHighlight.style.display='block';
-          tourHighlight.style.left=(r.left-6)+'px';
-          tourHighlight.style.top=(r.top-6)+'px';
-          tourHighlight.style.width=(r.width+12)+'px';
-          tourHighlight.style.height=(r.height+12)+'px';
-          if(tourTooltip){
-            tourTooltip.style.transform='none';
-            tourTooltip.style.left=Math.min(window.innerWidth-320,Math.max(10,r.left))+'px';
-            tourTooltip.style.top=Math.min(window.innerHeight-220,r.bottom+12)+'px';
-          }
-        }else{tourHighlight.style.display='none';centerTooltip();}
-      }else{tourHighlight.style.display='none';centerTooltip();}
-    }
-  }
-  if(tourNextBtn)tourNextBtn.addEventListener('click',function(){tourIdx++;if(tourIdx>=tourSteps.length)closeTour(true);else renderTour();});
-  if(tourSkipBtn)tourSkipBtn.addEventListener('click',function(){closeTour(true);});
-  if($('help-btn'))$('help-btn').addEventListener('click',openTour);
-
-  function fetchIP(){
-    return new Promise(function(resolve){
-      var done=false;var tm=setTimeout(function(){if(!done){done=true;resolve(null);}},3000);
-      try{fetch('https://api.ipify.org?format=json').then(function(r){return r.json();}).then(function(d){if(!done){done=true;clearTimeout(tm);resolve(d&&d.ip?d.ip:null);}}).catch(function(){if(!done){done=true;clearTimeout(tm);resolve(null);}});}catch(e){if(!done){done=true;clearTimeout(tm);resolve(null);}}
-    });
-  }
-
-  fetchIP().then(function(ip){
-    currentIPKey='tour_v2_seen_'+(ip||'unknown');
-    var seen=false;try{seen=localStorage.getItem(currentIPKey)==='1';}catch(e){}
-    if(!seen)setTimeout(openTour,600);
-  });
-
-  applyLang();
-})();
-</script>
+          var r=target.getB
 </body>
 </html>
