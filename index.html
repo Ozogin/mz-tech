@@ -3,352 +3,451 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель МЗ — Промышленный Хэллоуинский Монолит</title>
+<title>Панель МЗ — Halloween Monolith</title>
 <style>
 :root{
-  --bg-dark-core:#06060c; --neon-pumpkin-orange:#ff6200; --neon-witch-purple:#8e44ad;
-  --glass-panel-background:rgba(20,20,30,.55); --text-pure-white:#fff;
-  --matrix-green:#2ecc71; --blood-red:#c0392b;
-  --accent:var(--neon-pumpkin-orange); --accent-2:var(--neon-witch-purple);
-  --card-border:rgba(255,98,0,.2); --card-border-2:rgba(142,68,173,.3);
-  --bg-gradient:radial-gradient(circle at 50% 50%,#150d2a 0%,#06060c 100%);
+  --bg:#06060c; --panel:rgba(20,20,32,.55); --panel-2:rgba(12,12,20,.65);
+  --text:#fff; --muted:#8e8ea3;
+  --accent:#ff6200; --accent-2:#8e44ad;
+  --green:#2ecc71; --red:#c0392b;
+  --border:rgba(255,98,0,.18); --border-2:rgba(142,68,173,.25);
+  --bg-grad:radial-gradient(circle at 50% 20%,#1a0f2e 0%,#06060c 70%);
+  --shadow:0 10px 40px -10px rgba(0,0,0,.6);
+  --radius:22px;
 }
 body.theme-samhain{
-  --bg-gradient:radial-gradient(circle at 50% 50%,#0b1a12 0%,#040807 100%);
+  --bg-grad:radial-gradient(circle at 50% 20%,#0b1a12 0%,#040807 70%);
   --accent:#2ecc71; --accent-2:#c0392b;
-  --card-border:rgba(46,204,113,.25); --card-border-2:rgba(192,57,43,.3);
+  --border:rgba(46,204,113,.22); --border-2:rgba(192,57,43,.28);
 }
 *{box-sizing:border-box;}
+html,body{height:100%;}
 body{
-  font-family:'Segoe UI',Roboto,system-ui,sans-serif; background-color:var(--bg-dark-core);
-  color:var(--text-pure-white); margin:0; padding:20px; display:flex; flex-direction:column;
-  justify-content:center; align-items:center; min-height:100vh; overflow-x:hidden;
-  background-image:var(--bg-gradient); background-attachment:fixed;
-  user-select:none; -webkit-user-select:none; transition:background-image .6s ease;
+  margin:0; padding:24px; min-height:100vh;
+  font-family:'Inter','Segoe UI',Roboto,system-ui,sans-serif;
+  color:var(--text); background:var(--bg); background-image:var(--bg-grad);
+  background-attachment:fixed; transition:background-image .6s ease,color .3s;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  overflow-x:hidden; user-select:none; -webkit-user-select:none;
 }
-.site-spider-web-top-left,.site-spider-web-top-right,.site-spider-web-bottom-left,.site-spider-web-bottom-right{
-  position:fixed; width:220px; height:250px; z-index:1; pointer-events:none; opacity:.9;
+/* фоновая дымка */
+.fog{
+  position:fixed; inset:-20%; z-index:0; pointer-events:none;
+  background:radial-gradient(circle at 30% 30%,rgba(142,68,173,.10),transparent 55%),
+             radial-gradient(circle at 70% 70%,rgba(255,98,0,.08),transparent 55%);
+  animation:fogMove 28s ease-in-out infinite alternate;
 }
-.site-spider-web-top-left{top:0;left:0;}
-.site-spider-web-top-right{top:0;right:0;transform:scaleX(-1);}
-.site-spider-web-bottom-left{bottom:0;left:0;transform:scaleY(-1);}
-.site-spider-web-bottom-right{bottom:0;right:0;transform:scale(-1,-1);}
-.fog-ambient-layer{
-  position:fixed; width:200%; height:100%;
-  background:radial-gradient(circle,rgba(142,68,173,.08) 0%,transparent 60%);
-  top:0; left:-50%; z-index:0; animation:coreFogEngineMovement 25s infinite linear; pointer-events:none;
-  transition:background .6s ease;
+body.theme-samhain .fog{
+  background:radial-gradient(circle at 30% 30%,rgba(46,204,113,.10),transparent 55%),
+             radial-gradient(circle at 70% 70%,rgba(192,57,43,.08),transparent 55%);
 }
-body.theme-samhain .fog-ambient-layer{background:radial-gradient(circle,rgba(46,204,113,.07) 0%,transparent 60%);}
-@keyframes coreFogEngineMovement{0%{transform:translate(0,0) scale(1);}50%{transform:translate(5%,3%) scale(1.1);}100%{transform:translate(0,0) scale(1);}}
-.top-controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;width:100%;max-width:885px;position:relative;z-index:10;}
-.theme-switcher,.master-audio-banner-panel,.synth-toggle{
-  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);
-  padding:12px 20px; border-radius:30px; font-size:13px; color:#c0c0d0; cursor:pointer;
-  text-align:center; font-weight:600; transition:all .3s ease;
-  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  display:flex; align-items:center; gap:8px;
+@keyframes fogMove{0%{transform:translate(0,0) scale(1);}100%{transform:translate(3%,2%) scale(1.08);}}
+
+/* паутины */
+.web{position:fixed;width:200px;height:230px;z-index:1;pointer-events:none;opacity:.85;}
+.web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);}
+.web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
+
+/* верхняя панель */
+.topbar{
+  width:100%; max-width:960px; display:flex; flex-wrap:wrap; gap:10px;
+  justify-content:center; margin-bottom:22px; position:relative; z-index:10;
 }
-.theme-switcher:hover,.master-audio-banner-panel:hover,.synth-toggle:hover{
-  border-color:var(--accent); color:#fff; background:rgba(255,255,255,.07);
-  box-shadow:0 0 20px -5px var(--accent);
+.pill{
+  display:flex; align-items:center; gap:8px; padding:11px 18px; border-radius:999px;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+  color:#c9c9d6; font-size:13px; font-weight:600; cursor:pointer;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  transition:all .25s ease;
 }
-.master-audio-banner-panel{flex:1;min-width:240px;justify-content:center;}
-.theme-switcher{min-width:170px;justify-content:center;}
-.synth-toggle{min-width:200px;justify-content:center;}
-.synth-toggle.active{border-color:var(--accent-2);color:var(--accent-2);box-shadow:0 0 20px -5px var(--accent-2);}
-.master-layout-container{display:flex;flex-direction:row;gap:25px;max-width:950px;width:100%;flex-wrap:wrap;justify-content:center;position:relative;z-index:10;}
-.hud-glass-card{
-  background:var(--glass-panel-background); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  padding:30px; border-radius:24px; box-shadow:0 8px 32px 0 rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);
-  width:100%; max-width:430px; text-align:center; border:1px solid var(--card-border);
-  position:relative; transition:border-color .6s ease;
+.pill:hover{color:#fff;border-color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
+.pill.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 22px -6px var(--accent);}
+.pill.music{flex:1;min-width:230px;justify-content:center;}
+.pill.music.playing{border-color:var(--green);color:var(--green);box-shadow:0 0 22px -6px var(--green);}
+.lang-group{display:flex;gap:6px;padding:4px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+.lang-btn{padding:8px 16px;border-radius:999px;border:none;background:transparent;color:#9a9aad;font-weight:700;font-size:12px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+.lang-btn.active{background:var(--accent);color:#000;}
+
+/* сетка */
+.grid{
+  display:flex; flex-wrap:wrap; gap:22px; justify-content:center;
+  width:100%; max-width:960px; position:relative; z-index:10;
 }
-.hud-glass-card.game-node{border-color:var(--card-border-2);}
-h1{margin:0 0 15px;color:var(--accent);font-size:24px;text-shadow:0 0 15px rgba(255,98,0,.4);transition:color .6s ease;}
-h2{margin:0 0 15px;color:var(--accent-2);font-size:24px;text-shadow:0 0 15px rgba(142,68,173,.4);transition:color .6s ease;}
-.core-status-badge{
-  display:inline-block; padding:5px 15px; font-weight:bold; border-radius:20px;
-  text-transform:uppercase; margin-bottom:15px; font-size:11px; letter-spacing:1px;
-  background:rgba(255,98,0,.12); color:var(--accent); border:1px solid var(--accent); transition:all .6s ease;
+.card{
+  position:relative; flex:1 1 420px; max-width:460px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--radius); padding:28px;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.05);
+  transition:border-color .5s ease,transform .3s ease;
 }
-.core-status-badge::before{content:'● ';animation:pulseDot 2s ease-in-out infinite;}
-@keyframes pulseDot{0%,100%{opacity:1;}50%{opacity:.3;}}
-.hud-info-wrapper{text-align:left;background:rgba(0,0,0,.35);padding:15px;border-radius:14px;}
-.hud-data-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;border-bottom:1px solid rgba(255,255,255,.03);padding-bottom:5px;}
-.hud-data-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-.hud-row-label{color:#8e8e9f;}
-.hud-row-value{font-weight:bold;color:#fff;}
-.hud-row-value.accent{color:var(--accent);transition:color .6s ease;}
-.credits-container{margin-top:20px;font-size:13px;color:#73738c;border-top:1px solid rgba(255,255,255,.06);padding-top:12px;line-height:1.7;text-align:left;}
-.game-area-viewport{width:100%;height:200px;background:rgba(0,0,0,.55);border-radius:16px;position:relative;margin-top:15px;border:1px solid var(--card-border-2);overflow:hidden;transition:border-color .6s ease;}
-.game-area-viewport::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 120%,rgba(142,68,173,.15),transparent 70%);}
-#pumpkin{font-size:40px;position:absolute;cursor:pointer;top:35%;left:45%;filter:drop-shadow(0 0 10px var(--accent));transition:left .12s ease,top .12s ease,transform .08s ease,filter .3s ease;will-change:left,top,transform;z-index:2;}
+.card:hover{transform:translateY(-2px);}
+.card.game{border-color:var(--border-2);}
+.card::before{
+  content:''; position:absolute; inset:-1px; border-radius:var(--radius); z-index:-1;
+  background:linear-gradient(135deg,var(--accent),transparent 45%,transparent 55%,var(--accent-2));
+  opacity:.14; filter:blur(14px); animation:breath 7s ease-in-out infinite;
+}
+@keyframes breath{0%,100%{opacity:.10;}50%{opacity:.26;}}
+
+h1,h2{margin:0 0 6px;font-size:22px;letter-spacing:-.3px;}
+h1{color:var(--accent);text-shadow:0 0 24px rgba(255,98,0,.35);transition:color .5s;}
+h2{color:var(--accent-2);text-shadow:0 0 24px rgba(142,68,173,.35);transition:color .5s;}
+.subtitle{color:var(--muted);font-size:12px;margin-bottom:18px;letter-spacing:.3px;}
+
+.badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--accent);border:1px solid var(--accent);background:rgba(255,98,0,.10);
+  margin-bottom:16px;transition:all .5s;
+}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+.info{background:rgba(0,0,0,.35);border-radius:14px;padding:14px 16px;}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.row:last-child{border-bottom:none;padding-bottom:0;}
+.row .k{color:var(--muted);} .row .v{font-weight:600;color:#fff;text-align:right;}
+.row .v.accent{color:var(--accent);transition:color .5s;font-family:monospace;}
+
+.credits{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px;color:#6f6f88;line-height:1.9;text-align:left;}
+.credits b{font-weight:700;}
+
+/* игровая зона */
+.arena{
+  position:relative;width:100%;height:210px;margin-top:14px;border-radius:16px;
+  background:rgba(0,0,0,.55);border:1px solid var(--border-2);overflow:hidden;
+  transition:border-color .5s;
+}
+.arena::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 50% 130%,rgba(142,68,173,.18),transparent 70%);}
+#pumpkin{
+  position:absolute;top:38%;left:45%;font-size:42px;cursor:pointer;z-index:2;
+  filter:drop-shadow(0 0 10px var(--accent));
+  transition:left .12s ease,top .12s ease,transform .08s ease,filter .3s;
+  will-change:left,top,transform;
+}
 #pumpkin:active{transform:scale(.85);}
-#pumpkin.bonus{filter:drop-shadow(0 0 14px var(--matrix-green)) hue-rotate(90deg);}
-#pumpkin.cursed{filter:drop-shadow(0 0 14px var(--blood-red)) hue-rotate(-45deg) saturate(2);}
-.game-hud{display:flex;justify-content:space-between;margin-top:15px;font-weight:700;padding:0 5px;font-size:15px;}
-.game-hud .val{font-variant-numeric:tabular-nums;}
-#runtime-score-counter{color:var(--accent-2);transition:color .6s ease;}
-#historical-best-counter{color:var(--matrix-green);}
-#game-timer-display{color:var(--accent);transition:color .6s ease;}
-#combo-display{color:var(--matrix-green);font-size:13px;min-height:18px;text-align:center;margin-top:4px;font-weight:700;opacity:0;transition:opacity .3s ease;}
-#combo-display.visible{opacity:1;}
-.control-btn-layout{display:flex;gap:10px;margin-top:12px;}
-.hud-action-button{flex:1;color:#fff;border:none;padding:11px;border-radius:12px;cursor:pointer;font-weight:700;font-size:14px;transition:transform .15s ease,box-shadow .2s ease,background .3s ease;background:linear-gradient(135deg,var(--accent-2),#5a2a75);}
-.hud-action-button:hover{transform:translateY(-1px);box-shadow:0 6px 20px -5px var(--accent-2);}
-.hud-action-button:active{transform:translateY(1px);}
-.hud-action-button.stop-modifier{background:linear-gradient(135deg,var(--blood-red),#7a1f15);}
-.hud-action-button.stop-modifier:hover{box-shadow:0 6px 20px -5px var(--blood-red);}
-.hud-action-button:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.achievements-box{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06);width:100%;margin-top:15px;padding:12px;border-radius:12px;font-size:12px;text-align:left;}
-.ach-title{font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;transition:color .6s ease;}
-.ach-item{color:#8e8e9f;display:flex;align-items:center;gap:5px;margin-bottom:4px;transition:color .3s;}
-.ach-item.unlocked{color:var(--matrix-green);font-weight:600;}
-.yt-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;justify-content:center;align-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:20px;}
-.yt-overlay.open{display:flex;}
-.yt-modal{background:#111;border-radius:20px;padding:20px;max-width:720px;width:100%;border:1px solid var(--card-border);box-shadow:0 0 60px -10px var(--accent-2);position:relative;}
-.yt-modal iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block;}
-.yt-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:none;background:var(--blood-red);color:#fff;font-size:20px;cursor:pointer;font-weight:bold;line-height:1;box-shadow:0 4px 16px rgba(192,57,43,.6);}
-.yt-close:hover{background:#e74c3c;}
-.yt-note{color:#8e8e9f;font-size:12px;margin-top:10px;text-align:center;line-height:1.5;}
-@media (max-width:520px){body{padding:12px;}.hud-glass-card{padding:20px;}.game-area-viewport{height:170px;}}
+#pumpkin.bonus{filter:drop-shadow(0 0 16px var(--green));}
+#pumpkin.cursed{filter:drop-shadow(0 0 16px var(--red)) saturate(1.8);}
+
+.stats{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-weight:700;font-size:14px;}
+.stats .val{font-variant-numeric:tabular-nums;}
+#score{color:var(--accent-2);transition:color .5s;}
+#timer{color:var(--accent);transition:color .5s;}
+#best{color:var(--green);}
+#combo{min-height:18px;margin-top:6px;text-align:center;font-size:12.5px;font-weight:700;color:var(--green);opacity:0;transition:opacity .3s;}
+#combo.show{opacity:1;}
+
+.btns{display:flex;gap:10px;margin-top:12px;}
+.btn{
+  flex:1;padding:12px;border:none;border-radius:13px;color:#fff;font-weight:700;font-size:14px;
+  cursor:pointer;transition:transform .15s,box-shadow .2s,background .3s;
+  background:linear-gradient(135deg,var(--accent-2),#5a2a75);
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px -8px var(--accent-2);}
+.btn:active{transform:translateY(1px);}
+.btn.stop{background:linear-gradient(135deg,var(--red),#7a1f15);}
+.btn.stop:hover{box-shadow:0 8px 24px -8px var(--red);}
+
+.ach{margin-top:16px;padding:13px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);font-size:12px;text-align:left;}
+.ach-title{font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;transition:color .5s;font-size:11px;}
+.ach-item{color:#8e8ea3;margin-bottom:5px;transition:color .3s;}
+.ach-item:last-child{margin-bottom:0;}
+.ach-item.on{color:var(--green);font-weight:600;}
+
+@media (max-width:560px){
+  body{padding:14px;}
+  .card{padding:20px;flex-basis:100%;}
+  .arena{height:180px;}
+}
 </style>
 </head>
 <body>
 
-<svg class="site-spider-web-top-left" viewBox="0 0 100 100">
-  <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.25)" stroke-width="0.8" fill="none"/>
-  <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" stroke="rgba(255,98,0,.18)" stroke-width="0.6" fill="none"/>
-  <path d="M0,0 L35,85 M0,0 L85,35" stroke="rgba(255,98,0,.12)" stroke-width="0.4" fill="none"/>
+<div class="fog"></div>
+<svg class="web tl" viewBox="0 0 100 100">
+  <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255,98,0,.22)" stroke-width="0.8" fill="none"/>
+  <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" stroke="rgba(255,98,0,.16)" stroke-width="0.6" fill="none"/>
 </svg>
-<svg class="site-spider-web-top-right" viewBox="0 0 100 100"></svg>
-<svg class="site-spider-web-bottom-left" viewBox="0 0 100 100"></svg>
-<svg class="site-spider-web-bottom-right" viewBox="0 0 100 100"></svg>
-<div class="fog-ambient-layer"></div>
+<svg class="web tr" viewBox="0 0 100 100"></svg>
+<svg class="web bl" viewBox="0 0 100 100"></svg>
+<svg class="web br" viewBox="0 0 100 100"></svg>
 
-<div class="top-controls">
-  <div class="theme-switcher" id="theme-toggle" title="Переключить тему">
+<div class="topbar">
+  <div class="lang-group">
+    <button class="lang-btn active" id="lang-ru">RU</button>
+    <button class="lang-btn" id="lang-en">EN</button>
+  </div>
+  <div class="pill" id="theme-toggle">
     <span id="theme-icon">🎃</span><span id="theme-label">Тема: Тыква</span>
   </div>
-  <div class="master-audio-banner-panel" id="master-audio-engine-activation-button">🎵 Открыть музыку (YouTube)</div>
-  <div class="synth-toggle" id="synth-toggle">🔮 Синтез-эмбиент: выкл</div>
-</div>
-
-<div class="master-layout-container">
-  <div class="hud-glass-card">
-    <h1>Мониторинг Технички МЗ</h1>
-    <div class="core-status-badge">СИСТЕМА АКТИВНА</div>
-    <div class="hud-info-wrapper">
-      <div class="hud-data-row"><span class="hud-row-label">Имя узла:</span><span class="hud-row-value">Техничка Озогин МЗ</span></div>
-      <div class="hud-data-row"><span class="hud-row-label">Издание:</span><span class="hud-row-value accent">Halloween Edition</span></div>
-      <div class="hud-data-row"><span class="hud-row-label">Дата создания:</span><span class="hud-row-value">25.10.2026</span></div>
-      <div class="hud-data-row"><span class="hud-row-label">Время работы:</span><span class="hud-row-value accent" id="realtime-clock-digital-display" style="font-family:monospace;">0ч 0мин 0сек</span></div>
-      <div class="hud-data-row"><span class="hud-row-label">База данных:</span><span class="hud-row-value">Google Таблица</span></div>
-      <div class="hud-data-row"><span class="hud-row-label">Сетевой узел:</span><span class="hud-row-value">GitHub Pages live</span></div>
-    </div>
-    <div class="credits-container">
-      Разработчик: <span style="color:var(--accent);font-weight:bold;">Ozogin</span><br>
-      ИИ-Архитекторы: <span style="color:var(--accent-2);font-weight:bold;">Алиса</span> &amp; <span style="color:#2ecc71;font-weight:bold;">DeepSeek</span><br>
-      Спонсор: <span style="color:#2ecc71;font-weight:bold;">Alberto Pepper</span>
-    </div>
-  </div>
-
-  <div class="hud-glass-card game-node">
-    <h2>🦇 Хэллоуинская Игра</h2>
-    <div class="game-area-viewport" id="game-area"><div id="pumpkin">🎃</div></div>
-    <div class="game-hud">
-      <div>Счет: <span id="runtime-score-counter" class="val">0</span></div>
-      <div>Время: <span id="game-timer-display" class="val">30</span>с</div>
-      <div>Рекорд: <span id="historical-best-counter" class="val">0</span></div>
-    </div>
-    <div id="combo-display"></div>
-    <div class="control-btn-layout">
-      <button class="hud-action-button" id="game-start-trigger">Старт</button>
-      <button class="hud-action-button stop-modifier" id="game-stop-trigger">Стоп</button>
-    </div>
-    <div class="achievements-box">
-      <div class="ach-title">🎃 Достижения сессии:</div>
-      <div class="ach-item" id="achievement-slot-1">❌ Охотник за призраками (10 очков)</div>
-      <div class="ach-item" id="achievement-slot-2">❌ Повелитель тыкв (25 очков)</div>
-      <div class="ach-item" id="achievement-slot-3">❌ Комбо-мастер (x5 комбо)</div>
-    </div>
+  <div class="pill music" id="music-toggle">
+    <span id="music-icon">🔇</span><span id="music-label">Музыка: выкл</span>
   </div>
 </div>
 
-<div class="yt-overlay" id="yt-overlay">
-  <div class="yt-modal">
-    <button class="yt-close" id="yt-close" aria-label="Закрыть">×</button>
-    <div id="yt-player-container"></div>
-    <div class="yt-note">Официальный плеер YouTube. Закройте окно, чтобы остановить музыку.</div>
+<audio id="bg-music" loop preload="auto">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="grid">
+  <div class="card">
+    <h1 id="t-title1">Мониторинг Технички МЗ</h1>
+    <div class="subtitle" id="t-sub1">Промышленный хэллоуинский монолит</div>
+    <div class="badge"><span class="dot"></span><span id="t-status">Система активна</span></div>
+    <div class="info">
+      <div class="row"><span class="k" id="t-k1">Имя узла</span><span class="v">Техничка Озогин МЗ</span></div>
+      <div class="row"><span class="k" id="t-k2">Издание</span><span class="v accent" id="t-v2">Halloween Edition</span></div>
+      <div class="row"><span class="k" id="t-k3">Дата создания</span><span class="v">25.10.2026</span></div>
+      <div class="row"><span class="k" id="t-k4">Время работы</span><span class="v accent" id="clock" style="font-family:monospace;">0ч 0мин 0сек</span></div>
+      <div class="row"><span class="k" id="t-k5">База данных</span><span class="v">Google Таблица</span></div>
+      <div class="row"><span class="k" id="t-k6">Сетевой узел</span><span class="v">GitHub Pages live</span></div>
+    </div>
+    <div class="credits">
+      <span id="t-dev">Разработчик</span>: <b style="color:var(--accent);">Ozogin</b><br>
+      <span id="t-ai">ИИ-Архитекторы</span>: <b style="color:var(--accent-2);">Алиса</b> &amp; <b style="color:#2ecc71;">DeepSeek</b><br>
+      <span id="t-sponsor">Спонсор</span>: <b style="color:#2ecc71;">Alberto Pepper</b>
+    </div>
+  </div>
+
+  <div class="card game">
+    <h2 id="t-title2">🦇 Хэллоуинская Игра</h2>
+    <div class="subtitle" id="t-sub2">Лови тыквы, избегай проклятий</div>
+    <div class="arena" id="arena"><div id="pumpkin">🎃</div></div>
+    <div class="stats">
+      <div><span id="t-score">Счет</span>: <span class="val" id="score">0</span></div>
+      <div><span id="t-time">Время</span>: <span class="val" id="timer">30</span></div>
+      <div><span id="t-best">Рекорд</span>: <span class="val" id="best">0</span></div>
+    </div>
+    <div id="combo"></div>
+    <div class="btns">
+      <button class="btn" id="start-btn" id="t-start">Старт</button>
+      <button class="btn stop" id="stop-btn" id="t-stop">Стоп</button>
+    </div>
+    <div class="ach">
+      <div class="ach-title" id="t-ach">🎃 Достижения сессии</div>
+      <div class="ach-item" id="ach1">❌ Охотник за призраками (10)</div>
+      <div class="ach-item" id="ach2">❌ Повелитель тыкв (25)</div>
+      <div class="ach-item" id="ach3">❌ Комбо-мастер (x5)</div>
+    </div>
   </div>
 </div>
 
-<!-- СКРИПТ В СЛЕДУЮЩЕМ СООБЩЕНИИ -->
-</body>
-</html>
 <script>
 (function () {
   'use strict';
 
   var $ = function (id) { return document.getElementById(id); };
   var el = {
-    clock: $('realtime-clock-digital-display'),
+    clock: $('clock'),
+    langRu: $('lang-ru'), langEn: $('lang-en'),
     themeToggle: $('theme-toggle'), themeIcon: $('theme-icon'), themeLabel: $('theme-label'),
-    ytBtn: $('master-audio-engine-activation-button'), synthToggle: $('synth-toggle'),
-    ytOverlay: $('yt-overlay'), ytClose: $('yt-close'), ytContainer: $('yt-player-container'),
-    pumpkin: $('pumpkin'), area: $('game-area'),
-    score: $('runtime-score-counter'), timer: $('game-timer-display'),
-    best: $('historical-best-counter'), combo: $('combo-display'),
-    startBtn: $('game-start-trigger'), stopBtn: $('game-stop-trigger'),
-    a1: $('achievement-slot-1'), a2: $('achievement-slot-2'), a3: $('achievement-slot-3')
+    musicToggle: $('music-toggle'), musicIcon: $('music-icon'), musicLabel: $('music-label'),
+    pumpkin: $('pumpkin'), arena: $('arena'),
+    score: $('score'), timer: $('timer'), best: $('best'), combo: $('combo'),
+    startBtn: $('start-btn'), stopBtn: $('stop-btn'),
+    ach1: $('ach1'), ach2: $('ach2'), ach3: $('ach3')
   };
 
-  var sec = 0, gameLoop = null, timerLoop = null, specialTimeout = null;
-  var active = false, score = 0, best = 0, timeLeft = 30;
-  var combo = { count: 0, max: 0, last: 0 };
-  var theme = 'pumpkin', pState = 'normal';
+  /* ================== ЯЗЫК ================== */
+  var LANG = {
+    ru: {
+      title1: 'Мониторинг Технички МЗ', sub1: 'Промышленный хэллоуинский монолит',
+      status: 'Система активна',
+      k1: 'Имя узла', k2: 'Издание', k3: 'Дата создания', k4: 'Время работы', k5: 'База данных', k6: 'Сетевой узел',
+      v2: 'Halloween Edition',
+      dev: 'Разработчик', ai: 'ИИ-Архитекторы', sponsor: 'Спонсор',
+      title2: '🦇 Хэллоуинская Игра', sub2: 'Лови тыквы, избегай проклятий',
+      score: 'Счет', time: 'Время', best: 'Рекорд',
+      start: 'Старт', stop: 'Стоп',
+      ach: '🎃 Достижения сессии',
+      ach1: '❌ Охотник за призраками (10)', ach2: '❌ Повелитель тыкв (25)', ach3: '❌ Комбо-мастер (x5)',
+      ach1on: '🏆 Охотник за призраками (Получено!)', ach2on: '🏆 Повелитель тыкв (Получено!)', ach3on: '🏆 Комбо-мастер (Получено!)',
+      themePumpkin: 'Тема: Тыква', themeSamhain: 'Тема: Самайн',
+      musicOff: 'Музыка: выкл', musicOn: 'Музыка: вкл',
+      clockFmt: function (h, m, s) { return h + 'ч ' + m + 'мин ' + s + 'сек'; }
+    },
+    en: {
+      title1: 'MZ Tech Node Monitor', sub1: 'Industrial Halloween Monolith',
+      status: 'System active',
+      k1: 'Node name', k2: 'Edition', k3: 'Created', k4: 'Uptime', k5: 'Database', k6: 'Network node',
+      v2: 'Halloween Edition',
+      dev: 'Developer', ai: 'AI Architects', sponsor: 'Sponsor',
+      title2: '🦇 Halloween Game', sub2: 'Catch pumpkins, avoid curses',
+      score: 'Score', time: 'Time', best: 'Best',
+      start: 'Start', stop: 'Stop',
+      ach: '🎃 Session achievements',
+      ach1: '❌ Ghost hunter (10)', ach2: '❌ Pumpkin lord (25)', ach3: '❌ Combo master (x5)',
+      ach1on: '🏆 Ghost hunter (Unlocked!)', ach2on: '🏆 Pumpkin lord (Unlocked!)', ach3on: '🏆 Combo master (Unlocked!)',
+      themePumpkin: 'Theme: Pumpkin', themeSamhain: 'Theme: Samhain',
+      musicOff: 'Music: off', musicOn: 'Music: on',
+      clockFmt: function (h, m, s) { return h + 'h ' + m + 'm ' + s + 's'; }
+    }
+  };
+  var lang = 'ru';
 
-  try { var sb = localStorage.getItem('mz_halloween_best'); if (sb) best = parseInt(sb, 10) || 0; } catch (e) {}
-  if (el.best) el.best.innerText = best;
-
-  var web = document.querySelector('.site-spider-web-top-left');
-  if (web) {
-    var html = web.innerHTML;
-    var tr = document.querySelector('.site-spider-web-top-right');
-    var bl = document.querySelector('.site-spider-web-bottom-left');
-    var br = document.querySelector('.site-spider-web-bottom-right');
-    if (tr) tr.innerHTML = html;
-    if (bl) bl.innerHTML = html;
-    if (br) br.innerHTML = html;
+  function setText(id, txt) { var e = $(id); if (e) e.textContent = txt; }
+  function applyLang() {
+    var t = LANG[lang];
+    setText('t-title1', t.title1); setText('t-sub1', t.sub1); setText('t-status', t.status);
+    setText('t-k1', t.k1); setText('t-k2', t.k2); setText('t-k3', t.k3);
+    setText('t-k4', t.k4); setText('t-k5', t.k5); setText('t-k6', t.k6);
+    setText('t-v2', t.v2);
+    setText('t-dev', t.dev); setText('t-ai', t.ai); setText('t-sponsor', t.sponsor);
+    setText('t-title2', t.title2); setText('t-sub2', t.sub2);
+    setText('t-score', t.score); setText('t-time', t.time); setText('t-best', t.best);
+    setText('start-btn', t.start); setText('stop-btn', t.stop);
+    setText('t-ach', t.ach);
+    if (el.ach1 && !el.ach1.classList.contains('on')) el.ach1.textContent = t.ach1;
+    if (el.ach2 && !el.ach2.classList.contains('on')) el.ach2.textContent = t.ach2;
+    if (el.ach3 && !el.ach3.classList.contains('on')) el.ach3.textContent = t.ach3;
+    el.themeLabel.textContent = (theme === 'pumpkin') ? t.themePumpkin : t.themeSamhain;
+    el.musicLabel.textContent = music.on ? t.musicOn : t.musicOff;
+    el.langRu.classList.toggle('active', lang === 'ru');
+    el.langEn.classList.toggle('active', lang === 'en');
   }
+  if (el.langRu) el.langRu.addEventListener('click', function () { lang = 'ru'; applyLang(); });
+  if (el.langEn) el.langEn.addEventListener('click', function () { lang = 'en'; applyLang(); });
 
+  /* ================== ЧАСЫ ================== */
+  var sec = 0;
   setInterval(function () {
     sec++;
     var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
-    if (el.clock) el.clock.innerText = h + 'ч ' + m + 'мин ' + s + 'сек';
+    if (el.clock) el.clock.textContent = LANG[lang].clockFmt(h, m, s);
   }, 1000);
 
+  /* ================== ТЕМА ================== */
+  var theme = 'pumpkin';
   if (el.themeToggle) el.themeToggle.addEventListener('click', function () {
     theme = (theme === 'pumpkin') ? 'samhain' : 'pumpkin';
-    if (theme === 'samhain') {
-      document.body.classList.add('theme-samhain');
-      if (el.themeIcon) el.themeIcon.textContent = '🌿';
-      if (el.themeLabel) el.themeLabel.textContent = 'Тема: Самайн';
-    } else {
-      document.body.classList.remove('theme-samhain');
-      if (el.themeIcon) el.themeIcon.textContent = '🎃';
-      if (el.themeLabel) el.themeLabel.textContent = 'Тема: Тыква';
-    }
+    document.body.classList.toggle('theme-samhain', theme === 'samhain');
+    el.themeIcon.textContent = (theme === 'samhain') ? '🌿' : '🎃';
+    el.themeLabel.textContent = (theme === 'samhain') ? LANG[lang].themeSamhain : LANG[lang].themePumpkin;
   });
 
-  var Audio = {
-    ctx: null, interval: null, on: false,
-    notes: [146.83, 174.61, 220.00, 261.63, 174.61, 146.83, 116.54, 146.83],
-    bells: [880, 1174.66, 1046.50], i: 0, bi: 0,
+  /* ================== МУЗЫКА (СИНТЕЗ, БЕЗ ФАЙЛОВ) ================== */
+  // Мрачная минорная тема: Dm-лад, "колокольчики" + низкий дрон.
+  // Ритм в духе spooky-skeletons: короткие стаккато-ноты + пауза.
+  var music = {
+    ctx: null, master: null, timer: null,
+    on: false, step: 0,
+    // Мелодия (частоты, Гц). Пауза = 0.
+    melody: [
+      293.66, 349.23, 440.00, 349.23, 293.66, 0, 293.66, 349.23,
+      440.00, 523.25, 440.00, 349.23, 293.66, 0, 261.63, 246.94
+    ],
+    bass: [73.42, 73.42, 87.31, 87.31, 73.42, 73.42, 65.41, 65.41],
+    bpm: 132,
+
     ensure: function () {
-      if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return false; } }
+      if (this.ctx) {
+        if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
+        return true;
+      }
+      try {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = 0.5;
+        this.master.connect(this.ctx.destination);
+      } catch (e) { return false; }
       if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
       return true;
     },
-    step: function () {
-      if (!this.ctx || !this.on) return;
+
+    note: function (freq, start, dur, type, vol) {
+      if (!freq) return;
+      var o = this.ctx.createOscillator();
+      var g = this.ctx.createGain();
+      o.type = type || 'triangle';
+      o.frequency.setValueAtTime(freq, start);
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.linearRampToValueAtTime(vol, start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      o.connect(g); g.connect(this.master);
+      o.start(start); o.stop(start + dur + 0.05);
+    },
+
+    tick: function () {
+      if (!this.on || !this.ctx) return;
       if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
       var t = this.ctx.currentTime;
-      var o = this.ctx.createOscillator(), g = this.ctx.createGain();
-      o.type = 'triangle';
-      o.frequency.setValueAtTime(this.notes[this.i], t);
-      o.frequency.linearRampToValueAtTime(this.notes[this.i] * 0.985, t + 2.4);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.16, t + 0.4);
-      g.gain.linearRampToValueAtTime(0.0001, t + 2.6);
-      o.connect(g); g.connect(this.ctx.destination);
-      o.start(t); o.stop(t + 2.7);
-      if (this.i % 3 === 0) {
-        var b = this.ctx.createOscillator(), bg = this.ctx.createGain();
-        b.type = 'sine';
-        b.frequency.setValueAtTime(this.bells[this.bi % this.bells.length], t + 0.2);
-        bg.gain.setValueAtTime(0.0001, t + 0.2);
-        bg.gain.linearRampToValueAtTime(0.08, t + 0.25);
-        bg.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-        b.connect(bg); bg.connect(this.ctx.destination);
-        b.start(t + 0.2); b.stop(t + 1.7);
-        this.bi++;
-      }
-      this.i = (this.i + 1) % this.notes.length;
+      var stepDur = 60 / this.bpm / 2; // восьмые
+      var i = this.step % this.melody.length;
+      var m = this.melody[i];
+      var b = this.bass[Math.floor(i / 2) % this.bass.length];
+
+      // мелодия — стаккато
+      this.note(m, t, stepDur * 0.9, 'triangle', 0.12);
+      // "колокольчик" на сильных долях
+      if (i % 4 === 0 && m) this.note(m * 2, t, 0.9, 'sine', 0.06);
+      // бас на каждые две ноты
+      if (i % 2 === 0) this.note(b, t, stepDur * 1.6, 'sawtooth', 0.08);
+
+      this.step++;
     },
+
     start: function () {
-      if (!this.ensure() || this.interval) return;
-      this.on = true; var self = this;
-      this.step();
-      this.interval = setInterval(function () { self.step(); }, 1400);
+      if (!this.ensure()) return;
+      if (this.timer) return;
+      this.on = true;
+      var self = this;
+      this.tick();
+      this.timer = setInterval(function () { self.tick(); }, 60000 / this.bpm / 2);
+      el.musicToggle.classList.add('playing');
+      el.musicIcon.textContent = '🎵';
+      el.musicLabel.textContent = LANG[lang].musicOn;
     },
+
     stop: function () {
       this.on = false;
-      if (this.interval) { clearInterval(this.interval); this.interval = null; }
+      if (this.timer) { clearInterval(this.timer); this.timer = null; }
+      el.musicToggle.classList.remove('playing');
+      el.musicIcon.textContent = '🔇';
+      el.musicLabel.textContent = LANG[lang].musicOff;
     },
-    blip: function (type, f1, f2, vol) {
-      if (!this.ctx || !this.on) return;
+
+    blip: function (f1, f2, vol, type) {
+      if (!this.ctx) return;
       if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
       try {
-        var t = this.ctx.currentTime, o = this.ctx.createOscillator(), g = this.ctx.createGain();
-        o.type = type;
+        var t = this.ctx.currentTime;
+        var o = this.ctx.createOscillator(), g = this.ctx.createGain();
+        o.type = type || 'square';
         o.frequency.setValueAtTime(f1, t);
         o.frequency.exponentialRampToValueAtTime(f2, t + 0.18);
         g.gain.setValueAtTime(vol, t);
         g.gain.linearRampToValueAtTime(0.001, t + 0.2);
-        o.connect(g); g.connect(this.ctx.destination);
+        o.connect(g); g.connect(this.master || this.ctx.destination);
         o.start(t); o.stop(t + 0.22);
       } catch (e) {}
     },
-    catch: function () { this.blip('square', 600, 120, 0.15); },
-    bonus: function () { this.blip('sine', 880, 1320, 0.12); },
-    cursed: function () { this.blip('sawtooth', 200, 50, 0.16); }
+    catchSfx: function () { this.blip(600, 120, 0.14); },
+    bonusSfx: function () { this.blip(880, 1320, 0.10, 'sine'); },
+    cursedSfx: function () { this.blip(200, 50, 0.16, 'sawtooth'); }
   };
 
-  if (el.synthToggle) el.synthToggle.addEventListener('click', function () {
-    if (Audio.on) {
-      Audio.stop();
-      el.synthToggle.classList.remove('active');
-      el.synthToggle.textContent = '🔮 Синтез-эмбиент: выкл';
-    } else {
-      Audio.start();
-      if (Audio.on) {
-        el.synthToggle.classList.add('active');
-        el.synthToggle.textContent = '🔮 Синтез-эмбиент: вкл';
-      }
-    }
+  if (el.musicToggle) el.musicToggle.addEventListener('click', function () {
+    if (music.on) music.stop(); else music.start();
   });
 
-  var ytFrame = null, YT_ID = 'RaDa7m76uXY';
-  function openYT() {
-    if (!el.ytOverlay) return;
-    el.ytOverlay.classList.add('open');
-    if (!ytFrame && el.ytContainer) {
-      ytFrame = document.createElement('iframe');
-      ytFrame.src = 'https://www.youtube.com/embed/' + YT_ID + '?autoplay=1&rel=0&modestbranding=1';
-      ytFrame.allow = 'autoplay; encrypted-media; picture-in-picture';
-      ytFrame.allowFullscreen = true;
-      ytFrame.title = 'Хэллоуинская музыка';
-      el.ytContainer.appendChild(ytFrame);
-    }
-  }
-  function closeYT() {
-    if (!el.ytOverlay) return;
-    el.ytOverlay.classList.remove('open');
-    if (ytFrame) { ytFrame.remove(); ytFrame = null; }
-  }
-  if (el.ytBtn) el.ytBtn.addEventListener('click', openYT);
-  if (el.ytClose) el.ytClose.addEventListener('click', closeYT);
-  if (el.ytOverlay) el.ytOverlay.addEventListener('click', function (e) { if (e.target === el.ytOverlay) closeYT(); });
+  /* ================== ИГРА ================== */
+  var active = false, gameLoop = null, timerLoop = null, specialTimer = null;
+  var score = 0, best = 0, timeLeft = 30;
+  var combo = { count: 0, max: 0, last: 0 };
+  var pState = 'normal';
 
-  function areaSize() {
-    if (!el.area) return { w: 300, h: 150 };
-    return { w: Math.max(10, el.area.clientWidth - 50), h: Math.max(10, el.area.clientHeight - 50) };
+  try { var sb = localStorage.getItem('mz_halloween_best'); if (sb) best = parseInt(sb, 10) || 0; } catch (e) {}
+  if (el.best) el.best.textContent = best;
+
+  function arenaSize() {
+    if (!el.arena) return { w: 300, h: 150 };
+    return { w: Math.max(10, el.arena.clientWidth - 50), h: Math.max(10, el.arena.clientHeight - 50) };
   }
   function movePumpkin() {
     if (!active || !el.pumpkin) return;
-    var s = areaSize();
+    var s = arenaSize();
     el.pumpkin.style.left = Math.floor(Math.random() * s.w) + 'px';
     el.pumpkin.style.top = Math.floor(Math.random() * s.h) + 'px';
   }
@@ -361,9 +460,9 @@ h2{margin:0 0 15px;color:var(--accent-2);font-size:24px;text-shadow:0 0 15px rgb
     else el.pumpkin.textContent = '🎃';
   }
   function scheduleSpecial() {
-    clearTimeout(specialTimeout);
+    clearTimeout(specialTimer);
     if (!active) return;
-    specialTimeout = setTimeout(function () {
+    specialTimer = setTimeout(function () {
       if (!active) return;
       var r = Math.random();
       if (r < 0.35) setState('bonus');
@@ -372,28 +471,24 @@ h2{margin:0 0 15px;color:var(--accent-2);font-size:24px;text-shadow:0 0 15px rgb
       scheduleSpecial();
     }, 2500 + Math.random() * 3000);
   }
-  function resetPos() {
-    if (!el.pumpkin) return;
-    el.pumpkin.style.left = '45%';
-    el.pumpkin.style.top = '35%';
-  }
   function updateScore() {
-    if (el.score) el.score.innerText = score;
+    if (el.score) el.score.textContent = score;
     if (score > best) {
       best = score;
-      if (el.best) el.best.innerText = best;
+      if (el.best) el.best.textContent = best;
       try { localStorage.setItem('mz_halloween_best', best); } catch (e) {}
     }
   }
   function evalAch() {
-    if (score >= 10 && el.a1) { el.a1.innerText = '🏆 Охотник за призраками (Получено!)'; el.a1.className = 'ach-item unlocked'; }
-    if (score >= 25 && el.a2) { el.a2.innerText = '🏆 Повелитель тыкв (Получено!)'; el.a2.className = 'ach-item unlocked'; }
-    if (combo.max >= 5 && el.a3) { el.a3.innerText = '🏆 Комбо-мастер (Получено!)'; el.a3.className = 'ach-item unlocked'; }
+    var t = LANG[lang];
+    if (score >= 10 && el.ach1) { el.ach1.textContent = t.ach1on; el.ach1.classList.add('on'); }
+    if (score >= 25 && el.ach2) { el.ach2.textContent = t.ach2on; el.ach2.classList.add('on'); }
+    if (combo.max >= 5 && el.ach3) { el.ach3.textContent = t.ach3on; el.ach3.classList.add('on'); }
   }
   function updateCombo() {
     if (!el.combo) return;
-    if (combo.count >= 2) { el.combo.textContent = 'Комбо x' + combo.count + '!'; el.combo.classList.add('visible'); }
-    else el.combo.classList.remove('visible');
+    if (combo.count >= 2) { el.combo.textContent = 'Комбо x' + combo.count + '!'; el.combo.classList.add('show'); }
+    else el.combo.classList.remove('show');
   }
   function registerClick() {
     var n = Date.now();
@@ -405,20 +500,21 @@ h2{margin:0 0 15px;color:var(--accent-2);font-size:24px;text-shadow:0 0 15px rgb
   function resetUI() {
     score = 0; timeLeft = 30;
     combo = { count: 0, max: 0, last: 0 };
-    if (el.score) el.score.innerText = '0';
-    if (el.timer) el.timer.innerText = '30';
-    if (el.combo) { el.combo.textContent = ''; el.combo.classList.remove('visible'); }
-    if (el.a1) { el.a1.innerText = '❌ Охотник за призраками (10 очков)'; el.a1.className = 'ach-item'; }
-    if (el.a2) { el.a2.innerText = '❌ Повелитель тыкв (25 очков)'; el.a2.className = 'ach-item'; }
-    if (el.a3) { el.a3.innerText = '❌ Комбо-мастер (x5 комбо)'; el.a3.className = 'ach-item'; }
+    if (el.score) el.score.textContent = '0';
+    if (el.timer) el.timer.textContent = '30';
+    if (el.combo) { el.combo.textContent = ''; el.combo.classList.remove('show'); }
+    var t = LANG[lang];
+    if (el.ach1) { el.ach1.textContent = t.ach1; el.ach1.classList.remove('on'); }
+    if (el.ach2) { el.ach2.textContent = t.ach2; el.ach2.classList.remove('on'); }
+    if (el.ach3) { el.ach3.textContent = t.ach3; el.ach3.classList.remove('on'); }
   }
   function stopGame() {
     active = false;
     if (gameLoop) { clearInterval(gameLoop); gameLoop = null; }
     if (timerLoop) { clearInterval(timerLoop); timerLoop = null; }
-    clearTimeout(specialTimeout); specialTimeout = null;
+    clearTimeout(specialTimer); specialTimer = null;
     setState('normal');
-    resetPos();
+    if (el.pumpkin) { el.pumpkin.style.left = '45%'; el.pumpkin.style.top = '35%'; }
   }
   function startGame() {
     stopGame();
@@ -429,21 +525,20 @@ h2{margin:0 0 15px;color:var(--accent-2);font-size:24px;text-shadow:0 0 15px rgb
     gameLoop = setInterval(movePumpkin, 750);
     timerLoop = setInterval(function () {
       timeLeft--;
-      if (el.timer) el.timer.innerText = timeLeft;
+      if (el.timer) el.timer.textContent = timeLeft;
       if (timeLeft <= 0) { stopGame(); evalAch(); }
     }, 1000);
     scheduleSpecial();
   }
-
   if (el.startBtn) el.startBtn.addEventListener('click', startGame);
   if (el.stopBtn) el.stopBtn.addEventListener('click', stopGame);
 
   if (el.pumpkin) el.pumpkin.addEventListener('click', function () {
     if (!active) return;
     registerClick();
-    if (pState === 'bonus') { score += 3; Audio.bonus(); setState('normal'); }
-    else if (pState === 'cursed') { score = Math.max(0, score - 2); Audio.cursed(); setState('normal'); }
-    else { score += 1; Audio.catch(); }
+    if (pState === 'bonus') { score += 3; music.bonusSfx(); setState('normal'); }
+    else if (pState === 'cursed') { score = Math.max(0, score - 2); music.cursedSfx(); setState('normal'); }
+    else { score += 1; music.catchSfx(); }
     updateScore();
     evalAch();
     movePumpkin();
@@ -451,12 +546,15 @@ h2{margin:0 0 15px;color:var(--accent-2);font-size:24px;text-shadow:0 0 15px rgb
 
   window.addEventListener('resize', function () {
     if (!active || !el.pumpkin) return;
-    var s = areaSize();
+    var s = arenaSize();
     var x = parseFloat(el.pumpkin.style.left) || 0;
     var y = parseFloat(el.pumpkin.style.top) || 0;
     if (x > s.w) el.pumpkin.style.left = s.w + 'px';
     if (y > s.h) el.pumpkin.style.top = s.h + 'px';
   });
 
+  applyLang();
 })();
 </script>
+</body>
+</html>
