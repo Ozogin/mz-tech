@@ -1,383 +1,61 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Панель МЗ — Промышленный Хэллоуинский Монолит</title>
-<style>
-    :root {
-        --bg-dark-core: #06060c;
-        --neon-pumpkin-orange: #ff6200;
-        --neon-witch-purple: #8e44ad;
-        --glass-panel-background: rgba(20, 20, 30, 0.55);
-        --text-pure-white: #ffffff;
-        --matrix-green: #2ecc71;
-        --blood-red: #c0392b;
-        --accent: var(--neon-pumpkin-orange);
-        --accent-2: var(--neon-witch-purple);
-        --card-border: rgba(255, 98, 0, 0.2);
-        --card-border-2: rgba(142, 68, 173, 0.3);
-        --bg-gradient: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%);
-    }
-
-    body.theme-samhain {
-        --bg-gradient: radial-gradient(circle at 50% 50%, #0b1a12 0%, #040807 100%);
-        --accent: #2ecc71;
-        --accent-2: #c0392b;
-        --card-border: rgba(46, 204, 113, 0.25);
-        --card-border-2: rgba(192, 57, 43, 0.3);
-        --neon-pumpkin-orange: #2ecc71;
-        --neon-witch-purple: #c0392b;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-        font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-        background-color: var(--bg-dark-core);
-        color: var(--text-pure-white);
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        overflow-x: hidden;
-        background-image: var(--bg-gradient);
-        background-attachment: fixed;
-        user-select: none;
-        -webkit-user-select: none;
-        transition: background-image 0.6s ease;
-    }
-
-    .site-spider-web-top-left, .site-spider-web-top-right,
-    .site-spider-web-bottom-left, .site-spider-web-bottom-right {
-        position: fixed; width: 220px; height: 250px; z-index: 1; pointer-events: none; opacity: 0.9;
-    }
-    .site-spider-web-top-left { top: 0; left: 0; }
-    .site-spider-web-top-right { top: 0; right: 0; transform: scaleX(-1); }
-    .site-spider-web-bottom-left { bottom: 0; left: 0; transform: scaleY(-1); }
-    .site-spider-web-bottom-right { bottom: 0; right: 0; transform: scale(-1, -1); }
-
-    .fog-ambient-layer {
-        position: fixed; width: 200%; height: 100%;
-        background: radial-gradient(circle, rgba(142,68,173,0.08) 0%, transparent 60%);
-        top: 0; left: -50%; z-index: 0;
-        animation: coreFogEngineMovement 25s infinite linear; pointer-events: none;
-        transition: background 0.6s ease;
-    }
-    body.theme-samhain .fog-ambient-layer {
-        background: radial-gradient(circle, rgba(46,204,113,0.07) 0%, transparent 60%);
-    }
-    @keyframes coreFogEngineMovement {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(5%, 3%) scale(1.1); }
-        100% { transform: translate(0, 0) scale(1); }
-    }
-
-    .top-controls {
-        display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-        margin-bottom: 20px; width: 100%; max-width: 885px; position: relative; z-index: 10;
-    }
-
-    .theme-switcher, .master-audio-banner-panel, .synth-toggle {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        padding: 12px 20px; border-radius: 30px;
-        font-size: 13px; color: #c0c0d0; cursor: pointer; text-align: center;
-        font-weight: 600; transition: all 0.3s ease;
-        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        display: flex; align-items: center; gap: 8px;
-    }
-    .theme-switcher:hover, .master-audio-banner-panel:hover, .synth-toggle:hover {
-        border-color: var(--accent); color: #fff;
-        background: rgba(255,255,255,0.07);
-        box-shadow: 0 0 20px -5px var(--accent);
-    }
-    .master-audio-banner-panel { flex: 1; min-width: 240px; justify-content: center; }
-    .master-audio-banner-panel.active {
-        border-color: var(--matrix-green); color: var(--matrix-green);
-        box-shadow: 0 0 20px -5px var(--matrix-green);
-    }
-    .theme-switcher { min-width: 170px; justify-content: center; }
-    .synth-toggle { min-width: 200px; justify-content: center; }
-    .synth-toggle.active {
-        border-color: var(--accent-2); color: var(--accent-2);
-        box-shadow: 0 0 20px -5px var(--accent-2);
-    }
-
-    .master-layout-container {
-        display: flex; flex-direction: row; gap: 25px; max-width: 950px; width: 100%;
-        flex-wrap: wrap; justify-content: center; position: relative; z-index: 10;
-    }
-
-    .hud-glass-card {
-        background: var(--glass-panel-background);
-        backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-        padding: 30px; border-radius: 24px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-        width: 100%; max-width: 430px; text-align: center;
-        border: 1px solid var(--card-border);
-        position: relative; transition: border-color 0.6s ease, box-shadow 0.6s ease;
-    }
-    .hud-glass-card.game-node { border-color: var(--card-border-2); }
-
-    .hud-glass-card::before {
-        content: ''; position: absolute; inset: -1px; border-radius: 24px; z-index: -1;
-        background: linear-gradient(135deg, var(--accent), transparent 40%, transparent 60%, var(--accent-2));
-        opacity: 0.15; filter: blur(12px);
-        animation: cardBreath 6s ease-in-out infinite;
-        transition: background 0.6s ease;
-    }
-    @keyframes cardBreath {
-        0%, 100% { opacity: 0.12; }
-        50% { opacity: 0.28; }
-    }
-
-    h1 {
-        margin: 0 0 15px; color: var(--accent); font-size: 24px;
-        text-shadow: 0 0 15px rgba(255,98,0,0.4);
-        transition: color 0.6s ease;
-    }
-    h2 {
-        margin: 0 0 15px; color: var(--accent-2); font-size: 24px;
-        text-shadow: 0 0 15px rgba(142,68,173,0.4);
-        transition: color 0.6s ease;
-    }
-
-    .core-status-badge {
-        display: inline-block; padding: 5px 15px; font-weight: bold;
-        border-radius: 20px; text-transform: uppercase; margin-bottom: 15px;
-        font-size: 11px; letter-spacing: 1px;
-        background: rgba(255,98,0,0.12);
-        color: var(--accent); border: 1px solid var(--accent);
-        transition: all 0.6s ease;
-    }
-    .core-status-badge::before {
-        content: '● '; animation: pulseDot 2s ease-in-out infinite;
-    }
-    @keyframes pulseDot {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; }
-    }
-
-    .hud-info-wrapper { text-align: left; background: rgba(0, 0, 0, 0.35); padding: 15px; border-radius: 14px; }
-    .hud-data-row {
-        display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;
-        border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 5px;
-    }
-    .hud-data-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .hud-row-label { color: #8e8e9f; }
-    .hud-row-value { font-weight: bold; color: #fff; }
-    .hud-row-value.accent { color: var(--accent); transition: color 0.6s ease; }
-
-    .credits-container {
-        margin-top: 20px; font-size: 13px; color: #73738c;
-        border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px;
-        line-height: 1.7; text-align: left;
-    }
-
-    .game-area-viewport {
-        width: 100%; height: 200px; background: rgba(0, 0, 0, 0.55);
-        border-radius: 16px; position: relative; margin-top: 15px;
-        border: 1px solid var(--card-border-2); overflow: hidden;
-        transition: border-color 0.6s ease;
-    }
-    .game-area-viewport::after {
-        content: ''; position: absolute; inset: 0; pointer-events: none;
-        background: radial-gradient(circle at 50% 120%, rgba(142,68,173,0.15), transparent 70%);
-    }
-
-    #pumpkin {
-        font-size: 40px; position: absolute; cursor: pointer; top: 35%; left: 45%;
-        filter: drop-shadow(0 0 10px var(--accent));
-        transition: left 0.12s ease, top 0.12s ease, transform 0.08s ease, filter 0.3s ease;
-        will-change: left, top, transform;
-    }
-    #pumpkin:active { transform: scale(0.85); }
-    #pumpkin.bonus { filter: drop-shadow(0 0 14px var(--matrix-green)) hue-rotate(90deg); }
-    #pumpkin.cursed { filter: drop-shadow(0 0 14px var(--blood-red)) hue-rotate(-45deg) saturate(2); }
-
-    .game-hud {
-        display: flex; justify-content: space-between; margin-top: 15px;
-        font-weight: 700; padding: 0 5px; font-size: 15px;
-    }
-    .game-hud .val { font-variant-numeric: tabular-nums; }
-    #runtime-score-counter { color: var(--accent-2); transition: color 0.6s ease; }
-    #historical-best-counter { color: var(--matrix-green); }
-    #game-timer-display { color: var(--accent); transition: color 0.6s ease; }
-    #combo-display {
-        color: var(--matrix-green); font-size: 13px; min-height: 18px;
-        text-align: center; margin-top: 4px; font-weight: 700;
-        opacity: 0; transition: opacity 0.3s ease;
-    }
-    #combo-display.visible { opacity: 1; }
-
-    .control-btn-layout { display: flex; gap: 10px; margin-top: 12px; }
-    .hud-action-button {
-        flex: 1; color: #fff; border: none; padding: 11px;
-        border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px;
-        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.3s ease;
-        background: linear-gradient(135deg, var(--accent-2), #5a2a75);
-    }
-    .hud-action-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px -5px var(--accent-2);
-    }
-    .hud-action-button:active { transform: translateY(1px); }
-    .hud-action-button.stop-modifier { background: linear-gradient(135deg, var(--blood-red), #7a1f15); }
-    .hud-action-button.stop-modifier:hover { box-shadow: 0 6px 20px -5px var(--blood-red); }
-    .hud-action-button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-
-    .achievements-box {
-        background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255,255,255,0.06);
-        width: 100%; margin-top: 15px; padding: 12px; border-radius: 12px;
-        font-size: 12px; text-align: left;
-    }
-    .ach-title {
-        font-weight: 700; color: var(--accent); margin-bottom: 6px;
-        text-transform: uppercase; letter-spacing: 0.5px;
-        transition: color 0.6s ease;
-    }
-    .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 4px; transition: color 0.3s; }
-    .ach-item.unlocked { color: var(--matrix-green); font-weight: 600; }
-
-    .yt-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100;
-        display: none; justify-content: center; align-items: center;
-        backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-        padding: 20px;
-    }
-    .yt-overlay.open { display: flex; }
-    .yt-modal {
-        background: #111; border-radius: 20px; padding: 20px; max-width: 720px; width: 100%;
-        border: 1px solid var(--card-border); box-shadow: 0 0 60px -10px var(--accent-2);
-        position: relative;
-    }
-    .yt-modal iframe { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 12px; display: block; }
-    .yt-close {
-        position: absolute; top: -14px; right: -14px; width: 36px; height: 36px;
-        border-radius: 50%; border: none; background: var(--blood-red); color: #fff;
-        font-size: 20px; cursor: pointer; font-weight: bold; line-height: 1;
-        box-shadow: 0 4px 16px rgba(192,57,43,0.6);
-    }
-    .yt-close:hover { background: #e74c3c; }
-    .yt-note {
-        color: #8e8e9f; font-size: 12px; margin-top: 10px; text-align: center; line-height: 1.5;
-    }
-
-    @media (max-width: 520px) {
-        body { padding: 12px; }
-        .hud-glass-card { padding: 20px; }
-        .game-area-viewport { height: 170px; }
-    }
-</style>
-</head>
-<body>
-
-<svg class="site-spider-web-top-left" viewBox="0 0 100 100">
-    <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255, 98, 0, 0.25)" stroke-width="0.8" fill="none"/>
-    <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" stroke="rgba(255, 98, 0, 0.18)" stroke-width="0.6" fill="none"/>
-    <path d="M0,0 L35,85 M0,0 L85,35" stroke="rgba(255, 98, 0, 0.12)" stroke-width="0.4" fill="none"/>
-</svg>
-<svg class="site-spider-web-top-right" viewBox="0 0 100 100"></svg>
-<svg class="site-spider-web-bottom-left" viewBox="0 0 100 100"></svg>
-<svg class="site-spider-web-bottom-right" viewBox="0 0 100 100"></svg>
-
-<div class="fog-ambient-layer"></div>
-
-<div class="top-controls">
-    <div class="theme-switcher" id="theme-toggle" title="Переключить тему">
-        <span id="theme-icon">🎃</span>
-        <span id="theme-label">Тема: Тыква</span>
-    </div>
-    <div class="master-audio-banner-panel" id="master-audio-engine-activation-button">
-        🎵 Открыть музыку (YouTube)
-    </div>
-    <div class="synth-toggle" id="synth-toggle">
-        🔮 Синтез-эмбиент: выкл
-    </div>
-</div>
-
-<div class="master-layout-container">
-    <div class="hud-glass-card">
-        <h1>Мониторинг Технички МЗ</h1>
-        <div class="core-status-badge">СИСТЕМА АКТИВНА</div>
-        <div class="hud-info-wrapper">
-            <div class="hud-data-row"><span class="hud-row-label">Имя узла:</span><span class="hud-row-value">Техничка Озогин МЗ</span></div>
-            <div class="hud-data-row"><span class="hud-row-label">Издание:</span><span class="hud-row-value accent">Halloween Edition</span></div>
-            <div class="hud-data-row"><span class="hud-row-label">Дата создания:</span><span class="hud-row-value">25.10.2026</span></div>
-            <div class="hud-data-row"><span class="hud-row-label">Время работы:</span><span class="hud-row-value accent" id="realtime-clock-digital-display" style="font-family:monospace;">0ч 0мин 0сек</span></div>
-            <div class="hud-data-row"><span class="hud-row-label">База данных:</span><span class="hud-row-value">Google Таблица</span></div>
-            <div class="hud-data-row"><span class="hud-row-label">Сетевой узел:</span><span class="hud-row-value">GitHub Pages live</span></div>
-        </div>
-        <div class="credits-container">
-            Разработчик: <span style="color:var(--accent); font-weight:bold;">Ozogin</span><br>
-            ИИ-Архитекторы: <span style="color:var(--accent-2); font-weight:bold;">Алиса</span> &amp; <span style="color:#2ecc71; font-weight:bold;">DeepSeek</span><br>
-            Спонсор: <span style="color:#2ecc71; font-weight:bold;">Alberto Pepper</span>
-        </div>
-    </div>
-
-    <div class="hud-glass-card game-node">
-        <h2>🦇 Хэллоуинская Игра</h2>
-        <div class="game-area-viewport">
-            <div id="pumpkin">🎃</div>
-        </div>
-        <div class="game-hud">
-            <div>Счет: <span id="runtime-score-counter" class="val">0</span></div>
-            <div>Время: <span id="game-timer-display" class="val">30</span>с</div>
-            <div>Рекорд: <span id="historical-best-counter" class="val">0</span></div>
-        </div>
-        <div id="combo-display"></div>
-        <div class="control-btn-layout">
-            <button class="hud-action-button" id="game-start-trigger">Старт</button>
-            <button class="hud-action-button stop-modifier" id="game-stop-trigger">Стоп</button>
-        </div>
-        <div class="achievements-box">
-            <div class="ach-title">🎃 Достижения сессии:</div>
-            <div class="ach-item" id="achievement-slot-1">❌ Охотник за призраками (10 очков)</div>
-            <div class="ach-item" id="achievement-slot-2">❌ Повелитель тыкв (25 очков)</div>
-            <div class="ach-item" id="achievement-slot-3">❌ Комбо-мастер (x5 комбо)</div>
-        </div>
-    </div>
-</div>
-
-<div class="yt-overlay" id="yt-overlay">
-    <div class="yt-modal">
-        <button class="yt-close" id="yt-close" aria-label="Закрыть">×</button>
-        <div id="yt-player-container"></div>
-        <div class="yt-note">Официальный плеер YouTube. Закройте окно, чтобы остановить музыку.</div>
-    </div>
-</div>
-
 <script>
-window.addEventListener('load', function () {
+(function () {
     'use strict';
+
+    /* ================== ЭЛЕМЕНТЫ ================== */
+    var el = {
+        clock: document.getElementById('realtime-clock-digital-display'),
+        themeToggle: document.getElementById('theme-toggle'),
+        themeIcon: document.getElementById('theme-icon'),
+        themeLabel: document.getElementById('theme-label'),
+        ytBtn: document.getElementById('master-audio-engine-activation-button'),
+        synthToggle: document.getElementById('synth-toggle'),
+        ytOverlay: document.getElementById('yt-overlay'),
+        ytClose: document.getElementById('yt-close'),
+        ytContainer: document.getElementById('yt-player-container'),
+        pumpkin: document.getElementById('pumpkin'),
+        area: document.getElementById('game-area'),
+        score: document.getElementById('runtime-score-counter'),
+        timer: document.getElementById('game-timer-display'),
+        best: document.getElementById('historical-best-counter'),
+        combo: document.getElementById('combo-display'),
+        startBtn: document.getElementById('game-start-trigger'),
+        stopBtn: document.getElementById('game-stop-trigger'),
+        a1: document.getElementById('achievement-slot-1'),
+        a2: document.getElementById('achievement-slot-2'),
+        a3: document.getElementById('achievement-slot-3')
+    };
 
     /* ================== СОСТОЯНИЕ ================== */
     var totalSystemSecondsCounter = 0;
-    var gameLoop = null;        // интервал движения тыквы
-    var timerLoop = null;       // интервал обратного отсчёта
+    var gameLoop = null;
+    var timerLoop = null;
+    var specialTimeout = null;
     var isSystemGameActive = false;
     var score = 0;
     var best = 0;
     var timerLeft = 30;
     var combo = { count: 0, max: 0, lastClick: 0 };
     var themeMode = 'pumpkin';
+    var pumpkinState = 'normal';
 
     try {
         var savedBest = localStorage.getItem('mz_halloween_best');
         if (savedBest) best = parseInt(savedBest, 10) || 0;
     } catch (e) {}
-    var bestEl = document.getElementById('historical-best-counter');
-    if (bestEl) bestEl.innerText = best;
+    if (el.best) el.best.innerText = best;
 
     /* ================== ПАУТИНЫ ================== */
-    var webSvgContent = document.querySelector(".site-spider-web-top-left").innerHTML;
-    document.querySelector(".site-spider-web-top-right").innerHTML = webSvgContent;
-    document.querySelector(".site-spider-web-bottom-left").innerHTML = webSvgContent;
-    document.querySelector(".site-spider-web-bottom-right").innerHTML = webSvgContent;
+    var web = document.querySelector('.site-spider-web-top-left');
+    if (web) {
+        var webHTML = web.innerHTML;
+        var tr = document.querySelector('.site-spider-web-top-right');
+        var bl = document.querySelector('.site-spider-web-bottom-left');
+        var br = document.querySelector('.site-spider-web-bottom-right');
+        if (tr) tr.innerHTML = webHTML;
+        if (bl) bl.innerHTML = webHTML;
+        if (br) br.innerHTML = webHTML;
+    }
 
     /* ================== ЧАСЫ ================== */
     setInterval(function () {
@@ -385,29 +63,26 @@ window.addEventListener('load', function () {
         var h = Math.floor(totalSystemSecondsCounter / 3600);
         var m = Math.floor((totalSystemSecondsCounter % 3600) / 60);
         var s = totalSystemSecondsCounter % 60;
-        var clockDisplay = document.getElementById("realtime-clock-digital-display");
-        if (clockDisplay) clockDisplay.innerText = h + "ч " + m + "мин " + s + "сек";
+        if (el.clock) el.clock.innerText = h + 'ч ' + m + 'мин ' + s + 'сек';
     }, 1000);
 
     /* ================== ТЕМЫ ================== */
-    var themeToggle = document.getElementById('theme-toggle');
-    var themeIcon = document.getElementById('theme-icon');
-    var themeLabel = document.getElementById('theme-label');
+    if (el.themeToggle) {
+        el.themeToggle.addEventListener('click', function () {
+            themeMode = (themeMode === 'pumpkin') ? 'samhain' : 'pumpkin';
+            if (themeMode === 'samhain') {
+                document.body.classList.add('theme-samhain');
+                if (el.themeIcon) el.themeIcon.textContent = '🌿';
+                if (el.themeLabel) el.themeLabel.textContent = 'Тема: Самайн';
+            } else {
+                document.body.classList.remove('theme-samhain');
+                if (el.themeIcon) el.themeIcon.textContent = '🎃';
+                if (el.themeLabel) el.themeLabel.textContent = 'Тема: Тыква';
+            }
+        });
+    }
 
-    themeToggle.addEventListener('click', function () {
-        themeMode = (themeMode === 'pumpkin') ? 'samhain' : 'pumpkin';
-        if (themeMode === 'samhain') {
-            document.body.classList.add('theme-samhain');
-            themeIcon.textContent = '🌿';
-            themeLabel.textContent = 'Тема: Самайн';
-        } else {
-            document.body.classList.remove('theme-samhain');
-            themeIcon.textContent = '🎃';
-            themeLabel.textContent = 'Тема: Тыква';
-        }
-    });
-
-    /* ================== АУДИО: СИНТЕЗ-ЭМБИЕНТ ================== */
+    /* ================== СИНТЕЗ-ЭМБИЕНТ ================== */
     var Audio = {
         ctx: null,
         interval: null,
@@ -417,18 +92,13 @@ window.addEventListener('load', function () {
         idx: 0,
         bellIdx: 0,
 
-        ensureCtx: function () {
+        ensure: function () {
             if (!this.ctx) {
                 try {
                     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                } catch (e) {
-                    console.error('Web Audio не поддерживается:', e);
-                    return false;
-                }
+                } catch (e) { return false; }
             }
-            if (this.ctx.state === 'suspended') {
-                this.ctx.resume().catch(function () {});
-            }
+            if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
             return true;
         },
 
@@ -436,7 +106,6 @@ window.addEventListener('load', function () {
             if (!this.ctx || !this.isOn) return;
             if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
             var t = this.ctx.currentTime;
-            var self = this;
 
             var osc = this.ctx.createOscillator();
             var g = this.ctx.createGain();
@@ -446,10 +115,8 @@ window.addEventListener('load', function () {
             g.gain.setValueAtTime(0.0001, t);
             g.gain.linearRampToValueAtTime(0.16, t + 0.4);
             g.gain.linearRampToValueAtTime(0.0001, t + 2.6);
-            osc.connect(g);
-            g.connect(this.ctx.destination);
-            osc.start(t);
-            osc.stop(t + 2.7);
+            osc.connect(g); g.connect(this.ctx.destination);
+            osc.start(t); osc.stop(t + 2.7);
 
             if (this.idx % 3 === 0) {
                 var bell = this.ctx.createOscillator();
@@ -459,17 +126,15 @@ window.addEventListener('load', function () {
                 bg.gain.setValueAtTime(0.0001, t + 0.2);
                 bg.gain.linearRampToValueAtTime(0.08, t + 0.25);
                 bg.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-                bell.connect(bg);
-                bg.connect(this.ctx.destination);
-                bell.start(t + 0.2);
-                bell.stop(t + 1.7);
+                bell.connect(bg); bg.connect(this.ctx.destination);
+                bell.start(t + 0.2); bell.stop(t + 1.7);
                 this.bellIdx++;
             }
             this.idx = (this.idx + 1) % this.notes.length;
         },
 
         start: function () {
-            if (!this.ensureCtx()) return;
+            if (!this.ensure()) return;
             if (this.interval) return;
             this.isOn = true;
             var self = this;
@@ -482,145 +147,226 @@ window.addEventListener('load', function () {
             if (this.interval) { clearInterval(this.interval); this.interval = null; }
         },
 
-        blip: function (type, freqStart, freqEnd, vol) {
+        blip: function (type, f1, f2, vol) {
             if (!this.ctx || !this.isOn) return;
             if (this.ctx.state === 'suspended') this.ctx.resume().catch(function () {});
             try {
                 var t = this.ctx.currentTime;
-                var osc = this.ctx.createOscillator();
+                var o = this.ctx.createOscillator();
                 var g = this.ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freqStart, t);
-                osc.frequency.exponentialRampToValueAtTime(freqEnd, t + 0.18);
+                o.type = type;
+                o.frequency.setValueAtTime(f1, t);
+                o.frequency.exponentialRampToValueAtTime(f2, t + 0.18);
                 g.gain.setValueAtTime(vol, t);
                 g.gain.linearRampToValueAtTime(0.001, t + 0.2);
-                osc.connect(g);
-                g.connect(this.ctx.destination);
-                osc.start(t);
-                osc.stop(t + 0.22);
+                o.connect(g); g.connect(this.ctx.destination);
+                o.start(t); o.stop(t + 0.22);
             } catch (e) {}
         },
-
         catchSound: function () { this.blip('square', 600, 120, 0.15); },
         bonusSound: function () { this.blip('sine', 880, 1320, 0.12); },
         cursedSound: function () { this.blip('sawtooth', 200, 50, 0.16); }
     };
 
-    var synthToggle = document.getElementById('synth-toggle');
-    synthToggle.addEventListener('click', function () {
-        if (Audio.isOn) {
-            Audio.stop();
-            synthToggle.classList.remove('active');
-            synthToggle.textContent = '🔮 Синтез-эмбиент: выкл';
-        } else {
-            Audio.start();
+    if (el.synthToggle) {
+        el.synthToggle.addEventListener('click', function () {
             if (Audio.isOn) {
-                synthToggle.classList.add('active');
-                synthToggle.textContent = '🔮 Синтез-эмбиент: вкл';
+                Audio.stop();
+                el.synthToggle.classList.remove('active');
+                el.synthToggle.textContent = '🔮 Синтез-эмбиент: выкл';
+            } else {
+                Audio.start();
+                if (Audio.isOn) {
+                    el.synthToggle.classList.add('active');
+                    el.synthToggle.textContent = '🔮 Синтез-эмбиент: вкл';
+                }
             }
-        }
-    });
+        });
+    }
 
-    /* ================== YOUTUBE ПЛЕЕР ================== */
-    var ytOverlay = document.getElementById('yt-overlay');
-    var ytClose = document.getElementById('yt-close');
-    var ytContainer = document.getElementById('yt-player-container');
+    /* ================== YOUTUBE ================== */
     var ytIframe = null;
-    var YT_VIDEO_ID = 'RaDa7m76uXY';
+    var YT_ID = 'RaDa7m76uXY';
 
-    function openYouTube() {
-        ytOverlay.classList.add('open');
-        if (!ytIframe) {
+    function openYT() {
+        if (!el.ytOverlay) return;
+        el.ytOverlay.classList.add('open');
+        if (!ytIframe && el.ytContainer) {
             ytIframe = document.createElement('iframe');
-            ytIframe.src = 'https://www.youtube.com/embed/' + YT_VIDEO_ID + '?autoplay=1&rel=0&modestbranding=1';
+            ytIframe.src = 'https://www.youtube.com/embed/' + YT_ID + '?autoplay=1&rel=0&modestbranding=1';
             ytIframe.allow = 'autoplay; encrypted-media; picture-in-picture';
             ytIframe.allowFullscreen = true;
             ytIframe.title = 'Хэллоуинская музыка';
-            ytContainer.appendChild(ytIframe);
+            el.ytContainer.appendChild(ytIframe);
         }
     }
-
-    function closeYouTube() {
-        ytOverlay.classList.remove('open');
+    function closeYT() {
+        if (!el.ytOverlay) return;
+        el.ytOverlay.classList.remove('open');
         if (ytIframe) { ytIframe.remove(); ytIframe = null; }
     }
-
-    document.getElementById('master-audio-engine-activation-button').addEventListener('click', openYouTube);
-    ytClose.addEventListener('click', closeYouTube);
-    ytOverlay.addEventListener('click', function (e) {
-        if (e.target === ytOverlay) closeYouTube();
-    });
+    if (el.ytBtn) el.ytBtn.addEventListener('click', openYT);
+    if (el.ytClose) el.ytClose.addEventListener('click', closeYT);
+    if (el.ytOverlay) {
+        el.ytOverlay.addEventListener('click', function (e) {
+            if (e.target === el.ytOverlay) closeYT();
+        });
+    }
 
     /* ================== ИГРА ================== */
-    var pumpkinEl = document.getElementById('pumpkin');
-    var scoreEl = document.getElementById('runtime-score-counter');
-    var timerEl = document.getElementById('game-timer-display');
-    var comboEl = document.getElementById('combo-display');
-    var startBtn = document.getElementById('game-start-trigger');
-    var stopBtn = document.getElementById('game-stop-trigger');
-    var area = document.querySelector('.game-area-viewport');
-
-    var pumpkinState = 'normal'; // normal | bonus | cursed
-    var bonusTimeout = null;
-
     function areaSize() {
-        return { w: area.clientWidth - 50, h: area.clientHeight - 50 };
+        if (!el.area) return { w: 300, h: 150 };
+        return {
+            w: Math.max(10, el.area.clientWidth - 50),
+            h: Math.max(10, el.area.clientHeight - 50)
+        };
     }
 
     function movePumpkin() {
-        if (!isSystemGameActive) return;
-        var size = areaSize();
-        var x = Math.max(0, Math.floor(Math.random() * size.w));
-        var y = Math.max(0, Math.floor(Math.random() * size.h));
-        pumpkinEl.style.left = x + 'px';
-        pumpkinEl.style.top = y + 'px';
+        if (!isSystemGameActive || !el.pumpkin) return;
+        var s = areaSize();
+        el.pumpkin.style.left = Math.floor(Math.random() * s.w) + 'px';
+        el.pumpkin.style.top = Math.floor(Math.random() * s.h) + 'px';
     }
 
     function setPumpkinState(state) {
         pumpkinState = state;
-        pumpkinEl.classList.remove('bonus', 'cursed');
-        if (state === 'bonus') {
-            pumpkinEl.classList.add('bonus');
-            pumpkinEl.textContent = '🕷️';
-        } else if (state === 'cursed') {
-            pumpkinEl.classList.add('cursed');
-            pumpkinEl.textContent = '👿';
-        } else {
-            pumpkinEl.textContent = '🎃';
-        }
+        if (!el.pumpkin) return;
+        el.pumpkin.classList.remove('bonus', 'cursed');
+        if (state === 'bonus') { el.pumpkin.classList.add('bonus'); el.pumpkin.textContent = '🕷️'; }
+        else if (state === 'cursed') { el.pumpkin.classList.add('cursed'); el.pumpkin.textContent = '👿'; }
+        else { el.pumpkin.textContent = '🎃'; }
     }
 
     function scheduleSpecial() {
-        clearTimeout(bonusTimeout);
+        clearTimeout(specialTimeout);
         if (!isSystemGameActive) return;
         var delay = 2500 + Math.random() * 3000;
-        bonusTimeout = setTimeout(function () {
+        specialTimeout = setTimeout(function () {
             if (!isSystemGameActive) return;
             var roll = Math.random();
-            if (roll < 0.4) setPumpkinState('bonus');
-            else if (roll < 0.6) setPumpkinState('cursed');
+            if (roll < 0.35) setPumpkinState('bonus');
+            else if (roll < 0.55) setPumpkinState('cursed');
             else setPumpkinState('normal');
             scheduleSpecial();
         }, delay);
     }
 
     function resetPumpkinPosition() {
-        pumpkinEl.style.left = '45%';
-        pumpkinEl.style.top = '35%';
+        if (!el.pumpkin) return;
+        el.pumpkin.style.left = '45%';
+        el.pumpkin.style.top = '35%';
     }
 
     function updateScoreUI() {
-        scoreEl.innerText = score;
+        if (el.score) el.score.innerText = score;
         if (score > best) {
             best = score;
-            bestEl.innerText = best;
+            if (el.best) el.best.innerText = best;
             try { localStorage.setItem('mz_halloween_best', best); } catch (e) {}
         }
     }
 
     function evaluateAchievements() {
-        var a1 = document.getElementById('achievement-slot-1');
-        var a2 = document.getElementById('achievement-slot-2');
-        var a3 = document.getElementById('achievement-slot-3');
-        if (score >= 10) { a1.innerText = '🏆 Охотник за призраками (Получено!)'; a1.className = 'ach-item unlocked'; }
-        if (score >= 25) { a2.innerText
+        if (score >= 10 && el.a1) { el.a1.innerText = '🏆 Охотник за призраками (Получено!)'; el.a1.className = 'ach-item unlocked'; }
+        if (score >= 25 && el.a2) { el.a2.innerText = '🏆 Повелитель тыкв (Получено!)'; el.a2.className = 'ach-item unlocked'; }
+        if (combo.max >= 5 && el.a3) { el.a3.innerText = '🏆 Комбо-мастер (Получено!)'; el.a3.className = 'ach-item unlocked'; }
+    }
+
+    function updateComboUI() {
+        if (!el.combo) return;
+        if (combo.count >= 2) {
+            el.combo.textContent = 'Комбо x' + combo.count + '!';
+            el.combo.classList.add('visible');
+        } else {
+            el.combo.classList.remove('visible');
+        }
+    }
+
+    function registerClick() {
+        var now = Date.now();
+        if (now - combo.lastClick < 900) combo.count++;
+        else combo.count = 1;
+        combo.lastClick = now;
+        if (combo.count > combo.max) combo.max = combo.count;
+        updateComboUI();
+    }
+
+    function resetGameUI() {
+        score = 0;
+        timerLeft = 30;
+        combo = { count: 0, max: 0, lastClick: 0 };
+        if (el.score) el.score.innerText = '0';
+        if (el.timer) el.timer.innerText = '30';
+        if (el.combo) { el.combo.textContent = ''; el.combo.classList.remove('visible'); }
+        if (el.a1) { el.a1.innerText = '❌ Охотник за призраками (10 очков)'; el.a1.className = 'ach-item'; }
+        if (el.a2) { el.a2.innerText = '❌ Повелитель тыкв (25 очков)'; el.a2.className = 'ach-item'; }
+        if (el.a3) { el.a3.innerText = '❌ Комбо-мастер (x5 комбо)'; el.a3.className = 'ach-item'; }
+    }
+
+    function stopGame() {
+        isSystemGameActive = false;
+        if (gameLoop) { clearInterval(gameLoop); gameLoop = null; }
+        if (timerLoop) { clearInterval(timerLoop); timerLoop = null; }
+        clearTimeout(specialTimeout);
+        specialTimeout = null;
+        setPumpkinState('normal');
+        resetPumpkinPosition();
+    }
+
+    function startGame() {
+        stopGame();
+        resetGameUI();
+        isSystemGameActive = true;
+        setPumpkinState('normal');
+        movePumpkin();
+        gameLoop = setInterval(movePumpkin, 750);
+        timerLoop = setInterval(function () {
+            timerLeft--;
+            if (el.timer) el.timer.innerText = timerLeft;
+            if (timerLeft <= 0) {
+                stopGame();
+                evaluateAchievements();
+            }
+        }, 1000);
+        scheduleSpecial();
+    }
+
+    if (el.startBtn) el.startBtn.addEventListener('click', startGame);
+    if (el.stopBtn) el.stopBtn.addEventListener('click', stopGame);
+
+    if (el.pumpkin) {
+        el.pumpkin.addEventListener('click', function () {
+            if (!isSystemGameActive) return;
+            registerClick();
+            if (pumpkinState === 'bonus') {
+                score += 3;
+                Audio.bonusSound();
+                setPumpkinState('normal');
+            } else if (pumpkinState === 'cursed') {
+                score = Math.max(0, score - 2);
+                Audio.cursedSound();
+                setPumpkinState('normal');
+            } else {
+                score += 1;
+                Audio.catchSound();
+            }
+            updateScoreUI();
+            evaluateAchievements();
+            movePumpkin();
+        });
+    }
+
+    /* пересчёт позиции при ресайзе, чтобы тыква не улетала за край */
+    window.addEventListener('resize', function () {
+        if (!isSystemGameActive) return;
+        var s = areaSize();
+        if (!el.pumpkin) return;
+        var x = parseFloat(el.pumpkin.style.left) || 0;
+        var y = parseFloat(el.pumpkin.style.top) || 0;
+        if (x > s.w) el.pumpkin.style.left = s.w + 'px';
+        if (y > s.h) el.pumpkin.style.top = s.h + 'px';
+    });
+
+})();
+</script>
