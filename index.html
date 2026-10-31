@@ -5,37 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель МЗ — Промышленный Хэллоуинский Монолит</title>
     <style>
-        /* ========================================================================= */
-        /* ПОДСИСТЕМА 1: ГЛОБАЛЬНЫЕ НЕОНОВЫЕ HUD-СТИЛИ                               */
-        /* ========================================================================= */
-        :root { 
-            --bg-dark-core: #06060c; 
-            --neon-pumpkin-orange: #ff6200; 
-            --neon-witch-purple: #8e44ad; 
-            --glass-panel-background: rgba(20, 20, 30, 0.7); 
+        :root {
+            --bg-dark-core: #06060c;
+            --neon-pumpkin-orange: #ff6200;
+            --neon-witch-purple: #8e44ad;
+            --glass-panel-background: rgba(20, 20, 30, 0.7);
             --text-pure-white: #ffffff;
             --matrix-green: #2ecc71;
             --blood-red: #c0392b;
         }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background-color: var(--bg-dark-core); 
-            color: var(--text-pure-white); 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark-core);
+            color: var(--text-pure-white);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%); 
-            user-select: none; 
+            background-image: radial-gradient(circle at 50% 50%, #150d2a 0%, #06060c 100%);
+            user-select: none;
             -webkit-user-select: none;
         }
 
-        /* ПОДСИСТЕМА 2: МАССИВНЫЕ ВЕКТОРНЫЕ ПАУТИНЫ ПО УГЛАМ ЭКРАНА */
         .site-spider-web-top-left {
             position: fixed; top: 0; left: 0; width: 220px; height: 250px; z-index: 1; pointer-events: none;
         }
@@ -59,16 +55,15 @@
             100% { transform: translate(0, 0) scale(1); }
         }
 
-        .master-layout-container { 
+        .master-layout-container {
             display: flex; flex-direction: row; gap: 25px; max-width: 950px; width: 100%; flex-wrap: wrap; justify-content: center; position: relative; z-index: 10;
         }
 
-        /* ПОДСИСТЕМА 3: КАРТОЧКИ МОНИТОРИНГА И СТАТИСТИКИ */
-        .hud-glass-card { 
+        .hud-glass-card {
             background: var(--glass-panel-background); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); width: 100%; max-width: 430px; text-align: center; border: 1px solid rgba(255, 98, 0, 0.2); box-sizing: border-box; position: relative;
         }
         .hud-glass-card.game-node { border-color: rgba(142, 68, 173, 0.3); }
-        
+
         h1 { margin-top: 0; margin-bottom: 15px; color: var(--neon-pumpkin-orange); font-size: 24px; text-shadow: 0 0 10px rgba(255, 98, 0, 0.3); }
         h2 { margin-top: 0; margin-bottom: 15px; color: var(--neon-witch-purple); font-size: 24px; text-shadow: 0 0 10px rgba(142, 68, 173, 0.3); }
         .core-status-badge { display: inline-block; padding: 5px 15px; font-weight: bold; border-radius: 20px; text-transform: uppercase; margin-bottom: 15px; font-size: 12px; background: rgba(255, 98, 0, 0.1); color: var(--neon-pumpkin-orange); border: 1px solid var(--neon-pumpkin-orange); }
@@ -77,8 +72,7 @@
         .hud-data-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .hud-row-label { color: #8e8e9f; } .hud-row-value { font-weight: bold; color: #ffffff; }
         .credits-container { margin-top: 20px; font-size: 13px; color: #73738c; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; line-height: 1.6; text-align: left; }
-        
-        /* ПОДСИСТЕМА 4: ИГРОВАЯ ЗОНА И КНОПКИ СЕРВЕРА */
+
         .game-area-viewport { width: 100%; height: 180px; background: rgba(0, 0, 0, 0.6); border-radius: 12px; position: relative; margin-top: 15px; border: 1px solid rgba(142, 68, 173, 0.2); overflow: hidden; }
         #pumpkin { font-size: 40px; position: absolute; cursor: pointer; top: 35%; left: 45%; user-select: none; filter: drop-shadow(0 0 8px var(--neon-pumpkin-orange)); transition: left 0.1s ease, top 0.1s ease; }
         .control-btn-layout { display: flex; gap: 10px; margin-top: 15px; }
@@ -86,10 +80,10 @@
         .hud-action-button:hover { background: #9b59b6; }
         .hud-action-button.stop-modifier { background: var(--blood-red); }
         .hud-action-button.stop-modifier:hover { background: #e74c3c; }
-        
+
         .master-audio-banner-panel { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 30px; margin-bottom: 20px; font-size: 13px; color: #a0a0b0; cursor: pointer; text-align: center; width: 100%; max-width: 885px; box-sizing: border-box; font-weight: bold; transition: all 0.3s; }
         .master-audio-banner-panel:hover { border-color: var(--neon-pumpkin-orange); color: #fff; background: rgba(255,255,255,0.05); }
-        
+
         .achievements-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 121, 0, 0.1); width: 100%; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; box-sizing: border-box; }
         .ach-title { font-weight: bold; color: var(--neon-pumpkin-orange); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         .ach-item { color: #8e8e9f; display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
@@ -98,7 +92,6 @@
 </head>
 <body>
 
-    <!-- ПОДСИСТЕМА КРАСИВЫХ СЕТЕВЫХ ПАУТИН (БЕЗ СМАЙЛИКОВ) -->
     <svg class="site-spider-web-top-left" viewBox="0 0 100 100">
         <path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" stroke="rgba(255, 98, 0, 0.25)" stroke-width="0.8" fill="none"/>
         <path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" stroke="rgba(255, 98, 0, 0.18)" stroke-width="0.6" fill="none"/>
@@ -110,7 +103,6 @@
 
     <div class="fog-ambient-layer"></div>
 
-    <!-- УБРАНЫ ОШИБКИ ONCLICK: КНОПКИ ТЕПЕРЬ СЛУШАЮТ СИСТЕМУ НАПРЯМУЮ ИЗ ПАМЯТИ -->
     <div class="master-audio-banner-panel" id="master-audio-engine-activation-button">
         🎵 Нажмите сюда, чтобы запустить хэллоуинскую мелодию (Музыка)
     </div>
@@ -141,3 +133,156 @@
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:bold; padding:0 5px;">
                 <div>Счет: <span id="runtime-score-counter" style="color:var(--neon-witch-purple);">0</span></div>
+                <div>Рекорд: <span id="historical-best-counter" style="color:var(--matrix-green);">0</span></div>
+            </div>
+            <div class="control-btn-layout">
+                <button class="hud-action-button" id="game-start-trigger">Старт</button>
+                <button class="hud-action-button stop-modifier" id="game-stop-trigger">Стоп</button>
+            </div>
+            <div class="achievements-box">
+                <div class="ach-title">🎃 Достижения сессии:</div>
+                <div class="ach-item" id="achievement-slot-1">❌ Охотник за призраками (10 очков)</div>
+                <div class="ach-item" id="achievement-slot-2">❌ Повелитель тыкв (25 очков)</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            var totalSystemSecondsCounter = 0;
+            var coreGameIntervalLoop = null;
+            var isSystemGameActive = false;
+            var score = 0;
+            var best = 0;
+
+            var webSvgContent = document.querySelector(".site-spider-web-top-left").innerHTML;
+            document.querySelector(".site-spider-web-top-right").innerHTML = webSvgContent;
+            document.querySelector(".site-spider-web-bottom-left").innerHTML = webSvgContent;
+            document.querySelector(".site-spider-web-bottom-right").innerHTML = webSvgContent;
+
+            function executeRealtimeClockTick() {
+                totalSystemSecondsCounter++;
+                var h = Math.floor(totalSystemSecondsCounter / 3600);
+                var m = Math.floor((totalSystemSecondsCounter % 3600) / 60);
+                var s = totalSystemSecondsCounter % 60;
+                var clockDisplay = document.getElementById("realtime-clock-digital-display");
+                if (clockDisplay) {
+                    clockDisplay.innerText = h + "ч " + m + "мин " + s + "сек";
+                }
+            }
+            setInterval(executeRealtimeClockTick, 1000);
+
+            var moduleAudioEngine = {
+                context: null,
+                interval: null,
+                notes: [130.81, 155.56, 196.00, 220.00],
+                currentIdx: 0,
+                init: function () {
+                    if (this.context) return;
+                    try {
+                        this.context = new (window.AudioContext || window.webkitAudioContext)();
+                        var self = this;
+                        function playMelodyStep() {
+                            if (!self.context) return;
+                            var osc = self.context.createOscillator();
+                            var gainNode = self.context.createGain();
+                            osc.type = "sine";
+                            osc.frequency.setValueAtTime(self.notes[self.currentIdx], self.context.currentTime);
+                            gainNode.gain.setValueAtTime(0.06, self.context.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.001, self.context.currentTime + 1.2);
+                            osc.connect(gainNode);
+                            gainNode.connect(self.context.destination);
+                            osc.start();
+                            osc.stop(self.context.currentTime + 1.2);
+                            self.currentIdx = (self.currentIdx + 1) % self.notes.length;
+                        }
+                        playMelodyStep();
+                        this.interval = setInterval(playMelodyStep, 1000);
+                        document.getElementById("master-audio-engine-activation-button").innerText = "🔮 Фоновая хэллоуинская музыка запущена и играет!";
+                    } catch (error) {
+                        console.error("Ошибка инициализации аудио ядра:", error);
+                    }
+                },
+                playCatchSoundEffect: function () {
+                    if (!this.context) return;
+                    try {
+                        var osc = this.context.createOscillator();
+                        var gain = this.context.createGain();
+                        osc.type = "sine";
+                        osc.frequency.setValueAtTime(300, this.context.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(90, this.context.currentTime + 0.15);
+                        gain.gain.setValueAtTime(0.08, this.context.currentTime);
+                        gain.gain.linearRampToValueAtTime(0.001, this.context.currentTime + 0.15);
+                        osc.connect(gain);
+                        gain.connect(this.context.destination);
+                        osc.start();
+                        osc.stop(this.context.currentTime + 0.15);
+                    } catch (e) {}
+                }
+            };
+
+            function movePumpkinToRandomPoint() {
+                if (!isSystemGameActive) return;
+                var p = document.getElementById("pumpkin");
+                if (p) {
+                    p.style.left = Math.floor(Math.random() * 320) + "px";
+                    p.style.top = Math.floor(Math.random() * 130) + "px";
+                }
+            }
+
+            function evaluateAchievementsNode() {
+                if (score >= 10) {
+                    var a1 = document.getElementById("achievement-slot-1");
+                    if (a1) { a1.innerText = "🏆 Охотник за призраками (Получено!)"; a1.className = "ach-item unlocked"; }
+                }
+                if (score >= 25) {
+                    var a2 = document.getElementById("achievement-slot-2");
+                    if (a2) { a2.innerText = "🏆 Повелитель тыкв (Получено!)"; a2.className = "ach-item unlocked"; }
+                }
+            }
+
+            document.getElementById("master-audio-engine-activation-button").addEventListener("click", function () {
+                moduleAudioEngine.init();
+            });
+
+            document.getElementById("game-start-trigger").addEventListener("click", function () {
+                moduleAudioEngine.init();
+                score = 0;
+                document.getElementById("runtime-score-counter").innerText = score;
+                // Сброс достижений при новом старте
+                var a1 = document.getElementById("achievement-slot-1");
+                var a2 = document.getElementById("achievement-slot-2");
+                a1.innerText = "❌ Охотник за призраками (10 очков)"; a1.className = "ach-item";
+                a2.innerText = "❌ Повелитель тыкв (25 очков)"; a2.className = "ach-item";
+                isSystemGameActive = true;
+                if (coreGameIntervalLoop) clearInterval(coreGameIntervalLoop);
+                movePumpkinToRandomPoint();
+                coreGameIntervalLoop = setInterval(movePumpkinToRandomPoint, 750);
+            });
+
+            document.getElementById("game-stop-trigger").addEventListener("click", function () {
+                isSystemGameActive = false;
+                if (coreGameIntervalLoop) clearInterval(coreGameIntervalLoop);
+                var p = document.getElementById("pumpkin");
+                if (p) {
+                    p.style.left = "45%";
+                    p.style.top = "35%";
+                }
+            });
+
+            document.getElementById("pumpkin").addEventListener("click", function () {
+                if (!isSystemGameActive) return;
+                score++;
+                document.getElementById("runtime-score-counter").innerText = score;
+                if (score > best) {
+                    best = score;
+                    document.getElementById("historical-best-counter").innerText = best;
+                }
+                try { moduleAudioEngine.playCatchSoundEffect(); } catch (e) {}
+                evaluateAchievementsNode();
+                movePumpkinToRandomPoint();
+            });
+        };
+    </script>
+</body>
+</html>
