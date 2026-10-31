@@ -6,14 +6,11 @@
 <title>Панель МЗ — Halloween Monolith v3.0</title>
 <style>
 :root{
-  --bg:#06060c; --panel:rgba(20,20,32,.55);
-  --text:#fff; --muted:#8e8ea3;
-  --accent:#ff6200; --accent-2:#8e44ad;
-  --green:#2ecc71; --red:#c0392b; --gold:#f39c12;
+  --bg:#06060c; --panel:rgba(20,20,32,.55); --text:#fff; --muted:#8e8ea3;
+  --accent:#ff6200; --accent-2:#8e44ad; --green:#2ecc71; --red:#c0392b; --gold:#f39c12;
   --border:rgba(255,98,0,.18); --border-2:rgba(142,68,173,.25);
   --bg-grad:radial-gradient(circle at 50% 20%,#1a0f2e 0%,#06060c 70%);
-  --shadow:0 10px 40px -10px rgba(0,0,0,.6);
-  --radius:22px;
+  --shadow:0 10px 40px -10px rgba(0,0,0,.6); --radius:22px;
 }
 body.theme-samhain{
   --bg-grad:radial-gradient(circle at 50% 20%,#0b1a12 0%,#040807 70%);
@@ -24,7 +21,7 @@ body.theme-samhain{
 html,body{height:100%;}
 body{
   margin:0; padding:24px; min-height:100vh;
-  font-family:'Inter','Segoe UI',Roboto,system-ui,sans-serif;
+  font-family:'Inter','Segoe UI',sans-serif;
   color:var(--text); background:var(--bg); background-image:var(--bg-grad);
   background-attachment:fixed; transition:background-image .6s ease,color .3s;
   display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
@@ -33,7 +30,7 @@ body{
 body.shake{animation:shake .35s ease;}
 @keyframes shake{0%,100%{transform:translate(0,0);}25%{transform:translate(-6px,3px);}50%{transform:translate(6px,-3px);}75%{transform:translate(-3px,-2px);}}
 
-/* Фоновые скелеты — танец как на скрине */
+/* Фоновые скелеты */
 .background-skeletons{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .5s ease;}
 .background-skeletons.active{opacity:1;}
 .bg-skeleton{
@@ -224,11 +221,76 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   <div class="tour-btns"><button class="tour-skip" id="tour-skip">Пропустить</button><button class="tour-next" id="tour-next">Далее</button></div>
 </div>
 
-  var sfx={
-    catchSfx:function(){playBlip(700,140,0.14);},
-    bonusSfx:function(){playBlip(980,1500,0.10,'sine');},
-    cursedSfx:function(){playBlip(220,60,0.16,'sawtooth');}
+<div id="yt-audio-container" style="position:fixed; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none;"></div>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  var L = {
+    ru: {
+      t1:'Мониторинг Технички МЗ', s1:'Промышленный хэллоуинский монолит', st:'Система активна', k1:'Имя узла',k2:'Издание',k3:'Дата',k4:'Время работы',k5:'База', v2:'Halloween Edition',dev:'Разработчик',ai:'ИИ',sp:'Спонсор',
+      t2:'🦇 Хэллоуинская Игра',s2:'Лови тыквы', sc:'Счет',tm:'Время',bs:'Рекорд',str:'Серия',go:'Старт',stop:'Стоп', share:'📤 Поделиться', copied:'Скопировано!', ach:'🎃 Достижения', a1:'❌ Охотник (10)',a2:'❌ Повелитель (25)',a3:'❌ Комбо (x5)',
+      a1o:'🏆 Охотник!',a2o:'🏆 Повелитель!',a3o:'🏆 Комбо!', thP:'Тема: Тыква', thS:'Тема: Самайн', mOff:'Музыка: выкл', mOn:'Музыка: вкл', sfxOn:'Звуки: вкл', sfxOff:'Звуки: выкл', hcOff:'Хардкор: выкл', hcOn:'Хардкор: вкл', skOn:'Скелеты: вкл', skOff:'Скелеты: выкл', combo:'Комбо x',
+      shareTxt:function(v){return 'Мой рекорд: '+v+' очков!';}, clk:function(h,m,s){return h+'ч '+m+'мин '+s+'сек';},
+      tour:[{ti:'Добро пожаловать!',tx:'Это панель.',sel:null},{ti:'Вкладки',tx:'Смотри историю.',sel:'.tabs'},{ti:'Музыка',tx:'Включает трек.',sel:'#music-toggle'},{ti:'Игра',tx:'Лови тыквы!',sel:'#game-card'},{ti:'Готово!',tx:'Кнопка «?» запустит тур.',sel:null}],
+      tourUpdate:[{ti:'🎉 Обновление!',tx:'Новая музыка и скелеты.',sel:null},{ti:'Музыка',tx:'Через YouTube.',sel:'#music-toggle'},{ti:'История',tx:'Список версий.',sel:'.tabs'},{ti:'Приятной игры!',tx:'Спонсор с нами.',sel:null}]
+    },
+    en: {
+      t1:'MZ Tech Node Monitor', s1:'Industrial Halloween Monolith', st:'System active', k1:'Node name',k2:'Edition',k3:'Date',k4:'Uptime',k5:'Database', v2:'Halloween Edition',dev:'Developer',ai:'AI',sp:'Sponsor',
+      t2:'🦇 Halloween Game',s2:'Catch pumpkins', sc:'Score',tm:'Time',bs:'Best',str:'Streak',go:'Start',stop:'Stop', share:'📤 Share', copied:'Copied!', ach:'🎃 Achievements', a1:'❌ Hunter (10)',a2:'❌ Lord (25)',a3:'❌ Combo (x5)',
+      a1o:'🏆 Hunter!',a2o:'🏆 Lord!',a3o:'🏆 Combo!', thP:'Theme: Pumpkin', thS:'Theme: Samhain', mOff:'Music: off', mOn:'Music: on', sfxOn:'SFX: on', sfxOff:'SFX: off', hcOff:'Hardcore: off', hcOn:'Hardcore: on', skOn:'Skeletons: on', skOff:'Skeletons: off', combo:'Combo x',
+      shareTxt:function(v){return 'My best: '+v+' points!';}, clk:function(h,m,s){return h+'h '+m+'m '+s+'s';},
+      tour:[{ti:'Welcome!',tx:'Panel.',sel:null},{ti:'Tabs',tx:'Check history.',sel:'.tabs'},{ti:'Music',tx:'Toggles track.',sel:'#music-toggle'},{ti:'Game',tx:'Catch!',sel:'#game-card'},{ti:'Done!',tx:'"?" re-opens.',sel:null}],
+      tourUpdate:[{ti:'🎉 Update!',tx:'New music.',sel:null},{ti:'Music',tx:'YouTube.',sel:'#music-toggle'},{ti:'History',tx:'Versions.',sel:'.tabs'},{ti:'Enjoy!',tx:'Sponsor is back.',sel:null}]
+    }
   };
+  var lang='ru', theme='pumpkin', sfxOn=true, hardcore=false, skelOn=true;
+  function setText(id,v){var e=$(id);if(e)e.textContent=v;}
+
+  if($('tab-main-btn')) $('tab-main-btn').addEventListener('click', function(){
+    $('tab-main').classList.add('active'); $('tab-vers').classList.remove('active');
+    this.classList.add('active'); $('tab-vers-btn').classList.remove('active');
+  });
+  if($('tab-vers-btn')) $('tab-vers-btn').addEventListener('click', function(){
+    $('tab-main').classList.remove('active'); $('tab-vers').classList.add('active');
+    this.classList.add('active'); $('tab-main-btn').classList.remove('active');
+  });
+
+  var versions = [
+    {v:'1.0', text:'Первый релиз. Базовая игра.'},
+    {v:'2.0', text:'Вкладки, переработанный тур.'},
+    {v:'3.0', text:'YouTube музыка, 30 фишек, новые механики.'}
+  ];
+  var list = $('changelog-list'); 
+  if (list) { 
+    list.innerHTML = ''; 
+    versions.forEach(function(item) { 
+      var li = document.createElement('li'); 
+      li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; 
+      list.appendChild(li); 
+    }); 
+  }
+
+  var YT_ID = 'RaDa7m76uXY'; var ytPlayer = null; var musicOn = false; var bgSkeletons = $('bg-skeletons');
+  function spawnBgSkeleton() {
+    if (!musicOn || !bgSkeletons) return;
+    var s = document.createElement('div'); s.className = 'bg-skeleton'; s.textContent = Math.random() < 0.5 ? '💀' : '🦴';
+    s.style.left = Math.random() * 100 + '%'; s.style.top = (Math.random() * 80 + 10) + '%';
+    s.style.fontSize = (40 + Math.random() * 40) + 'px'; s.style.animationDuration = (0.4 + Math.random() * 0.4) + 's';
+    bgSkeletons.appendChild(s); setTimeout(function(){ if (s.parentNode) s.parentNode.removeChild(s); }, 4000);
+  }
+  function startBgSkeletons() { if (!bgSkeletons) return; bgSkeletons.classList.add('active'); if (window._bgSkelInterval) clearInterval(window._bgSkelInterval); window._bgSkelInterval = setInterval(spawnBgSkeleton, 800); }
+  function stopBgSkeletons() { if (!bgSkeletons) return; bgSkeletons.classList.remove('active'); if (window._bgSkelInterval) { clearInterval(window._bgSkelInterval); window._bgSkelInterval = null; } bgSkeletons.innerHTML = ''; }
+  function updateMusicUI(){ var b=$('music-toggle'); if(b) b.classList.toggle('playing', musicOn); var ic=$('music-icon'); if(ic) ic.textContent = musicOn ? '🎵' : '🔇'; var lb=$('music-label'); if(lb) lb.textContent = musicOn ? L[lang].mOn : L[lang].mOff; }
+
+  var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  window.onYouTubeIframeAPIReady = function() { ytPlayer = new YT.Player('yt-audio-container', { height: '0', width: '0', videoId: YT_ID, playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': YT_ID } }); };
+  if($('music-toggle')){ $('music-toggle').addEventListener('click', function(){ if(!ytPlayer) return; if(musicOn){ ytPlayer.pauseVideo(); musicOn = false; stopBgSkeletons(); updateMusicUI(); } else { ytPlayer.playVideo(); musicOn = true; startBgSkeletons(); updateMusicUI(); } }); }
+
+  var sfxCtx=null; function ensureSfx(){if(sfxCtx){if(sfxCtx.state==='suspended')sfxCtx.resume().catch(function(){});return true;}try{sfxCtx=new (window.AudioContext||window.webkitAudioContext)();if(sfxCtx.state==='suspended')sfxCtx.resume().catch(function(){});return true;}catch(e){return false;}}
+  function playBlip(f1,f2,v,type){if(!sfxOn||!ensureSfx())return;try{var t=sfxCtx.currentTime,o=sfxCtx.createOscillator(),g=sfxCtx.createGain();o.type=type||'square';o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+0.18);g.gain.setValueAtTime(v,t);g.gain.linearRampToValueAtTime(0.001,t+0.2);o.connect(g);g.connect(sfxCtx.destination);o.start(t);o.stop(t+0.22);}catch(e){}}
+  var sfx={catchSfx:function(){playBlip(700,140,0.14);},bonusSfx:function(){playBlip(980,1500,0.10,'sine');},cursedSfx:function(){playBlip(220,60,0.16,'sawtooth');}};
 
   function applyLang(){
     var t=L[lang];
@@ -241,7 +303,8 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   if($('lang-ru'))$('lang-ru').addEventListener('click',function(){lang='ru';applyLang();});
   if($('lang-en'))$('lang-en').addEventListener('click',function(){lang='en';applyLang();});
 
-  var sec=0; setInterval(function(){sec++;var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;var c=$('clock');if(c)c.textContent=L[lang].clk(h,m,s);},1000);
+  var sec=0; 
+  setInterval(function(){sec++;var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;var c=$('clock');if(c)c.textContent=L[lang].clk(h,m,s);},1000);
 
   if($('theme-toggle'))$('theme-toggle').addEventListener('click',function(){ theme=(theme==='pumpkin')?'samhain':'pumpkin'; document.body.classList.toggle('theme-samhain',theme==='samhain'); if($('theme-icon'))$('theme-icon').textContent=(theme==='samhain')?'🌿':'🎃'; applyLang(); });
   if($('sfx-toggle'))$('sfx-toggle').addEventListener('click',function(){sfxOn=!sfxOn;this.classList.toggle('active',sfxOn);if($('sfx-icon'))$('sfx-icon').textContent=sfxOn?'🔔':'🔕';applyLang();});
@@ -365,5 +428,3 @@ h1{color:var(--accent);} h2{color:var(--accent-2);}
   applyLang();
 })();
 </script>
-</body>
-</html>
