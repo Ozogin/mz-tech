@@ -3,90 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>МЗ: Проклятие Технички v7.1</title>
-<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<title>МЗ: Проклятие Технички v8.0 — Cyber Halloween</title>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;600;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#08050c; --panel:rgba(20,10,30,.7);
-  --text:#fff; --muted:#9d8ca1;
-  --accent:#ff6200; --accent-2:#8e44ad; --green:#2ecc71; --red:#e74c3c; --gold:#f1c40f; --blue:#3498db;
-  --border:rgba(255,98,0,.4); --border-2:rgba(142,68,173,.5);
-  --glow-orange:0 0 20px rgba(255,98,0,.5); --glow-purple:0 0 20px rgba(142,68,173,.5);
+  --bg:#05040a; --panel:rgba(15, 10, 25, 0.6);
+  --text:#fff; --muted:#a09eb5;
+  --accent:#ff6600; --accent-2:#9d00ff; --green:#00ff88; --red:#ff0033; --gold:#ffcc00; --blue:#00ccff;
+  --border:rgba(255, 102, 0, 0.3); --border-2:rgba(157, 0, 255, 0.4);
+  --glow-orange:0 0 25px rgba(255, 102, 0, 0.6); --glow-purple:0 0 25px rgba(157, 0, 255, 0.6);
+  --glass-blur: blur(15px); --radius: 24px;
 }
-body.theme-samhain{--bg:#050a07;--accent:#2ecc71;--accent-2:#c0392b;--border:rgba(46,204,113,.4);--border-2:rgba(192,57,43,.5);--glow-orange:0 0 20px rgba(46,204,113,.5);--glow-purple:0 0 20px rgba(192,57,43,.5);}
+body.theme-samhain{
+  --bg:#040a06; --accent:#00ffcc; --accent-2:#ff0033;
+  --border:rgba(0, 255, 204, 0.3); --border-2:rgba(255, 0, 51, 0.4);
+  --glow-orange:0 0 25px rgba(0, 255, 204, 0.6); --glow-purple:0 0 25px rgba(255, 0, 51, 0.6);
+}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-x:hidden;transition:background .5s;user-select:none;}
-h1,h2{font-family:'Creepster',cursive;letter-spacing:2px;text-shadow:var(--glow-orange);}
-h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;text-shadow:var(--glow-purple);}
+body{
+  background:var(--bg); color:var(--text); font-family:'Montserrat',sans-serif;
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  padding:20px; overflow-x:hidden; transition:background .5s; user-select:none;
+  background-image: radial-gradient(circle at 10% 20%, rgba(157, 0, 255, 0.1) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(255, 102, 0, 0.1) 0%, transparent 40%);
+}
+body.theme-samhain {
+  background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(255, 0, 51, 0.1) 0%, transparent 40%);
+}
+h1,h2{font-family:'Creepster',cursive;letter-spacing:3px;}
+h1{color:var(--accent);font-size:42px;text-shadow:var(--glow-orange);}
+h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
-/* Фоновые эффекты */
-.fog{position:fixed;inset:0;background:url('https://www.transparenttextures.com/patterns/foggy-birds.png');opacity:.3;z-index:0;pointer-events:none;animation:fogMove 60s linear infinite;}
+/* Фон: Туман и паутина */
+.fog{position:fixed;inset:0;background:url('https://www.transparenttextures.com/patterns/foggy-birds.png');opacity:.2;z-index:0;pointer-events:none;animation:fogMove 60s linear infinite;}
 @keyframes fogMove{0%{background-position:0 0;}100%{background-position:1000px 1000px;}}
-.web{position:fixed;width:220px;height:250px;z-index:1;pointer-events:none;opacity:0.8;}
-.web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);} .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
-.web path{stroke:var(--accent);filter:drop-shadow(0 0 5px var(--accent));}
+.web{position:fixed;width:250px;height:280px;z-index:1;pointer-events:none;opacity:0.4;}
+.web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);}
+.web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
+.web path{stroke:var(--accent);filter:drop-shadow(0 0 8px var(--accent));}
 
-/* Верхнее меню */
-.topbar{width:100%;max-width:1100px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;z-index:10;}
-.pill{padding:10px 20px;border-radius:30px;background:rgba(0,0,0,.6);border:1px solid var(--border);color:var(--text);font-weight:bold;font-size:13px;cursor:pointer;transition:all .3s;backdrop-filter:blur(5px);}
-.pill:hover{background:var(--accent);color:#000;box-shadow:var(--glow-orange);}
-.pill.active{border-color:var(--accent);color:var(--accent);box-shadow:inset 0 0 10px var(--accent);}
-.tabs{width:100%;max-width:1100px;display:flex;gap:10px;margin-bottom:20px;z-index:10;flex-wrap:wrap;}
-.tab-btn{flex:1;padding:12px;background:rgba(0,0,0,.6);border:1px solid #333;color:#aaa;font-weight:bold;font-family:'Montserrat';cursor:pointer;border-radius:10px;transition:all .3s;min-width:120px;}
-.tab-btn.active{background:var(--accent-2);color:#fff;border-color:var(--accent-2);box-shadow:var(--glow-purple);}
-.tab-content{display:none;width:100%;max-width:1100px;z-index:10;}
-.tab-content.active{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;animation:fadeIn .4s;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+/* Верхняя панель (Glassmorphism) */
+.topbar{
+  width:100%; max-width:1200px; display:flex; flex-wrap:wrap; gap:12px;
+  justify-content:center; margin-bottom:25px; z-index:10;
+  background: var(--panel); border:1px solid var(--border);
+  padding: 15px; border-radius: var(--radius); backdrop-filter: var(--glass-blur);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.pill{
+  padding:12px 24px; border-radius:50px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.1); color:var(--text); font-weight:600;
+  font-size:14px; cursor:pointer; transition:all .3s;
+}
+.pill:hover{background:var(--accent); color:#000; box-shadow:var(--glow-orange); transform:translateY(-2px);}
+.pill.active{border-color:var(--accent); color:var(--accent); background:rgba(255,102,0,0.1);}
+
+/* Табы (Вкладки) */
+.tabs{
+  width:100%; max-width:1200px; display:flex; gap:15px;
+  margin-bottom:25px; z-index:10; flex-wrap:wrap;
+}
+.tab-btn{
+  flex:1; padding:16px; background: rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05); color:var(--muted);
+  font-weight:900; font-size:16px; cursor:pointer; border-radius:16px;
+  transition:all .3s; text-transform:uppercase; letter-spacing:1px;
+}
+.tab-btn.active{
+  background: linear-gradient(135deg, rgba(157,0,255,0.2), rgba(255,102,0,0.2));
+  color:#fff; border-color:var(--accent-2); box-shadow: 0 0 15px rgba(157,0,255,0.3);
+}
+
+/* Контент */
+.tab-content{display:none;width:100%;max-width:1200px;z-index:10;}
+.tab-content.active{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;animation:fadeIn .4s ease-out;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
 
 /* Карточки */
-.card{flex:1 1 400px;max-width:520px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:25px;backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.8);position:relative;}
-.card.game{border-color:var(--border-2);}
+.card{
+  flex:1 1 450px; max-width:550px; background: var(--panel);
+  border:1px solid var(--border); border-radius: var(--radius); padding:30px;
+  backdrop-filter: var(--glass-blur); box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+  position:relative; transition: transform 0.3s;
+}
+.card:hover { transform: translateY(-5px); }
+.card.game { border-color: var(--border-2); }
 
-/* Данные */
-.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.1);font-size:14px;}
-.row:last-child{border:none;}.k{color:var(--muted);font-size:12px;text-transform:uppercase;}.v{font-weight:bold;}.v.accent{color:var(--accent);}
-.credits{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.8;color:#ccc;}
+/* Данные мониторинга */
+.row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,0.1);font-size:15px;}
+.row:last-child{border:none;}
+.k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+.v{font-weight:900;font-family:monospace;font-size:16px;}
+.v.accent{color:var(--green);text-shadow:0 0 10px var(--green);}
+.credits{
+  margin-top:25px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);
+  font-size:14px; line-height:1.8; color:#b0b0c0;
+}
+.credits span { font-weight: 900; }
 
 /* Игра (Котёл) */
-.game-area{position:relative;width:100%;height:300px;background:radial-gradient(circle at 50% 100%, #2a0b36 0%, #0a0510 100%);border:2px solid var(--border-2);border-radius:15px;margin-top:15px;overflow:hidden;box-shadow:inset 0 0 50px #000;cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🪄</text></svg>'), auto;}
-#cauldron{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:60px;z-index:5;filter:drop-shadow(0 0 15px var(--green));transition:left .1s;}
-.falling-item{position:absolute;font-size:35px;z-index:4;pointer-events:none;filter:drop-shadow(0 0 10px #fff);}
-.stats{display:flex;justify-content:space-between;margin-top:15px;font-weight:900;font-size:16px;}
-.stats span{color:var(--accent);}
-.btns{display:flex;gap:10px;margin-top:15px;}
-.btn{flex:1;padding:14px;background:linear-gradient(135deg,var(--accent),#a03d00);border:none;border-radius:10px;color:#fff;font-weight:900;font-size:15px;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:'Montserrat';}
-.btn:hover{transform:translateY(-2px);box-shadow:var(--glow-orange);}
-.btn.stop{background:linear-gradient(135deg,var(--red),#8b1a1a);}
+.game-area{
+  position:relative; width:100%; height:350px;
+  background: radial-gradient(circle at 50% 100%, #1a052b 0%, #05010a 100%);
+  border:2px solid var(--border-2); border-radius:20px; margin-top:20px;
+  overflow:hidden; box-shadow: inset 0 0 60px rgba(0,0,0,1);
+  cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🪄</text></svg>'), auto;
+}
+#cauldron{
+  position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
+  font-size:70px; z-index:5; filter:drop-shadow(0 0 25px var(--green));
+  transition:left .1s ease-out;
+}
+.falling-item{
+  position:absolute; font-size:40px; z-index:4; pointer-events:none;
+  filter:drop-shadow(0 0 15px #fff);
+}
+.stats{display:flex;justify-content:space-between;margin-top:20px;font-weight:900;font-size:18px;letter-spacing:1px;}
+.stats span{color:var(--accent);font-family:monospace;font-size:22px;text-shadow:var(--glow-orange);}
+.btns{display:flex;gap:15px;margin-top:20px;}
+.btn{
+  flex:1; padding:16px; background: linear-gradient(135deg, var(--accent), #a03d00);
+  border:none; border-radius:14px; color:#fff; font-weight:900; font-size:16px;
+  text-transform:uppercase; cursor:pointer; transition:all .2s; letter-spacing:1px;
+  box-shadow: 0 5px 15px rgba(255,102,0,0.3);
+}
+.btn:hover{transform:translateY(-3px); box-shadow:var(--glow-orange); filter:brightness(1.1);}
+.btn.stop{background: linear-gradient(135deg, var(--red), #8b1a1a); box-shadow: 0 5px 15px rgba(255,0,51,0.3);}
 
-/* БОСС */
-#boss-area{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:150;justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(5px);}
-#boss-area.active{display:flex;}
-#boss{font-size:100px;cursor:pointer;animation:bossFloat 2s infinite alternate;filter:drop-shadow(0 0 30px var(--red));}
-@keyframes bossFloat{0%{transform:translateY(0) scale(1);}100%{transform:translateY(-20px) scale(1.05);}}
-.boss-hp{width:60%;height:20px;background:#333;border-radius:10px;margin-top:20px;overflow:hidden;border:2px solid var(--red);}
-#boss-hp-bar{height:100%;background:var(--red);width:100%;transition:width .2s;}
-.boss-text{font-size:24px;font-weight:900;color:var(--red);text-shadow:0 0 10px var(--red);margin-top:10px;}
+/* БОСС (Оверлей) */
+#boss-area{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:150;justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(10px);}
+#boss-area.active{display:flex;animation:fadeIn 0.3s;}
+#boss{font-size:150px;cursor:pointer;animation:bossFloat 2s infinite alternate;filter:drop-shadow(0 0 50px var(--red));}
+@keyframes bossFloat{0%{transform:translateY(0) scale(1);}100%{transform:translateY(-30px) scale(1.1);}}
+.boss-hp{width:70%;max-width:800px;height:30px;background:rgba(255,255,255,0.1);border-radius:15px;margin-top:30px;overflow:hidden;border:2px solid var(--red);box-shadow:0 0 20px rgba(255,0,51,0.5);}
+#boss-hp-bar{height:100%;background:linear-gradient(90deg, var(--red), #ff6666);width:100%;transition:width .2s;}
+.boss-text{font-size:32px;font-weight:900;color:var(--red);text-shadow:0 0 20px var(--red);margin-top:20px;letter-spacing:2px;}
 
 /* Дуэли */
-.duel-area{width:100%;height:300px;display:flex;justify-content:center;align-items:center;flex-direction:column;position:relative;}
-.monster{font-size:100px;animation:monsterPulse 1s infinite alternate;}
+.duel-area{width:100%;height:350px;display:flex;justify-content:center;align-items:center;flex-direction:column;position:relative;}
+.monster{font-size:120px;animation:monsterPulse 1s infinite alternate;filter:drop-shadow(0 0 20px var(--accent-2));}
 @keyframes monsterPulse{0%{transform:scale(1);}100%{transform:scale(1.1);}}
 .duel-btns{display:flex;gap:20px;margin-top:30px;}
-.duel-btn{padding:15px 30px;font-size:24px;background:var(--panel);border:2px solid var(--accent);border-radius:15px;cursor:pointer;transition:all .2s;}
-.duel-btn:hover{background:var(--accent);}
+.duel-btn{padding:15px 40px;font-size:20px;background:rgba(255,255,255,0.05);border:2px solid var(--accent);border-radius:15px;cursor:pointer;transition:all .2s;font-weight:900;color:#fff;letter-spacing:1px;}
+.duel-btn:hover{background:var(--accent); color:#000; box-shadow:var(--glow-orange);}
 
 /* Секрет */
-.secret-btn{position:fixed;bottom:20px;left:20px;z-index:50;font-size:30px;background:transparent;border:none;cursor:pointer;opacity:.3;transition:opacity .3s;}
-.secret-btn:hover{opacity:1;}
-#secret-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;justify-content:center;align-items:center;flex-direction:column;}
+.secret-btn{position:fixed;bottom:25px;left:25px;z-index:50;font-size:35px;background:transparent;border:none;cursor:pointer;opacity:.3;transition:all .3s;filter:drop-shadow(0 0 10px var(--gold));}
+.secret-btn:hover{opacity:1;transform:scale(1.1) rotate(10deg);}
+#secret-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px;}
 #secret-modal.active{display:flex;}
 
 /* Changelog */
-.changelog{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:25px;width:100%;text-align:left;}
+.changelog{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:35px;width:100%;text-align:left;backdrop-filter:var(--glass-blur);}
 .changelog ul{list-style:none;padding:0;}
-.changelog li{margin-bottom:12px;padding-left:20px;position:relative;color:#ddd;font-size:14px;line-height:1.5;}
-.changelog li::before{content:'🎃';position:absolute;left:0;top:2px;}
-.changelog li b{color:var(--accent);font-size:15px;}
+.changelog li{margin-bottom:15px;padding-left:25px;position:relative;color:#ccc;font-size:15px;line-height:1.6;}
+.changelog li::before{content:'🎃';position:absolute;left:0;top:2px;filter:drop-shadow(0 0 5px var(--accent));}
+.changelog li b{color:var(--accent);font-size:16px;}
 </style>
 </head>
 <body>
@@ -94,12 +167,12 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 <svg class="web tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" fill="none" stroke-width="1"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" fill="none" stroke-width="0.8"/></svg>
 <svg class="web tr" viewBox="0 0 100 100"></svg><svg class="web bl" viewBox="0 0 100 100"></svg><svg class="web br" viewBox="0 0 100 100"></svg>
 
-<button class="secret-btn" id="secret-btn">🕯️</button>
+<button class="secret-btn" id="secret-btn" title="Секрет...">🕯️</button>
 
 <div id="secret-modal">
-    <h1 style="font-size:60px; color:var(--red);">ТЫ НАШЁЛ СЕКРЕТ!</h1>
-    <p style="font-size:20px; margin-top:20px; text-align:center; max-width:600px;">Тыквенный Король передаёт тебе привет. Пусть твой онлайн будет вечным, а рекорды — незыблемыми! 🎃👑</p>
-    <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:30px; padding:10px 20px; background:var(--accent); border:none; border-radius:10px; font-weight:bold; cursor:pointer;">Закрыть</button>
+    <h1 style="font-size:70px; color:var(--gold); text-shadow:0 0 30px var(--gold);">ВЫ НАШЛИ ПАСХАЛКУ!</h1>
+    <p style="font-size:22px; margin-top:30px; max-width:700px; line-height:1.6; color:#ddd;">Древнее пророчество гласит: тот, кто найдёт эту свечу, обретёт вечный онлайн и защиту от снятия. Тыквенный Король приветствует тебя! 👑🎃</p>
+    <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:40px; padding:15px 35px; background:var(--accent); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px; transition:0.2s;">ЗАКРЫТЬ</button>
 </div>
 
 <div id="boss-area">
@@ -118,21 +191,21 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 
 <div class="tabs">
   <button class="tab-btn active" id="tab-main-btn">🎮 Игра</button>
-  <button class="tab-btn" id="tab-duel-btn">⚔️ Дуэли</button>
-  <button class="tab-btn" id="tab-vers-btn">📜 Обновления</button>
+  <button class="tab-btn" id="tab-duel-btn">⚔️ Испытания</button>
+  <button class="tab-btn" id="tab-vers-btn">📜 История</button>
 </div>
 
 <div class="tab-content active" id="tab-main">
   <div class="card" id="card-info">
     <h1>Техничка МЗ</h1>
     <div class="row"><span class="k">Имя узла</span><span class="v">Ozogin-MZ-01</span></div>
-    <div class="row"><span class="k">Издание</span><span class="v accent">Halloween Edition</span></div>
+    <div class="row"><span class="k">Издание</span><span class="v accent" style="color:var(--gold);">Cyber Halloween</span></div>
     <div class="row"><span class="k">Время работы</span><span class="v accent" id="clock">00:00:00</span></div>
     <div class="row"><span class="k">Пинг</span><span class="v accent" id="ping-display">...</span></div>
     <div class="credits">
-      <b>Разработчик:</b> <span style="color:var(--accent)">Ozogin</span><br>
-      <b>ИИ-Архитекторы:</b> <span style="color:var(--accent-2)">Алиса & DeepSeek</span><br>
-      <b>Спонсор:</b> <span style="color:var(--green)">Alberto Pepper</span>
+      <b>Разработчик:</b> <span style="color:var(--accent);">Ozogin</span><br>
+      <b>ИИ-Архитекторы:</b> <span style="color:var(--accent-2);">Алиса & DeepSeek</span><br>
+      <b>Спонсор:</b> <span style="color:var(--green);">Alberto Pepper</span>
     </div>
   </div>
 
@@ -143,8 +216,8 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     </div>
     <div class="stats">
       <div>СЧЕТ: <span id="score">0</span></div>
-      <div>ЖИЗНИ: <span id="lives">3</span></div>
-      <div>РЕКОРД: <span id="best">0</span></div>
+      <div>ЖИЗНИ: <span id="lives" style="color:var(--red);">3</span></div>
+      <div>РЕКОРД: <span id="best" style="color:var(--gold);">0</span></div>
     </div>
     <div class="btns">
       <button class="btn" id="start-btn">Старт</button>
@@ -155,12 +228,12 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 
 <div class="tab-content" id="tab-duel">
   <div class="card">
-    <h2>⚔️ Испытание</h2>
+    <h2>⚔️ Испытание Тьмой</h2>
     <div class="duel-area">
       <div class="monster" id="duel-monster">🧛</div>
-      <h3 id="duel-status">Нажми Старт, чтобы начать</h3>
+      <h3 id="duel-status" style="margin-top:20px; font-size:20px; color:var(--muted);">Нажми Старт, чтобы начать</h3>
       <div class="duel-btns">
-        <button class="duel-btn" id="duel-start">Старт</button>
+        <button class="duel-btn" id="duel-start">В БОЙ</button>
       </div>
     </div>
   </div>
@@ -168,7 +241,7 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 
 <div class="tab-content" id="tab-vers">
   <div class="changelog">
-    <h2 style="margin-bottom:20px;">История версий</h2>
+    <h2 style="margin-bottom:25px;">История версий</h2>
     <ul id="changelog-list"></ul>
   </div>
 </div>
@@ -191,6 +264,8 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   // ===== МУЗЫКА (YOUTUBE) =====
   var YT_ID = 'RaDa7m76uXY';
   var ytPlayer = null;
+  
+  // Загружаем API YouTube
   var tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -203,7 +278,7 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     });
   };
 
-  // ===== ЯЗЫК =====
+  // ===== ЯЗЫК (Базовый) =====
   function applyLang() {
     if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? '🎃 Тема: Тыква' : '🌿 Тема: Самайн';
     if($('music-toggle')) $('music-toggle').textContent = musicOn ? '🎵 Музыка: вкл' : '🔇 Музыка: выкл';
@@ -245,7 +320,7 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     });
   }
 
-  // ===== ИГРА =====
+  // ===== ИГРА (ВАРКА ЗЕЛИЙ) =====
   try{var sb=localStorage.getItem('mz_best');if(sb)best=parseInt(sb,10)||0;}catch(e){}
   if($('best')) $('best').textContent = best;
 
@@ -263,18 +338,23 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     if(!active) return;
     var r = Math.random();
     var type, emoji, points;
+    
     if(r < 0.20) { type = 'bomb'; emoji = '💣'; points = 0; } 
     else if(r < 0.35) { type = 'gold'; emoji = '🌟'; points = 5; } 
     else { type = 'normal'; emoji = ['🎃','🦴','👁️','🧪','🕷️'][Math.floor(Math.random()*5)]; points = 1; }
+
     var el = document.createElement('div');
     el.className = 'falling-item';
     el.textContent = emoji;
-    if(type === 'bomb') el.style.filter = 'drop-shadow(0 0 10px red)';
-    if(type === 'gold') el.style.filter = 'drop-shadow(0 0 15px gold)';
+    if(type === 'bomb') el.style.filter = 'drop-shadow(0 0 15px var(--red))';
+    if(type === 'gold') el.style.filter = 'drop-shadow(0 0 20px var(--gold))';
+    
     var x = Math.random() * 90 + 5; 
-    el.style.left = x + '%'; el.style.top = '-50px';
+    el.style.left = x + '%';
+    el.style.top = '-60px';
     gameArea.appendChild(el);
-    var obj = { el: el, x: x, y: -50, speed: 3 + Math.random() * 2 + (score * 0.05), points: points, type: type };
+    
+    var obj = { el: el, x: x, y: -60, speed: 3 + Math.random() * 2 + (score * 0.05), points: points, type: type };
     items.push(obj);
   }
 
@@ -284,14 +364,18 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
       var item = items[i];
       item.y += item.speed;
       item.el.style.top = item.y + 'px';
+      
       var rect = gameArea.getBoundingClientRect();
-      var cauldronLeft = cauldronX - 7.5, cauldronRight = cauldronX + 7.5;
+      var cauldronLeft = cauldronX - 7.5;
+      var cauldronRight = cauldronX + 7.5;
+      
       if(item.y > rect.height - 100 && item.y < rect.height - 40) {
         if(item.x > cauldronLeft && item.x < cauldronRight) {
           if(item.type === 'bomb') {
-            lives--; if($('lives')) $('lives').textContent = lives;
-            document.body.style.backgroundColor = '#300';
-            setTimeout(function(){ document.body.style.backgroundColor = ''; }, 200);
+            lives--;
+            if($('lives')) $('lives').textContent = lives;
+            document.body.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
+            setTimeout(function(){ document.body.style.boxShadow = 'none'; }, 300);
             if(lives <= 0) stopGame();
           } else {
             score += item.points;
@@ -299,7 +383,8 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
             if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_best',best);}catch(e){} }
           }
           if(item.el.parentNode) item.el.parentNode.removeChild(item.el);
-          items.splice(i, 1); continue;
+          items.splice(i, 1);
+          continue;
         }
       }
       if(item.y > rect.height) {
@@ -310,34 +395,50 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   }
 
   function startGame() {
-    stopGame(); score=0; lives=3; items=[];
-    if($('score')) $('score').textContent = '0'; if($('lives')) $('lives').textContent = '3';
+    stopGame();
+    score=0; lives=3; items=[];
+    if($('score')) $('score').textContent = '0';
+    if($('lives')) $('lives').textContent = '3';
     gameArea.innerHTML = '<div id="cauldron">🍲</div>';
-    cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
+    cauldron = $('cauldron');
+    cauldronX = 50; cauldron.style.left = '50%';
     active = true;
     gameLoop = setInterval(updateGame, 1000/60);
     itemTimer = setInterval(spawnItem, 700);
   }
 
   function stopGame() {
-    active = false; if(gameLoop) clearInterval(gameLoop); if(itemTimer) clearInterval(itemTimer);
-    items.forEach(function(i){ if(i.el.parentNode) i.el.parentNode.removeChild(i.el); }); items = [];
+    active = false;
+    if(gameLoop) clearInterval(gameLoop);
+    if(itemTimer) clearInterval(itemTimer);
+    items.forEach(function(i){ if(i.el.parentNode) i.el.parentNode.removeChild(i.el); });
+    items = [];
   }
 
   if($('start-btn')) $('start-btn').addEventListener('click', startGame);
   if($('stop-btn')) $('stop-btn').addEventListener('click', stopGame);
 
-  // ===== БОСС =====
-  var bossActive = false, bossHp = 100, bossTimer = 60;
+  // ===== БОСС (ТЫКВЕННЫЙ КОРОЛЬ) =====
+  var bossActive = false;
+  var bossHp = 100;
+  var bossTimer = 60;
   
   function spawnBoss() {
     if(bossActive) return;
-    bossActive = true; bossHp = 100; bossTimer = 60;
-    $('boss-area').classList.add('active'); updateBossUI();
+    bossActive = true;
+    bossHp = 100;
+    bossTimer = 60;
+    $('boss-area').classList.add('active');
+    updateBossUI();
+    
     var bossInterval = setInterval(function() {
       if(!bossActive) { clearInterval(bossInterval); return; }
-      bossTimer--; updateBossUI();
-      if(bossTimer <= 0) { endBoss(false); clearInterval(bossInterval); }
+      bossTimer--;
+      updateBossUI();
+      if(bossTimer <= 0) {
+        endBoss(false);
+        clearInterval(bossInterval);
+      }
     }, 1000);
   }
 
@@ -349,28 +450,46 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   function hitBoss() {
     if(!bossActive) return;
     bossHp -= 5;
-    if(bossHp <= 0) { bossHp = 0; updateBossUI(); endBoss(true); } 
-    else { updateBossUI(); $('boss').style.transform = 'scale(0.9) translateY(10px)'; setTimeout(function(){ $('boss').style.transform = ''; }, 100); }
+    if(bossHp <= 0) {
+      bossHp = 0;
+      updateBossUI();
+      endBoss(true);
+    } else {
+      updateBossUI();
+      $('boss').style.transform = 'scale(0.9) translateY(10px)';
+      setTimeout(function(){ $('boss').style.transform = ''; }, 100);
+    }
   }
 
   function endBoss(win) {
-    bossActive = false; $('boss-area').classList.remove('active');
+    bossActive = false;
+    $('boss-area').classList.remove('active');
     if(win) {
       alert("🎉 ПОБЕДА! Тыквенный Король повержен! Ты получаешь +100 очков!");
-      score += 100; if($('score')) $('score').textContent = score;
+      score += 100;
+      if($('score')) $('score').textContent = score;
       if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_best',best);}catch(e){} }
-    } else { alert("💀 Время вышло! Король Тыкв сбежал..."); }
+    } else {
+      alert("💀 Время вышло! Король Тыкв сбежал...");
+    }
   }
 
   if($('boss')) $('boss').addEventListener('click', hitBoss);
 
-  // Вызов Босса раз в 5 минут
+  // Вызов босса раз в 5 минут (300 000 мс)
   setInterval(function() {
-    if(!bossActive) spawnBoss();
-  }, 300000);
+    if(!bossActive) { 
+      spawnBoss();
+    }
+  }, 300000); 
 
   // ===== ДУЭЛИ =====
-  var duelMonsters = [{emoji:'🧛', name:'Вампир', weak:'🧄'},{emoji:'🧟', name:'Зомби', weak:'🔫'},{emoji:'👻', name:'Призрак', weak:'🔮'},{emoji:'🐺', name:'Оборотень', weak:'🥈'}];
+  var duelMonsters = [
+    { emoji: '🧛', name: 'Вампир', weak: '🧄' },
+    { emoji: '🧟', name: 'Зомби', weak: '🔫' },
+    { emoji: '👻', name: 'Призрак', weak: '🔮' },
+    { emoji: '🐺', name: 'Оборотень', weak: '🥈' }
+  ];
   var currentDuel = null;
 
   if($('duel-start')) $('duel-start').addEventListener('click', function() {
@@ -381,30 +500,54 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     this.onclick = function() {
       if(!currentDuel) return;
       if(currentDuel.weak === '🧄') { 
-        $('duel-status').textContent = 'ПОБЕДА! Монстр убежал! 🎉'; score += 20; if($('score')) $('score').textContent = score;
-      } else { $('duel-status').textContent = 'Промах! Монстр исцелился. 💀'; }
-      currentDuel = null; this.textContent = 'Ещё раз?'; this.onclick = null;
+        $('duel-status').textContent = 'ПОБЕДА! Монстр убежал! 🎉';
+        score += 20;
+        if($('score')) $('score').textContent = score;
+      } else {
+        $('duel-status').textContent = 'Промах! Монстр исцелился. 💀';
+      }
+      currentDuel = null;
+      this.textContent = 'Ещё раз?';
+      this.onclick = null; 
     };
   });
 
   // ===== СЕКРЕТ =====
-  if($('secret-btn')) $('secret-btn').addEventListener('click', function() { $('secret-modal').classList.add('active'); });
+  if($('secret-btn')) $('secret-btn').addEventListener('click', function() {
+    $('secret-modal').classList.add('active');
+  });
 
   // ===== ЧАСЫ =====
   var sec = 0;
   setInterval(function() {
-    sec++; var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
-    var c = $('clock'); if(c) c.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    sec++;
+    var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+    var c = $('clock');
+    if(c) c.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   }, 1000);
 
   // ===== ПИНГ =====
   var pingStart = Date.now();
-  fetch('https://api.ipify.org?format=json').then(function(){ if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms'; }).catch(function(){ if($('ping-display')) $('ping-display').textContent = 'err'; });
+  fetch('https://api.ipify.org?format=json').then(function(){
+    if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms';
+  }).catch(function(){ if($('ping-display')) $('ping-display').textContent = 'err'; });
 
   // ===== CHANGELOG =====
-  var versions = [{v:'1.0', text:'Первый релиз.'},{v:'6.0', text:'Игра «Варка Зелий».'},{v:'7.1', text:'Босс, Дуэли, Секрет. Убран Зал Славы.'}];
+  var versions = [
+    {v:'1.0', text:'Первый релиз.'},
+    {v:'6.0', text:'Игра «Варка Зелий».'},
+    {v:'7.1', text:'Босс, Дуэли, Секрет.'},
+    {v:'8.0', text:'Глобальный редизайн. Cyber Halloween.'}
+  ];
   var list = $('changelog-list'); 
-  if (list) { list.innerHTML = ''; versions.forEach(function(item) { var li = document.createElement('li'); li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; list.appendChild(li); }); }
+  if (list) { 
+    list.innerHTML = ''; 
+    versions.forEach(function(item) { 
+      var li = document.createElement('li'); 
+      li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; 
+      list.appendChild(li); 
+    }); 
+  }
 
   applyLang();
 })();
