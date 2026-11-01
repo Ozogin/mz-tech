@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>МЗ: Проклятие Технички v8.0 — Cyber Halloween</title>
+<title>МЗ: Проклятие Технички v9.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;600;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -27,111 +27,59 @@ body{
   background-image: radial-gradient(circle at 10% 20%, rgba(157, 0, 255, 0.1) 0%, transparent 40%),
                     radial-gradient(circle at 90% 80%, rgba(255, 102, 0, 0.1) 0%, transparent 40%);
 }
-body.theme-samhain {
-  background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 40%),
-                    radial-gradient(circle at 90% 80%, rgba(255, 0, 51, 0.1) 0%, transparent 40%);
-}
+body.theme-samhain { background-image: radial-gradient(circle at 10% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 0, 51, 0.1) 0%, transparent 40%); }
 h1,h2{font-family:'Creepster',cursive;letter-spacing:3px;}
 h1{color:var(--accent);font-size:42px;text-shadow:var(--glow-orange);}
 h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
-/* Фон: Туман и паутина */
+/* Анимации и фон */
 .fog{position:fixed;inset:0;background:url('https://www.transparenttextures.com/patterns/foggy-birds.png');opacity:.2;z-index:0;pointer-events:none;animation:fogMove 60s linear infinite;}
 @keyframes fogMove{0%{background-position:0 0;}100%{background-position:1000px 1000px;}}
 .web{position:fixed;width:250px;height:280px;z-index:1;pointer-events:none;opacity:0.4;}
-.web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);}
-.web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
+.web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);} .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
 .web path{stroke:var(--accent);filter:drop-shadow(0 0 8px var(--accent));}
 
-/* Верхняя панель (Glassmorphism) */
-.topbar{
-  width:100%; max-width:1200px; display:flex; flex-wrap:wrap; gap:12px;
-  justify-content:center; margin-bottom:25px; z-index:10;
-  background: var(--panel); border:1px solid var(--border);
-  padding: 15px; border-radius: var(--radius); backdrop-filter: var(--glass-blur);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-.pill{
-  padding:12px 24px; border-radius:50px; background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.1); color:var(--text); font-weight:600;
-  font-size:14px; cursor:pointer; transition:all .3s;
-}
-.pill:hover{background:var(--accent); color:#000; box-shadow:var(--glow-orange); transform:translateY(-2px);}
-.pill.active{border-color:var(--accent); color:var(--accent); background:rgba(255,102,0,0.1);}
+/* Панель */
+.topbar{width:100%;max-width:1200px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:25px;z-index:10;background:var(--panel);border:1px solid var(--border);padding:15px;border-radius:var(--radius);backdrop-filter:var(--glass-blur);box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+.pill{padding:12px 24px;border-radius:50px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-weight:600;font-size:14px;cursor:pointer;transition:all .3s;}
+.pill:hover{background:var(--accent);color:#000;box-shadow:var(--glow-orange);transform:translateY(-2px);}
+.pill.active{border-color:var(--accent);color:var(--accent);background:rgba(255,102,0,0.1);}
 
-/* Табы (Вкладки) */
-.tabs{
-  width:100%; max-width:1200px; display:flex; gap:15px;
-  margin-bottom:25px; z-index:10; flex-wrap:wrap;
-}
-.tab-btn{
-  flex:1; padding:16px; background: rgba(255,255,255,0.02);
-  border:1px solid rgba(255,255,255,0.05); color:var(--muted);
-  font-weight:900; font-size:16px; cursor:pointer; border-radius:16px;
-  transition:all .3s; text-transform:uppercase; letter-spacing:1px;
-}
-.tab-btn.active{
-  background: linear-gradient(135deg, rgba(157,0,255,0.2), rgba(255,102,0,0.2));
-  color:#fff; border-color:var(--accent-2); box-shadow: 0 0 15px rgba(157,0,255,0.3);
-}
+/* Табы */
+.tabs{width:100%;max-width:1200px;display:flex;gap:15px;margin-bottom:25px;z-index:10;flex-wrap:wrap;}
+.tab-btn{flex:1;padding:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);color:var(--muted);font-weight:900;font-size:16px;cursor:pointer;border-radius:16px;transition:all .3s;text-transform:uppercase;letter-spacing:1px;}
+.tab-btn.active{background:linear-gradient(135deg, rgba(157,0,255,0.2), rgba(255,102,0,0.2));color:#fff;border-color:var(--accent-2);box-shadow:0 0 15px rgba(157,0,255,0.3);}
 
-/* Контент */
 .tab-content{display:none;width:100%;max-width:1200px;z-index:10;}
 .tab-content.active{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;animation:fadeIn .4s ease-out;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
 
 /* Карточки */
-.card{
-  flex:1 1 450px; max-width:550px; background: var(--panel);
-  border:1px solid var(--border); border-radius: var(--radius); padding:30px;
-  backdrop-filter: var(--glass-blur); box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-  position:relative; transition: transform 0.3s;
-}
-.card:hover { transform: translateY(-5px); }
-.card.game { border-color: var(--border-2); }
+.card{flex:1 1 450px;max-width:550px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:30px;backdrop-filter:var(--glass-blur);box-shadow:0 15px 35px rgba(0,0,0,0.8);position:relative;transition:transform 0.3s;}
+.card:hover{transform:translateY(-5px);}
+.card.game{border-color:var(--border-2);}
 
-/* Данные мониторинга */
+/* Мониторинг */
 .row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,0.1);font-size:15px;}
 .row:last-child{border:none;}
 .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
 .v{font-weight:900;font-family:monospace;font-size:16px;}
 .v.accent{color:var(--green);text-shadow:0 0 10px var(--green);}
-.credits{
-  margin-top:25px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);
-  font-size:14px; line-height:1.8; color:#b0b0c0;
-}
-.credits span { font-weight: 900; }
+.credits{margin-top:25px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);font-size:14px;line-height:1.8;color:#b0b0c0;}
+.credits span{font-weight:900;}
 
 /* Игра (Котёл) */
-.game-area{
-  position:relative; width:100%; height:350px;
-  background: radial-gradient(circle at 50% 100%, #1a052b 0%, #05010a 100%);
-  border:2px solid var(--border-2); border-radius:20px; margin-top:20px;
-  overflow:hidden; box-shadow: inset 0 0 60px rgba(0,0,0,1);
-  cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🪄</text></svg>'), auto;
-}
-#cauldron{
-  position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
-  font-size:70px; z-index:5; filter:drop-shadow(0 0 25px var(--green));
-  transition:left .1s ease-out;
-}
-.falling-item{
-  position:absolute; font-size:40px; z-index:4; pointer-events:none;
-  filter:drop-shadow(0 0 15px #fff);
-}
+.game-area{position:relative;width:100%;height:350px;background:radial-gradient(circle at 50% 100%, #1a052b 0%, #05010a 100%);border:2px solid var(--border-2);border-radius:20px;margin-top:20px;overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,1);cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🪄</text></svg>'), auto;}
+#cauldron{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);font-size:70px;z-index:5;filter:drop-shadow(0 0 25px var(--green));transition:left .1s ease-out;}
+.falling-item{position:absolute;font-size:40px;z-index:4;pointer-events:none;filter:drop-shadow(0 0 15px #fff);}
 .stats{display:flex;justify-content:space-between;margin-top:20px;font-weight:900;font-size:18px;letter-spacing:1px;}
 .stats span{color:var(--accent);font-family:monospace;font-size:22px;text-shadow:var(--glow-orange);}
 .btns{display:flex;gap:15px;margin-top:20px;}
-.btn{
-  flex:1; padding:16px; background: linear-gradient(135deg, var(--accent), #a03d00);
-  border:none; border-radius:14px; color:#fff; font-weight:900; font-size:16px;
-  text-transform:uppercase; cursor:pointer; transition:all .2s; letter-spacing:1px;
-  box-shadow: 0 5px 15px rgba(255,102,0,0.3);
-}
-.btn:hover{transform:translateY(-3px); box-shadow:var(--glow-orange); filter:brightness(1.1);}
-.btn.stop{background: linear-gradient(135deg, var(--red), #8b1a1a); box-shadow: 0 5px 15px rgba(255,0,51,0.3);}
+.btn{flex:1;padding:16px;background:linear-gradient(135deg, var(--accent), #a03d00);border:none;border-radius:14px;color:#fff;font-weight:900;font-size:16px;text-transform:uppercase;cursor:pointer;transition:all .2s;letter-spacing:1px;box-shadow:0 5px 15px rgba(255,102,0,0.3);}
+.btn:hover{transform:translateY(-3px);box-shadow:var(--glow-orange);filter:brightness(1.1);}
+.btn.stop{background:linear-gradient(135deg, var(--red), #8b1a1a);box-shadow:0 5px 15px rgba(255,0,51,0.3);}
 
-/* БОСС (Оверлей) */
+/* Босс (Оверлей) */
 #boss-area{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:150;justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(10px);}
 #boss-area.active{display:flex;animation:fadeIn 0.3s;}
 #boss{font-size:150px;cursor:pointer;animation:bossFloat 2s infinite alternate;filter:drop-shadow(0 0 50px var(--red));}
@@ -140,19 +88,35 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 #boss-hp-bar{height:100%;background:linear-gradient(90deg, var(--red), #ff6666);width:100%;transition:width .2s;}
 .boss-text{font-size:32px;font-weight:900;color:var(--red);text-shadow:0 0 20px var(--red);margin-top:20px;letter-spacing:2px;}
 
-/* Дуэли */
+/* Дуэли (Испытания) */
 .duel-area{width:100%;height:350px;display:flex;justify-content:center;align-items:center;flex-direction:column;position:relative;}
 .monster{font-size:120px;animation:monsterPulse 1s infinite alternate;filter:drop-shadow(0 0 20px var(--accent-2));}
 @keyframes monsterPulse{0%{transform:scale(1);}100%{transform:scale(1.1);}}
 .duel-btns{display:flex;gap:20px;margin-top:30px;}
 .duel-btn{padding:15px 40px;font-size:20px;background:rgba(255,255,255,0.05);border:2px solid var(--accent);border-radius:15px;cursor:pointer;transition:all .2s;font-weight:900;color:#fff;letter-spacing:1px;}
-.duel-btn:hover{background:var(--accent); color:#000; box-shadow:var(--glow-orange);}
+.duel-btn:hover{background:var(--accent);color:#000;box-shadow:var(--glow-orange);}
 
-/* Секрет */
+/* Модалки (Секрет и Достижения) */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px;backdrop-filter:blur(5px);}
+.modal-overlay.active{display:flex;}
 .secret-btn{position:fixed;bottom:25px;left:25px;z-index:50;font-size:35px;background:transparent;border:none;cursor:pointer;opacity:.3;transition:all .3s;filter:drop-shadow(0 0 10px var(--gold));}
 .secret-btn:hover{opacity:1;transform:scale(1.1) rotate(10deg);}
-#secret-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px;}
-#secret-modal.active{display:flex;}
+.ach-btn{position:fixed;bottom:25px;right:25px;z-index:50;font-size:35px;background:transparent;border:none;cursor:pointer;opacity:.5;transition:all .3s;filter:drop-shadow(0 0 10px var(--gold));}
+.ach-btn:hover{opacity:1;transform:scale(1.1);}
+
+/* Всплывашка достижений */
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
+.toast{background:linear-gradient(135deg, var(--gold), #cc9900);color:#000;padding:15px 25px;border-radius:12px;font-weight:900;box-shadow:0 10px 30px rgba(255,204,0,0.5);display:flex;align-items:center;gap:15px;transform:translateX(120%);transition:transform .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);border:2px solid #fff;}
+.toast.show{transform:translateX(0);}
+.toast-icon{font-size:30px;}
+
+/* Достижения (Список) */
+.ach-list{display:flex;flex-direction:column;gap:12px;width:100%;max-width:600px;}
+.ach-item{display:flex;align-items:center;gap:15px;padding:12px;background:rgba(255,255,255,0.05);border-radius:12px;border:1px solid rgba(255,255,255,0.1);opacity:0.5;transition:all .3s;text-align:left;}
+.ach-item.unlocked{opacity:1;border-color:var(--gold);background:rgba(255,204,0,0.1);}
+.ach-icon{font-size:24px;}
+.ach-text b{color:#fff;font-size:15px;}
+.ach-text span{display:block;color:var(--muted);font-size:12px;margin-top:2px;}
 
 /* Changelog */
 .changelog{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:35px;width:100%;text-align:left;backdrop-filter:var(--glass-blur);}
@@ -168,13 +132,26 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 <svg class="web tr" viewBox="0 0 100 100"></svg><svg class="web bl" viewBox="0 0 100 100"></svg><svg class="web br" viewBox="0 0 100 100"></svg>
 
 <button class="secret-btn" id="secret-btn" title="Секрет...">🕯️</button>
+<button class="ach-btn" id="ach-btn" title="Достижения">🏆</button>
 
-<div id="secret-modal">
+<!-- Всплывашки достижений -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Модалка Секрета -->
+<div class="modal-overlay" id="secret-modal">
     <h1 style="font-size:70px; color:var(--gold); text-shadow:0 0 30px var(--gold);">ВЫ НАШЛИ ПАСХАЛКУ!</h1>
     <p style="font-size:22px; margin-top:30px; max-width:700px; line-height:1.6; color:#ddd;">Древнее пророчество гласит: тот, кто найдёт эту свечу, обретёт вечный онлайн и защиту от снятия. Тыквенный Король приветствует тебя! 👑🎃</p>
-    <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:40px; padding:15px 35px; background:var(--accent); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px; transition:0.2s;">ЗАКРЫТЬ</button>
+    <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:40px; padding:15px 35px; background:var(--accent); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
 </div>
 
+<!-- Модалка Достижений -->
+<div class="modal-overlay" id="ach-modal">
+    <h1 style="font-size:50px; color:var(--gold); text-shadow:0 0 30px var(--gold); margin-bottom:30px;">🏆 ДОСТИЖЕНИЯ</h1>
+    <div class="ach-list" id="ach-list"></div>
+    <button onclick="document.getElementById('ach-modal').classList.remove('active')" style="margin-top:30px; padding:15px 35px; background:var(--gold); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
+</div>
+
+<!-- Босс -->
 <div id="boss-area">
     <div class="boss-text">🎃 КОРОЛЬ ТЫКВ 🎃</div>
     <div id="boss">👑</div>
@@ -190,50 +167,50 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 </div>
 
 <div class="tabs">
-  <button class="tab-btn active" id="tab-main-btn">🎮 Игра</button>
-  <button class="tab-btn" id="tab-duel-btn">⚔️ Испытания</button>
-  <button class="tab-btn" id="tab-vers-btn">📜 История</button>
+  <button class="tab-btn active" id="tab-main-btn" data-ru="🎮 Игра" data-en="🎮 Game">🎮 Игра</button>
+  <button class="tab-btn" id="tab-duel-btn" data-ru="⚔️ Испытания" data-en="⚔️ Trials">⚔️ Испытания</button>
+  <button class="tab-btn" id="tab-vers-btn" data-ru="📜 История" data-en="📜 History">📜 История</button>
 </div>
 
 <div class="tab-content active" id="tab-main">
   <div class="card" id="card-info">
-    <h1>Техничка МЗ</h1>
-    <div class="row"><span class="k">Имя узла</span><span class="v">Ozogin-MZ-01</span></div>
-    <div class="row"><span class="k">Издание</span><span class="v accent" style="color:var(--gold);">Cyber Halloween</span></div>
-    <div class="row"><span class="k">Время работы</span><span class="v accent" id="clock">00:00:00</span></div>
-    <div class="row"><span class="k">Пинг</span><span class="v accent" id="ping-display">...</span></div>
+    <h1 data-ru="Техничка МЗ" data-en="MZ Tech Room">Техничка МЗ</h1>
+    <div class="row"><span class="k" data-ru="Имя узла" data-en="Node Name">Имя узла</span><span class="v">Ozogin-MZ-01</span></div>
+    <div class="row"><span class="k" data-ru="Издание" data-en="Edition">Издание</span><span class="v accent" style="color:var(--gold);" data-ru="Cyber Halloween" data-en="Cyber Halloween">Cyber Halloween</span></div>
+    <div class="row"><span class="k" data-ru="Время работы" data-en="Uptime">Время работы</span><span class="v accent" id="clock">00:00:00</span></div>
+    <div class="row"><span class="k" data-ru="Пинг" data-en="Ping">Пинг</span><span class="v accent" id="ping-display">...</span></div>
     <div class="credits">
-      <b>Разработчик:</b> <span style="color:var(--accent);">Ozogin</span><br>
-      <b>ИИ-Архитекторы:</b> <span style="color:var(--accent-2);">Алиса & DeepSeek</span><br>
-      <b>Спонсор:</b> <span style="color:var(--green);">Alberto Pepper</span>
+      <b data-ru="Разработчик:" data-en="Developer:">Разработчик:</b> <span style="color:var(--accent);">Ozogin</span><br>
+      <b data-ru="ИИ-Архитекторы:" data-en="AI Architects:">ИИ-Архитекторы:</b> <span style="color:var(--accent-2);">Алиса & DeepSeek</span><br>
+      <b data-ru="Спонсор:" data-en="Sponsor:">Спонсор:</b> <span style="color:var(--green);">Alberto Pepper</span>
     </div>
   </div>
 
   <div class="card game" id="card-game">
-    <h2>Варка Зелий</h2>
+    <h2 data-ru="Варка Зелий" data-en="Potion Brewing">Варка Зелий</h2>
     <div class="game-area" id="game-area">
       <div id="cauldron">🍲</div>
     </div>
     <div class="stats">
-      <div>СЧЕТ: <span id="score">0</span></div>
-      <div>ЖИЗНИ: <span id="lives" style="color:var(--red);">3</span></div>
-      <div>РЕКОРД: <span id="best" style="color:var(--gold);">0</span></div>
+      <div><span data-ru="СЧЕТ" data-en="SCORE">СЧЕТ</span>: <span id="score">0</span></div>
+      <div><span data-ru="ЖИЗНИ" data-en="LIVES">ЖИЗНИ</span>: <span id="lives" style="color:var(--red);">3</span></div>
+      <div><span data-ru="РЕКОРД" data-en="BEST">РЕКОРД</span>: <span id="best" style="color:var(--gold);">0</span></div>
     </div>
     <div class="btns">
-      <button class="btn" id="start-btn">Старт</button>
-      <button class="btn stop" id="stop-btn">Стоп</button>
+      <button class="btn" id="start-btn" data-ru="Старт" data-en="Start">Старт</button>
+      <button class="btn stop" id="stop-btn" data-ru="Стоп" data-en="Stop">Стоп</button>
     </div>
   </div>
 </div>
 
 <div class="tab-content" id="tab-duel">
   <div class="card">
-    <h2>⚔️ Испытание Тьмой</h2>
+    <h2 data-ru="⚔️ Испытание Тьмой" data-en="⚔️ Trial by Darkness">⚔️ Испытание Тьмой</h2>
     <div class="duel-area">
       <div class="monster" id="duel-monster">🧛</div>
-      <h3 id="duel-status" style="margin-top:20px; font-size:20px; color:var(--muted);">Нажми Старт, чтобы начать</h3>
+      <h3 id="duel-status" style="margin-top:20px; font-size:20px; color:var(--muted);" data-ru="Нажми Старт, чтобы начать" data-en="Press Start to begin">Нажми Старт, чтобы начать</h3>
       <div class="duel-btns">
-        <button class="duel-btn" id="duel-start">В БОЙ</button>
+        <button class="duel-btn" id="duel-start" data-ru="В БОЙ" data-en="FIGHT">В БОЙ</button>
       </div>
     </div>
   </div>
@@ -241,7 +218,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
 <div class="tab-content" id="tab-vers">
   <div class="changelog">
-    <h2 style="margin-bottom:25px;">История версий</h2>
+    <h2 style="margin-bottom:25px;" data-ru="История версий" data-en="Version History">История версий</h2>
     <ul id="changelog-list"></ul>
   </div>
 </div>
@@ -252,79 +229,149 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
 
-  // ===== ПЕРЕМЕННЫЕ =====
+  // ===== ПЕРЕВОДЫ =====
+  var translations = {
+    ru: {
+      start: "Старт", stop: "Стоп", score: "СЧЕТ", lives: "ЖИЗНИ", best: "РЕКОРД",
+      themeP: "🎃 Тема: Тыква", themeS: "🌿 Тема: Самайн", musicOff: "🔇 Музыка: выкл", musicOn: "🎵 Музыка: вкл",
+      fight: "В БОЙ", win: "ПОБЕДА!", lose: "Промах!", startDuel: "Нажми Старт, чтобы начать",
+      achUnlocked: "Достижение получено!", achTitle: "🏆 ДОСТИЖЕНИЯ"
+    },
+    en: {
+      start: "Start", stop: "Stop", score: "SCORE", lives: "LIVES", best: "BEST",
+      themeP: "🎃 Theme: Pumpkin", themeS: "🌿 Theme: Samhain", musicOff: "🔇 Music: off", musicOn: "🎵 Music: on",
+      fight: "FIGHT", win: "VICTORY!", lose: "Miss!", startDuel: "Press Start to begin",
+      achUnlocked: "Achievement Unlocked!", achTitle: "🏆 ACHIEVEMENTS"
+    }
+  };
   var lang = 'ru', theme = 'pumpkin', musicOn = false;
-  var score = 0, lives = 3, best = 0;
-  var active = false, gameLoop = null, itemTimer = null;
-  var cauldronX = 50;
-  var items = [];
-  var gameArea = $('game-area');
-  var cauldron = $('cauldron');
 
-  // ===== МУЗЫКА (YOUTUBE) =====
-  var YT_ID = 'RaDa7m76uXY';
-  var ytPlayer = null;
+  // ===== ДОСТИЖЕНИЯ =====
+  var achievementsList = [
+    {id: 'first_blood', icon: '🩸', ru: 'Первая кровь', en: 'First Blood', dRu: 'Наберите 10 очков', dEn: 'Reach 10 points'},
+    {id: 'witch', icon: '🧙‍♀️', ru: 'Ведьма', en: 'Witch', dRu: 'Наберите 50 очков', dEn: 'Reach 50 points'},
+    {id: 'pumpkin_king', icon: '👑', ru: 'Король Тыкв', en: 'Pumpkin King', dRu: 'Наберите 100 очков', dEn: 'Reach 100 points'},
+    {id: 'boss_killer', icon: '⚔️', ru: 'Убийца Босса', en: 'Boss Killer', dRu: 'Победите Босса', dEn: 'Defeat the Boss'},
+    {id: 'duelist', icon: '🛡️', ru: 'Дуэлянт', en: 'Duelist', dRu: 'Победите в Испытании', dEn: 'Win a Trial'}
+  ];
+  var unlockedAch = {};
+  try { var savedAch = localStorage.getItem('mz_achievements_v9'); if (savedAch) unlockedAch = JSON.parse(savedAch); } catch(e) {}
+
+  function renderAch() {
+    var list = $('ach-list'); if(!list) return;
+    list.innerHTML = '';
+    achievementsList.forEach(function(a) {
+      var un = unlockedAch[a.id];
+      var div = document.createElement('div');
+      div.className = 'ach-item' + (un ? ' unlocked' : '');
+      div.innerHTML = `<div class="ach-icon">${un ? a.icon : '🔒'}</div>
+                       <div class="ach-text"><b>${lang === 'ru' ? a.ru : a.en}</b><span>${lang === 'ru' ? a.dRu : a.dEn}</span></div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function unlockAch(id) {
+    if(unlockedAch[id]) return;
+    unlockedAch[id] = true;
+    try { localStorage.setItem('mz_achievements_v9', JSON.stringify(unlockedAch)); } catch(e) {}
+    renderAch();
+    var a = achievementsList.find(x => x.id === id);
+    if(!a) return;
+    var toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<div class="toast-icon">${a.icon}</div>
+                       <div><div style="font-size:12px; text-transform:uppercase; opacity:0.8;">${translations[lang].achUnlocked}</div>
+                       <div style="font-size:16px;">${lang === 'ru' ? a.ru : a.en}</div></div>`;
+    $('toast-container').appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => { if(toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
+    }, 4000);
+  }
+
+  if($('ach-btn')) $('ach-btn').addEventListener('click', () => $('ach-modal').classList.add('active'));
   
-  // Загружаем API YouTube
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  // ===== ЯЗЫК =====
+  function applyLang() {
+    var t = translations[lang];
+    $('theme-toggle').textContent = theme === 'pumpkin' ? t.themeP : t.themeS;
+    $('music-toggle').textContent = musicOn ? t.musicOn : t.musicOff;
+    $('start-btn').textContent = t.start;
+    $('stop-btn').textContent = t.stop;
+    $('duel-start').textContent = t.fight;
+    document.querySelectorAll('[data-ru]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang);
+    });
+    if($('duel-status').classList.contains('idle')) $('duel-status').textContent = t.startDuel;
+    renderAch();
+  }
 
+  if($('lang-ru')) $('lang-ru').addEventListener('click', () => { lang = 'ru'; applyLang(); $('lang-ru').classList.add('active'); $('lang-en').classList.remove('active'); });
+  if($('lang-en')) $('lang-en').addEventListener('click', () => { lang = 'en'; applyLang(); $('lang-en').classList.add('active'); $('lang-ru').classList.remove('active'); });
+
+  // ===== МУЗЫКА (С ПРЕДЗАГРУЗКОЙ) =====
+  var YT_ID = 'RaDa7m76uXY', ytPlayer = null;
+  var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
   window.onYouTubeIframeAPIReady = function() {
     ytPlayer = new YT.Player('yt-audio-container', {
       height: '0', width: '0', videoId: YT_ID,
-      playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': YT_ID }
+      playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': YT_ID },
+      events: { 'onReady': function() { ytPlayer.setVolume(50); } }
     });
   };
 
-  // ===== ЯЗЫК (Базовый) =====
-  function applyLang() {
-    if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? '🎃 Тема: Тыква' : '🌿 Тема: Самайн';
-    if($('music-toggle')) $('music-toggle').textContent = musicOn ? '🎵 Музыка: вкл' : '🔇 Музыка: выкл';
-  }
-
-  // ===== ВКЛАДКИ =====
-  var tabs = ['main', 'duel', 'vers'];
-  tabs.forEach(function(t) {
-    var btn = $('tab-' + t + '-btn');
-    var content = $('tab-' + t);
-    if(btn && content) {
-      btn.addEventListener('click', function() {
-        tabs.forEach(function(x) {
-          $('tab-' + x + '-btn').classList.remove('active');
-          $('tab-' + x).classList.remove('active');
-        });
-        btn.classList.add('active');
-        content.classList.add('active');
-      });
-    }
+  if($('music-toggle')) $('music-toggle').addEventListener('click', () => {
+    if(!ytPlayer) return;
+    if(musicOn) { ytPlayer.pauseVideo(); musicOn = false; } 
+    else { ytPlayer.playVideo(); musicOn = true; }
+    applyLang();
   });
 
-  // ===== ТЕМА И МУЗЫКА =====
-  if($('theme-toggle')) $('theme-toggle').addEventListener('click', function() {
+  // ===== ТЕМА =====
+  if($('theme-toggle')) $('theme-toggle').addEventListener('click', () => {
     theme = theme === 'pumpkin' ? 'samhain' : 'pumpkin';
     document.body.classList.toggle('theme-samhain', theme === 'samhain');
     applyLang();
   });
 
-  if($('music-toggle')) {
-    $('music-toggle').addEventListener('click', function() {
-      if(!ytPlayer) return; 
-      if(musicOn) {
-        ytPlayer.pauseVideo(); musicOn = false;
-      } else {
-        ytPlayer.playVideo(); musicOn = true;
-      }
-      applyLang();
+  // ===== ВКЛАДКИ =====
+  ['main', 'duel', 'vers'].forEach(t => {
+    if($('tab-' + t + '-btn')) $('tab-' + t + '-btn').addEventListener('click', () => {
+      ['main', 'duel', 'vers'].forEach(x => {
+        $('tab-' + x + '-btn').classList.remove('active');
+        $('tab-' + x).classList.remove('active');
+      });
+      $('tab-' + t + '-btn').classList.add('active');
+      $('tab-' + t).classList.add('active');
     });
+  });
+
+  // ===== ФИШКИ (Случайные фразы и звуки) =====
+  var catchPhrases = ["Отлично!", "Ещё одну!", "Так держать!", "Магия!", "Котёл кипит!"];
+  function playSound(type) {
+    // Простая генерация звука через Web Audio API
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      if(type === 'catch') { osc.frequency.value = 600; gain.gain.value = 0.1; }
+      else if(type === 'bomb') { osc.type = 'sawtooth'; osc.frequency.value = 100; gain.gain.value = 0.2; }
+      else if(type === 'boss') { osc.type = 'square'; osc.frequency.value = 80; gain.gain.value = 0.3; }
+      osc.start(); osc.stop(ctx.currentTime + 0.1);
+    } catch(e) {}
   }
 
   // ===== ИГРА (ВАРКА ЗЕЛИЙ) =====
-  try{var sb=localStorage.getItem('mz_best');if(sb)best=parseInt(sb,10)||0;}catch(e){}
+  var score = 0, lives = 3, best = 0, active = false, gameLoop = null, itemTimer = null;
+  var cauldronX = 50, items = [], gameArea = $('game-area'), cauldron = $('cauldron');
+
+  try { var sb = localStorage.getItem('mz_best_v9'); if(sb) best = parseInt(sb,10)||0; } catch(e) {}
   if($('best')) $('best').textContent = best;
 
-  document.addEventListener('mousemove', function(e){
+  document.addEventListener('mousemove', e => {
     if(!active || !gameArea) return;
     var rect = gameArea.getBoundingClientRect();
     if(e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
@@ -336,55 +383,48 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
   function spawnItem() {
     if(!active) return;
-    var r = Math.random();
-    var type, emoji, points;
-    
-    if(r < 0.20) { type = 'bomb'; emoji = '💣'; points = 0; } 
-    else if(r < 0.35) { type = 'gold'; emoji = '🌟'; points = 5; } 
+    var r = Math.random(), type, emoji, points;
+    if(r < 0.2) { type = 'bomb'; emoji = '💣'; points = 0; }
+    else if(r < 0.35) { type = 'gold'; emoji = '🌟'; points = 5; }
     else { type = 'normal'; emoji = ['🎃','🦴','👁️','🧪','🕷️'][Math.floor(Math.random()*5)]; points = 1; }
 
     var el = document.createElement('div');
-    el.className = 'falling-item';
-    el.textContent = emoji;
+    el.className = 'falling-item'; el.textContent = emoji;
     if(type === 'bomb') el.style.filter = 'drop-shadow(0 0 15px var(--red))';
     if(type === 'gold') el.style.filter = 'drop-shadow(0 0 20px var(--gold))';
     
-    var x = Math.random() * 90 + 5; 
-    el.style.left = x + '%';
-    el.style.top = '-60px';
+    var x = Math.random() * 90 + 5;
+    el.style.left = x + '%'; el.style.top = '-60px';
     gameArea.appendChild(el);
-    
-    var obj = { el: el, x: x, y: -60, speed: 3 + Math.random() * 2 + (score * 0.05), points: points, type: type };
-    items.push(obj);
+    items.push({ el, x, y: -60, speed: 3 + Math.random()*2 + (score*0.05), points, type });
   }
 
   function updateGame() {
     if(!active) return;
     for(var i = items.length - 1; i >= 0; i--) {
       var item = items[i];
-      item.y += item.speed;
-      item.el.style.top = item.y + 'px';
-      
+      item.y += item.speed; item.el.style.top = item.y + 'px';
       var rect = gameArea.getBoundingClientRect();
-      var cauldronLeft = cauldronX - 7.5;
-      var cauldronRight = cauldronX + 7.5;
+      var cL = cauldronX - 7.5, cR = cauldronX + 7.5;
       
       if(item.y > rect.height - 100 && item.y < rect.height - 40) {
-        if(item.x > cauldronLeft && item.x < cauldronRight) {
+        if(item.x > cL && item.x < cR) {
           if(item.type === 'bomb') {
-            lives--;
-            if($('lives')) $('lives').textContent = lives;
+            lives--; playSound('bomb');
+            $('lives').textContent = lives;
             document.body.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
-            setTimeout(function(){ document.body.style.boxShadow = 'none'; }, 300);
+            setTimeout(() => document.body.style.boxShadow = 'none', 300);
             if(lives <= 0) stopGame();
           } else {
-            score += item.points;
-            if($('score')) $('score').textContent = score;
-            if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_best',best);}catch(e){} }
+            score += item.points; playSound('catch');
+            $('score').textContent = score;
+            if(score > best) { best = score; $('best').textContent = best; localStorage.setItem('mz_best_v9', best); }
+            if(score >= 10) unlockAch('first_blood');
+            if(score >= 50) unlockAch('witch');
+            if(score >= 100) unlockAch('pumpkin_king');
           }
           if(item.el.parentNode) item.el.parentNode.removeChild(item.el);
-          items.splice(i, 1);
-          continue;
+          items.splice(i, 1); continue;
         }
       }
       if(item.y > rect.height) {
@@ -395,50 +435,35 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   }
 
   function startGame() {
-    stopGame();
-    score=0; lives=3; items=[];
-    if($('score')) $('score').textContent = '0';
-    if($('lives')) $('lives').textContent = '3';
+    stopGame(); score=0; lives=3; items=[];
+    $('score').textContent = '0'; $('lives').textContent = '3';
     gameArea.innerHTML = '<div id="cauldron">🍲</div>';
-    cauldron = $('cauldron');
-    cauldronX = 50; cauldron.style.left = '50%';
+    cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
     active = true;
     gameLoop = setInterval(updateGame, 1000/60);
     itemTimer = setInterval(spawnItem, 700);
   }
 
   function stopGame() {
-    active = false;
-    if(gameLoop) clearInterval(gameLoop);
-    if(itemTimer) clearInterval(itemTimer);
-    items.forEach(function(i){ if(i.el.parentNode) i.el.parentNode.removeChild(i.el); });
-    items = [];
+    active = false; clearInterval(gameLoop); clearInterval(itemTimer);
+    items.forEach(i => { if(i.el.parentNode) i.el.parentNode.removeChild(i.el); }); items = [];
   }
 
   if($('start-btn')) $('start-btn').addEventListener('click', startGame);
   if($('stop-btn')) $('stop-btn').addEventListener('click', stopGame);
 
-  // ===== БОСС (ТЫКВЕННЫЙ КОРОЛЬ) =====
-  var bossActive = false;
-  var bossHp = 100;
-  var bossTimer = 60;
+  // ===== БОСС =====
+  var bossActive = false, bossHp = 100, bossTimer = 60;
   
   function spawnBoss() {
     if(bossActive) return;
-    bossActive = true;
-    bossHp = 100;
-    bossTimer = 60;
+    bossActive = true; bossHp = 100; bossTimer = 60;
     $('boss-area').classList.add('active');
     updateBossUI();
-    
-    var bossInterval = setInterval(function() {
+    var bossInterval = setInterval(() => {
       if(!bossActive) { clearInterval(bossInterval); return; }
-      bossTimer--;
-      updateBossUI();
-      if(bossTimer <= 0) {
-        endBoss(false);
-        clearInterval(bossInterval);
-      }
+      bossTimer--; updateBossUI();
+      if(bossTimer <= 0) { endBoss(false); clearInterval(bossInterval); }
     }, 1000);
   }
 
@@ -449,104 +474,117 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
   function hitBoss() {
     if(!bossActive) return;
-    bossHp -= 5;
-    if(bossHp <= 0) {
-      bossHp = 0;
-      updateBossUI();
-      endBoss(true);
-    } else {
+    bossHp -= 5; playSound('boss');
+    if(bossHp <= 0) { bossHp = 0; updateBossUI(); endBoss(true); }
+    else {
       updateBossUI();
       $('boss').style.transform = 'scale(0.9) translateY(10px)';
-      setTimeout(function(){ $('boss').style.transform = ''; }, 100);
+      setTimeout(() => $('boss').style.transform = '', 100);
     }
   }
 
   function endBoss(win) {
-    bossActive = false;
-    $('boss-area').classList.remove('active');
+    bossActive = false; $('boss-area').classList.remove('active');
     if(win) {
-      alert("🎉 ПОБЕДА! Тыквенный Король повержен! Ты получаешь +100 очков!");
-      score += 100;
-      if($('score')) $('score').textContent = score;
-      if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_best',best);}catch(e){} }
-    } else {
-      alert("💀 Время вышло! Король Тыкв сбежал...");
-    }
+      alert("🎉 ПОБЕДА! Тыквенный Король повержен! +100 очков!");
+      score += 100; $('score').textContent = score;
+      if(score > best) { best = score; $('best').textContent = best; localStorage.setItem('mz_best_v9', best); }
+      unlockAch('boss_killer');
+    } else { alert("💀 Время вышло! Король Тыкв сбежал..."); }
   }
 
   if($('boss')) $('boss').addEventListener('click', hitBoss);
+  setInterval(() => { if(!bossActive) spawnBoss(); }, 300000); // Раз в 5 минут
 
-  // Вызов босса раз в 5 минут (300 000 мс)
-  setInterval(function() {
-    if(!bossActive) { 
-      spawnBoss();
-    }
-  }, 300000); 
-
-  // ===== ДУЭЛИ =====
+  // ===== ИСПЫТАНИЯ (ДУЭЛИ) =====
+  var duelActive = false, currentDuel = null;
   var duelMonsters = [
-    { emoji: '🧛', name: 'Вампир', weak: '🧄' },
-    { emoji: '🧟', name: 'Зомби', weak: '🔫' },
-    { emoji: '👻', name: 'Призрак', weak: '🔮' },
-    { emoji: '🐺', name: 'Оборотень', weak: '🥈' }
+    { emoji: '🧛', name: 'Вампир', weak: '🧄', time: 3 },
+    { emoji: '🧟', name: 'Зомби', weak: '🔫', time: 3 },
+    { emoji: '👻', name: 'Призрак', weak: '🔮', time: 2 },
+    { emoji: '🐺', name: 'Оборотень', weak: '🥈', time: 3 },
+    { emoji: '👹', name: 'Демон', weak: '📖', time: 2 }
   ];
-  var currentDuel = null;
 
   if($('duel-start')) $('duel-start').addEventListener('click', function() {
+    if(duelActive) return;
+    duelActive = true;
     currentDuel = duelMonsters[Math.floor(Math.random() * duelMonsters.length)];
     $('duel-monster').textContent = currentDuel.emoji;
-    $('duel-status').textContent = 'Покажи слабость: ' + currentDuel.weak;
-    this.textContent = 'Атаковать!';
-    this.onclick = function() {
-      if(!currentDuel) return;
-      if(currentDuel.weak === '🧄') { 
-        $('duel-status').textContent = 'ПОБЕДА! Монстр убежал! 🎉';
-        score += 20;
-        if($('score')) $('score').textContent = score;
-      } else {
-        $('duel-status').textContent = 'Промах! Монстр исцелился. 💀';
+    $('duel-status').classList.remove('idle');
+    $('duel-status').textContent = `Покажи: ${currentDuel.weak} (${currentDuel.time} сек)`;
+    
+    // Создаем кнопки выбора
+    var btnsContainer = document.createElement('div');
+    btnsContainer.className = 'duel-btns';
+    btnsContainer.id = 'duel-choices';
+    ['🧄', '🔫', '🔮', '🥈', '📖'].forEach(item => {
+      var b = document.createElement('button');
+      b.className = 'duel-btn'; b.textContent = item;
+      b.onclick = () => checkDuelAnswer(item);
+      btnsContainer.appendChild(b);
+    });
+    this.parentNode.appendChild(btnsContainer);
+    this.style.display = 'none';
+
+    // Таймер
+    var timeLeft = currentDuel.time;
+    var timerInt = setInterval(() => {
+      timeLeft--;
+      if(!duelActive) { clearInterval(timerInt); return; }
+      $('duel-status').textContent = `Покажи: ${currentDuel.weak} (${timeLeft} сек)`;
+      if(timeLeft <= 0) {
+        clearInterval(timerInt);
+        if(duelActive) checkDuelAnswer(null);
       }
-      currentDuel = null;
-      this.textContent = 'Ещё раз?';
-      this.onclick = null; 
-    };
+    }, 1000);
   });
+
+  function checkDuelAnswer(answer) {
+    if(!duelActive || !currentDuel) return;
+    duelActive = false;
+    var choices = $('duel-choices'); if(choices) choices.remove();
+    $('duel-start').style.display = 'block';
+
+    if(answer === currentDuel.weak) {
+      $('duel-status').textContent = "ПОБЕДА! Монстр убежал! 🎉";
+      score += 30; $('score').textContent = score;
+      unlockAch('duelist');
+    } else {
+      $('duel-status').textContent = "Промах! Монстр исцелился. 💀";
+    }
+    $('duel-status').classList.add('idle');
+    currentDuel = null;
+  }
 
   // ===== СЕКРЕТ =====
-  if($('secret-btn')) $('secret-btn').addEventListener('click', function() {
-    $('secret-modal').classList.add('active');
-  });
+  if($('secret-btn')) $('secret-btn').addEventListener('click', () => $('secret-modal').classList.add('active'));
 
-  // ===== ЧАСЫ =====
+  // ===== ЧАСЫ И ПИНГ =====
   var sec = 0;
-  setInterval(function() {
-    sec++;
-    var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
-    var c = $('clock');
-    if(c) c.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  setInterval(() => {
+    sec++; var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+    if($('clock')) $('clock').textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   }, 1000);
 
-  // ===== ПИНГ =====
   var pingStart = Date.now();
-  fetch('https://api.ipify.org?format=json').then(function(){
-    if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms';
-  }).catch(function(){ if($('ping-display')) $('ping-display').textContent = 'err'; });
+  fetch('https://api.ipify.org?format=json').then(() => { if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms'; }).catch(() => { if($('ping-display')) $('ping-display').textContent = 'err'; });
 
   // ===== CHANGELOG =====
   var versions = [
-    {v:'1.0', text:'Первый релиз.'},
-    {v:'6.0', text:'Игра «Варка Зелий».'},
-    {v:'7.1', text:'Босс, Дуэли, Секрет.'},
-    {v:'8.0', text:'Глобальный редизайн. Cyber Halloween.'}
+    {v:'1.0', ru:'Первый релиз.', en:'First release.'},
+    {v:'6.0', ru:'Игра «Варка Зелий».', en:'Potion Brewing game.'},
+    {v:'7.1', ru:'Босс, Дуэли, Секрет.', en:'Boss, Duels, Secret.'},
+    {v:'8.0', ru:'Глобальный редизайн.', en:'Global redesign.'},
+    {v:'9.0', ru:'Достижения, языки, новые испытания.', en:'Achievements, languages, new trials.'}
   ];
-  var list = $('changelog-list'); 
-  if (list) { 
-    list.innerHTML = ''; 
-    versions.forEach(function(item) { 
-      var li = document.createElement('li'); 
-      li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; 
-      list.appendChild(li); 
-    }); 
+  if($('changelog-list')) {
+    $('changelog-list').innerHTML = '';
+    versions.forEach(v => {
+      var li = document.createElement('li');
+      li.innerHTML = `<b>v${v.v}</b> — ${lang === 'ru' ? v.ru : v.en}`;
+      $('changelog-list').appendChild(li);
+    });
   }
 
   applyLang();
