@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>МЗ: Проклятие Технички v7.0</title>
+<title>МЗ: Проклятие Технички v7.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -67,11 +67,6 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 #boss-hp-bar{height:100%;background:var(--red);width:100%;transition:width .2s;}
 .boss-text{font-size:24px;font-weight:900;color:var(--red);text-shadow:0 0 10px var(--red);margin-top:10px;}
 
-/* Зал Славы */
-.hall-of-fame{width:100%;max-width:600px;text-align:left;}
-.hof-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #333;font-size:16px;}
-.hof-item:first-child{color:var(--gold);font-weight:900;font-size:18px;}
-
 /* Дуэли */
 .duel-area{width:100%;height:300px;display:flex;justify-content:center;align-items:center;flex-direction:column;position:relative;}
 .monster{font-size:100px;animation:monsterPulse 1s infinite alternate;}
@@ -99,17 +94,14 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 <svg class="web tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" fill="none" stroke-width="1"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" fill="none" stroke-width="0.8"/></svg>
 <svg class="web tr" viewBox="0 0 100 100"></svg><svg class="web bl" viewBox="0 0 100 100"></svg><svg class="web br" viewBox="0 0 100 100"></svg>
 
-<!-- Секретная кнопка -->
 <button class="secret-btn" id="secret-btn">🕯️</button>
 
-<!-- Модалка Секрета -->
 <div id="secret-modal">
     <h1 style="font-size:60px; color:var(--red);">ТЫ НАШЁЛ СЕКРЕТ!</h1>
     <p style="font-size:20px; margin-top:20px; text-align:center; max-width:600px;">Тыквенный Король передаёт тебе привет. Пусть твой онлайн будет вечным, а рекорды — незыблемыми! 🎃👑</p>
     <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:30px; padding:10px 20px; background:var(--accent); border:none; border-radius:10px; font-weight:bold; cursor:pointer;">Закрыть</button>
 </div>
 
-<!-- БОСС -->
 <div id="boss-area">
     <div class="boss-text">🎃 КОРОЛЬ ТЫКВ 🎃</div>
     <div id="boss">👑</div>
@@ -126,12 +118,10 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 
 <div class="tabs">
   <button class="tab-btn active" id="tab-main-btn">🎮 Игра</button>
-  <button class="tab-btn" id="tab-hof-btn">🏆 Зал Славы</button>
   <button class="tab-btn" id="tab-duel-btn">⚔️ Дуэли</button>
   <button class="tab-btn" id="tab-vers-btn">📜 Обновления</button>
 </div>
 
-<!-- ВКЛАДКА ИГРА -->
 <div class="tab-content active" id="tab-main">
   <div class="card" id="card-info">
     <h1>Техничка МЗ</h1>
@@ -163,17 +153,6 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   </div>
 </div>
 
-<!-- ВКЛАДКА ЗАЛ СЛАВЫ -->
-<div class="tab-content" id="tab-hof">
-  <div class="card">
-    <h2>🏆 Зал Славы (Глобальный ТОП)</h2>
-    <div class="hall-of-fame" id="hof-list">
-      <div style="text-align:center; padding:20px;">Загрузка...</div>
-    </div>
-  </div>
-</div>
-
-<!-- ВКЛАДКА ДУЭЛИ -->
 <div class="tab-content" id="tab-duel">
   <div class="card">
     <h2>⚔️ Испытание</h2>
@@ -187,7 +166,6 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   </div>
 </div>
 
-<!-- ВКЛАДКА ОБНОВЛЕНИЯ -->
 <div class="tab-content" id="tab-vers">
   <div class="changelog">
     <h2 style="margin-bottom:20px;">История версий</h2>
@@ -196,7 +174,7 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
 </div>
 
 <div id="yt-audio-container" style="display:none;"></div>
-  <script>
+<script>
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
@@ -210,15 +188,29 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   var gameArea = $('game-area');
   var cauldron = $('cauldron');
 
-  // ===== ЯЗЫК (упрощенно для примера) =====
+  // ===== МУЗЫКА (YOUTUBE) =====
+  var YT_ID = 'RaDa7m76uXY';
+  var ytPlayer = null;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  window.onYouTubeIframeAPIReady = function() {
+    ytPlayer = new YT.Player('yt-audio-container', {
+      height: '0', width: '0', videoId: YT_ID,
+      playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': YT_ID }
+    });
+  };
+
+  // ===== ЯЗЫК =====
   function applyLang() {
-    // В реальном проекте тут был бы полный словарь. Оставим базовые элементы.
     if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? '🎃 Тема: Тыква' : '🌿 Тема: Самайн';
     if($('music-toggle')) $('music-toggle').textContent = musicOn ? '🎵 Музыка: вкл' : '🔇 Музыка: выкл';
   }
 
   // ===== ВКЛАДКИ =====
-  var tabs = ['main', 'hof', 'duel', 'vers'];
+  var tabs = ['main', 'duel', 'vers'];
   tabs.forEach(function(t) {
     var btn = $('tab-' + t + '-btn');
     var content = $('tab-' + t);
@@ -230,7 +222,6 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
         });
         btn.classList.add('active');
         content.classList.add('active');
-        if(t === 'hof') loadHallOfFame();
       });
     }
   });
@@ -241,13 +232,20 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     document.body.classList.toggle('theme-samhain', theme === 'samhain');
     applyLang();
   });
-  if($('music-toggle')) $('music-toggle').addEventListener('click', function() {
-    musicOn = !musicOn;
-    applyLang();
-    // Тут был бы вызов YouTube API
-  });
 
-  // ===== ИГРА (ВАРКА ЗЕЛИЙ) =====
+  if($('music-toggle')) {
+    $('music-toggle').addEventListener('click', function() {
+      if(!ytPlayer) return; 
+      if(musicOn) {
+        ytPlayer.pauseVideo(); musicOn = false;
+      } else {
+        ytPlayer.playVideo(); musicOn = true;
+      }
+      applyLang();
+    });
+  }
+
+  // ===== ИГРА =====
   try{var sb=localStorage.getItem('mz_best');if(sb)best=parseInt(sb,10)||0;}catch(e){}
   if($('best')) $('best').textContent = best;
 
@@ -265,22 +263,17 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     if(!active) return;
     var r = Math.random();
     var type, emoji, points;
-    
     if(r < 0.20) { type = 'bomb'; emoji = '💣'; points = 0; } 
     else if(r < 0.35) { type = 'gold'; emoji = '🌟'; points = 5; } 
     else { type = 'normal'; emoji = ['🎃','🦴','👁️','🧪','🕷️'][Math.floor(Math.random()*5)]; points = 1; }
-
     var el = document.createElement('div');
     el.className = 'falling-item';
     el.textContent = emoji;
     if(type === 'bomb') el.style.filter = 'drop-shadow(0 0 10px red)';
     if(type === 'gold') el.style.filter = 'drop-shadow(0 0 15px gold)';
-    
     var x = Math.random() * 90 + 5; 
-    el.style.left = x + '%';
-    el.style.top = '-50px';
+    el.style.left = x + '%'; el.style.top = '-50px';
     gameArea.appendChild(el);
-    
     var obj = { el: el, x: x, y: -50, speed: 3 + Math.random() * 2 + (score * 0.05), points: points, type: type };
     items.push(obj);
   }
@@ -291,16 +284,12 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
       var item = items[i];
       item.y += item.speed;
       item.el.style.top = item.y + 'px';
-      
       var rect = gameArea.getBoundingClientRect();
-      var cauldronLeft = cauldronX - 7.5;
-      var cauldronRight = cauldronX + 7.5;
-      
+      var cauldronLeft = cauldronX - 7.5, cauldronRight = cauldronX + 7.5;
       if(item.y > rect.height - 100 && item.y < rect.height - 40) {
         if(item.x > cauldronLeft && item.x < cauldronRight) {
           if(item.type === 'bomb') {
-            lives--;
-            if($('lives')) $('lives').textContent = lives;
+            lives--; if($('lives')) $('lives').textContent = lives;
             document.body.style.backgroundColor = '#300';
             setTimeout(function(){ document.body.style.backgroundColor = ''; }, 200);
             if(lives <= 0) stopGame();
@@ -310,8 +299,7 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
             if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_best',best);}catch(e){} }
           }
           if(item.el.parentNode) item.el.parentNode.removeChild(item.el);
-          items.splice(i, 1);
-          continue;
+          items.splice(i, 1); continue;
         }
       }
       if(item.y > rect.height) {
@@ -322,51 +310,34 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   }
 
   function startGame() {
-    stopGame();
-    score=0; lives=3; items=[];
-    if($('score')) $('score').textContent = '0';
-    if($('lives')) $('lives').textContent = '3';
-    gameArea.innerHTML = '';
-    var c = document.createElement('div'); c.id = 'cauldron'; c.textContent = '🍲'; gameArea.appendChild(c);
-    cauldron = $('cauldron');
-    cauldronX = 50; cauldron.style.left = '50%';
+    stopGame(); score=0; lives=3; items=[];
+    if($('score')) $('score').textContent = '0'; if($('lives')) $('lives').textContent = '3';
+    gameArea.innerHTML = '<div id="cauldron">🍲</div>';
+    cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
     active = true;
     gameLoop = setInterval(updateGame, 1000/60);
     itemTimer = setInterval(spawnItem, 700);
   }
 
   function stopGame() {
-    active = false;
-    if(gameLoop) clearInterval(gameLoop);
-    if(itemTimer) clearInterval(itemTimer);
-    items.forEach(function(i){ if(i.el.parentNode) i.el.parentNode.removeChild(i.el); });
-    items = [];
+    active = false; if(gameLoop) clearInterval(gameLoop); if(itemTimer) clearInterval(itemTimer);
+    items.forEach(function(i){ if(i.el.parentNode) i.el.parentNode.removeChild(i.el); }); items = [];
   }
 
   if($('start-btn')) $('start-btn').addEventListener('click', startGame);
   if($('stop-btn')) $('stop-btn').addEventListener('click', stopGame);
 
-  // ===== БОСС (ТЫКВЕННЫЙ КОРОЛЬ) =====
-  var bossActive = false;
-  var bossHp = 100;
-  var bossTimer = 60;
+  // ===== БОСС =====
+  var bossActive = false, bossHp = 100, bossTimer = 60;
   
   function spawnBoss() {
     if(bossActive) return;
-    bossActive = true;
-    bossHp = 100;
-    bossTimer = 60;
-    $('boss-area').classList.add('active');
-    updateBossUI();
-    
+    bossActive = true; bossHp = 100; bossTimer = 60;
+    $('boss-area').classList.add('active'); updateBossUI();
     var bossInterval = setInterval(function() {
       if(!bossActive) { clearInterval(bossInterval); return; }
-      bossTimer--;
-      updateBossUI();
-      if(bossTimer <= 0) {
-        endBoss(false);
-        clearInterval(bossInterval);
-      }
+      bossTimer--; updateBossUI();
+      if(bossTimer <= 0) { endBoss(false); clearInterval(bossInterval); }
     }, 1000);
   }
 
@@ -378,46 +349,28 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
   function hitBoss() {
     if(!bossActive) return;
     bossHp -= 5;
-    if(bossHp <= 0) {
-      bossHp = 0;
-      updateBossUI();
-      endBoss(true);
-    } else {
-      updateBossUI();
-      $('boss').style.transform = 'scale(0.9) translateY(10px)';
-      setTimeout(function(){ $('boss').style.transform = ''; }, 100);
-    }
+    if(bossHp <= 0) { bossHp = 0; updateBossUI(); endBoss(true); } 
+    else { updateBossUI(); $('boss').style.transform = 'scale(0.9) translateY(10px)'; setTimeout(function(){ $('boss').style.transform = ''; }, 100); }
   }
 
   function endBoss(win) {
-    bossActive = false;
-    $('boss-area').classList.remove('active');
+    bossActive = false; $('boss-area').classList.remove('active');
     if(win) {
       alert("🎉 ПОБЕДА! Тыквенный Король повержен! Ты получаешь +100 очков!");
-      score += 100;
-      if($('score')) $('score').textContent = score;
+      score += 100; if($('score')) $('score').textContent = score;
       if(score > best) { best = score; if($('best')) $('best').textContent = best; try{localStorage.setItem('mz_best',best);}catch(e){} }
-    } else {
-      alert("💀 Время вышло! Король Тыкв сбежал...");
-    }
+    } else { alert("💀 Время вышло! Король Тыкв сбежал..."); }
   }
 
   if($('boss')) $('boss').addEventListener('click', hitBoss);
 
-  // Вызов босса раз в 2 минуты (для теста - раз в 10 секунд)
+  // Вызов Босса раз в 5 минут
   setInterval(function() {
-    if(!bossActive && Math.random() < 0.3) { // 30% шанс раз в 10 сек
-      spawnBoss();
-    }
-  }, 10000);
+    if(!bossActive) spawnBoss();
+  }, 300000);
 
   // ===== ДУЭЛИ =====
-  var duelMonsters = [
-    { emoji: '🧛', name: 'Вампир', weak: '🧄' },
-    { emoji: '🧟', name: 'Зомби', weak: '🔫' },
-    { emoji: '👻', name: 'Призрак', weak: '🔮' },
-    { emoji: '🐺', name: 'Оборотень', weak: '🥈' }
-  ];
+  var duelMonsters = [{emoji:'🧛', name:'Вампир', weak:'🧄'},{emoji:'🧟', name:'Зомби', weak:'🔫'},{emoji:'👻', name:'Призрак', weak:'🔮'},{emoji:'🐺', name:'Оборотень', weak:'🥈'}];
   var currentDuel = null;
 
   if($('duel-start')) $('duel-start').addEventListener('click', function() {
@@ -427,100 +380,32 @@ h1{color:var(--accent);font-size:36px;} h2{color:var(--accent-2);font-size:28px;
     this.textContent = 'Атаковать!';
     this.onclick = function() {
       if(!currentDuel) return;
-      if(currentDuel.weak === '🧄') { // Упрощенно для теста
-        $('duel-status').textContent = 'ПОБЕДА! Монстр убежал! 🎉';
-        score += 20;
-        if($('score')) $('score').textContent = score;
-      } else {
-        $('duel-status').textContent = 'Промах! Монстр исцелился. 💀';
-      }
-      currentDuel = null;
-      this.textContent = 'Ещё раз?';
-      this.onclick = null; // Сбрасываем
+      if(currentDuel.weak === '🧄') { 
+        $('duel-status').textContent = 'ПОБЕДА! Монстр убежал! 🎉'; score += 20; if($('score')) $('score').textContent = score;
+      } else { $('duel-status').textContent = 'Промах! Монстр исцелился. 💀'; }
+      currentDuel = null; this.textContent = 'Ещё раз?'; this.onclick = null;
     };
   });
 
-  // ===== ЗАЛ СЛАВЫ (Из Google Таблицы) =====
-  // ВСТАВЬ СЮДА СВОЮ ССЫЛКУ НА GOOGLE APPS SCRIPT
-  var GOOGLE_SCRIPT_URL = 'ТВОЯ_ССЫЛКА_СЮДА'; 
-  var SECRET_KEY = 'MoiSuperSecretKey123!';
-
-  async function loadHallOfFame() {
-    var list = $('hof-list');
-    if(!list) return;
-    list.innerHTML = '<div style="text-align:center; padding:20px;">Загрузка...</div>';
-
-    try {
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'getLeaderboard',
-          secret_key: SECRET_KEY
-        })
-      });
-      const resData = await response.json();
-
-      if(resData && resData.status === 'ok' && Array.isArray(resData.data)) {
-        list.innerHTML = '';
-        if(resData.data.length === 0) {
-          list.innerHTML = '<div style="text-align:center;">Пока никого нет в Зале Славы.</div>';
-          return;
-        }
-        resData.data.forEach(function(user, index) {
-          var div = document.createElement('div');
-          div.className = 'hof-item';
-          var h = Math.floor(user.minutes / 60);
-          var m = user.minutes % 60;
-          var medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1) + '.';
-          div.innerHTML = `<span>${medal} <b>${user.nick}</b></span><span>${h}ч ${m}мин</span>`;
-          list.appendChild(div);
-        });
-      } else {
-        list.innerHTML = '<div style="text-align:center; color:var(--red);">Ошибка загрузки данных.</div>';
-      }
-    } catch (e) {
-      list.innerHTML = '<div style="text-align:center; color:var(--red);">Не удалось связаться с таблицей.</div>';
-    }
-  }
-
   // ===== СЕКРЕТ =====
-  if($('secret-btn')) $('secret-btn').addEventListener('click', function() {
-    $('secret-modal').classList.add('active');
-  });
+  if($('secret-btn')) $('secret-btn').addEventListener('click', function() { $('secret-modal').classList.add('active'); });
 
   // ===== ЧАСЫ =====
   var sec = 0;
   setInterval(function() {
-    sec++;
-    var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
-    var c = $('clock');
-    if(c) c.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    sec++; var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+    var c = $('clock'); if(c) c.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
   }, 1000);
 
   // ===== ПИНГ =====
   var pingStart = Date.now();
-  fetch('https://api.ipify.org?format=json').then(function(){
-    if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms';
-  }).catch(function(){ if($('ping-display')) $('ping-display').textContent = 'err'; });
+  fetch('https://api.ipify.org?format=json').then(function(){ if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms'; }).catch(function(){ if($('ping-display')) $('ping-display').textContent = 'err'; });
 
   // ===== CHANGELOG =====
-  var versions = [
-    {v:'1.0', text:'Первый релиз.'},
-    {v:'6.0', text:'Игра «Варка Зелий», неоновый Хэллоуин.'},
-    {v:'7.0', text:'Босс «Король Тыкв», Дуэли, Зал Славы, Секрет.'}
-  ];
+  var versions = [{v:'1.0', text:'Первый релиз.'},{v:'6.0', text:'Игра «Варка Зелий».'},{v:'7.1', text:'Босс, Дуэли, Секрет. Убран Зал Славы.'}];
   var list = $('changelog-list'); 
-  if (list) { 
-    list.innerHTML = ''; 
-    versions.forEach(function(item) { 
-      var li = document.createElement('li'); 
-      li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; 
-      list.appendChild(li); 
-    }); 
-  }
+  if (list) { list.innerHTML = ''; versions.forEach(function(item) { var li = document.createElement('li'); li.innerHTML = '<b>v' + item.v + '</b> — ' + item.text; list.appendChild(li); }); }
 
   applyLang();
 })();
 </script>
-</body>
-</html>
