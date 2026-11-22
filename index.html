@@ -32,7 +32,7 @@ h1,h2{font-family:'Creepster',cursive;letter-spacing:3px;}
 h1{color:var(--accent);font-size:42px;text-shadow:var(--glow-orange);}
 h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
-/* Анимации и фон (оптимизировано для мобилок) */
+/* Анимации и фон */
 .fog{position:fixed;inset:0;background:url('https://www.transparenttextures.com/patterns/foggy-birds.png');opacity:.2;z-index:0;pointer-events:none;animation:fogMove 60s linear infinite;}
 @keyframes fogMove{0%{background-position:0 0;}100%{background-position:1000px 1000px;}}
 .web{position:fixed;width:250px;height:280px;z-index:1;pointer-events:none;opacity:0.4;}
@@ -82,7 +82,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 /* Босс (Оверлей) */
 #boss-area{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:150;justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(10px);}
 #boss-area.active{display:flex;animation:fadeIn 0.3s;}
-#boss{font-size:150px;cursor:pointer;animation:bossFloat 2s infinite alternate;filter:drop-shadow(0 0 50px var(--red));}
+#boss{font-size:150px;cursor:pointer;animation:bossFloat 2s infinite alternate;filter:drop-shadow(0 0 50px var(--red));transition:transform 0.1s;}
 @keyframes bossFloat{0%{transform:translateY(0) scale(1);}100%{transform:translateY(-30px) scale(1.1);}}
 .boss-hp{width:70%;max-width:800px;height:30px;background:rgba(255,255,255,0.1);border-radius:15px;margin-top:30px;overflow:hidden;border:2px solid var(--red);box-shadow:0 0 20px rgba(255,0,51,0.5);}
 #boss-hp-bar{height:100%;background:linear-gradient(90deg, var(--red), #ff6666);width:100%;transition:width .2s;}
@@ -96,9 +96,9 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .duel-btn{padding:15px 40px;font-size:20px;background:rgba(255,255,255,0.05);border:2px solid var(--accent);border-radius:15px;cursor:pointer;transition:all .2s;font-weight:900;color:#fff;letter-spacing:1px;}
 .duel-btn:hover{background:var(--accent);color:#000;box-shadow:var(--glow-orange);}
 
-/* Модалки (Секрет и Достижения) */
+/* Модалки (Секрет, Достижения, Босс) */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px;backdrop-filter:blur(5px);}
-.modal-overlay.active{display:flex;}
+.modal-overlay.active{display:flex;animation:fadeIn 0.2s;}
 .secret-btn{position:fixed;bottom:25px;left:25px;z-index:50;font-size:35px;background:transparent;border:none;cursor:pointer;opacity:.3;transition:all .3s;filter:drop-shadow(0 0 10px var(--gold));}
 .secret-btn:hover{opacity:1;transform:scale(1.1) rotate(10deg);}
 .ach-btn{position:fixed;bottom:25px;right:25px;z-index:50;font-size:35px;background:transparent;border:none;cursor:pointer;opacity:.5;transition:all .3s;filter:drop-shadow(0 0 10px var(--gold));}
@@ -125,7 +125,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .changelog li::before{content:'🎃';position:absolute;left:0;top:2px;filter:drop-shadow(0 0 5px var(--accent));}
 .changelog li b{color:var(--accent);font-size:16px;}
 
-/* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+/* Мобильная адаптация */
 @media (max-width: 768px) {
   body { padding: 10px; }
   h1 { font-size: 32px; }
@@ -134,7 +134,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   .pill { padding: 10px 16px; font-size: 13px; flex: 1 1 40%; text-align: center; }
   .tab-btn { padding: 14px; font-size: 14px; flex: 1 1 100%; }
   .card { padding: 20px; flex: 1 1 100%; }
-  .game-area { height: 300px; } /* Чуть ниже для мобилок */
+  .game-area { height: 300px; }
   .stats { font-size: 14px; flex-wrap: wrap; gap: 10px; justify-content: center; }
   .stats span { font-size: 18px; }
   .btn { padding: 18px; font-size: 15px; }
@@ -143,7 +143,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   .changelog { padding: 20px; }
   .boss-text { font-size: 24px; }
   #boss { font-size: 100px; }
-  .web { display: none; } /* Убираем паутину на телефоне, чтобы не мешала */
+  .web { display: none; }
+  .boss-hp { width: 90%; }
 }
 </style>
 </head>
@@ -157,18 +158,28 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
 <div class="toast-container" id="toast-container"></div>
 
+<!-- Модалка Секрета -->
 <div class="modal-overlay" id="secret-modal">
     <h1 style="font-size:70px; color:var(--gold); text-shadow:0 0 30px var(--gold);">ВЫ НАШЛИ ПАСХАЛКУ!</h1>
     <p style="font-size:22px; margin-top:30px; max-width:700px; line-height:1.6; color:#ddd;">Древнее пророчество гласит: тот, кто найдёт эту свечу, обретёт вечный онлайн и защиту от снятия. Тыквенный Король приветствует тебя! 👑🎃</p>
     <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:40px; padding:15px 35px; background:var(--accent); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
 </div>
 
+<!-- Модалка Достижений -->
 <div class="modal-overlay" id="ach-modal">
     <h1 style="font-size:50px; color:var(--gold); text-shadow:0 0 30px var(--gold); margin-bottom:30px;">🏆 ДОСТИЖЕНИЯ</h1>
     <div class="ach-list" id="ach-list"></div>
     <button onclick="document.getElementById('ach-modal').classList.remove('active')" style="margin-top:30px; padding:15px 35px; background:var(--gold); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
 </div>
 
+<!-- Модалка Сообщения Босса (вместо alert) -->
+<div class="modal-overlay" id="boss-message-modal" style="z-index: 250;">
+    <h2 id="boss-message-title" style="font-size: 40px; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin-bottom: 20px;"></h2>
+    <p id="boss-message-text" style="font-size: 20px; color: #fff; max-width: 600px; line-height: 1.5;"></p>
+    <button onclick="document.getElementById('boss-message-modal').classList.remove('active')" style="margin-top: 30px; padding: 15px 35px; background: var(--accent); border: none; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; color: #000; letter-spacing: 1px;">ЗАКРЫТЬ</button>
+</div>
+
+<!-- Оверлей Босса -->
 <div id="boss-area">
     <div class="boss-text">🎃 КОРОЛЬ ТЫКВ 🎃</div>
     <div id="boss">👑</div>
@@ -305,6 +316,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       toast.classList.remove('show');
       setTimeout(() => { if(toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
     }, 4000);
+    // Вибро-фишка
+    if(navigator.vibrate) navigator.vibrate(50);
   }
 
   if($('ach-btn')) $('ach-btn').addEventListener('click', () => $('ach-modal').classList.add('active'));
@@ -322,6 +335,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     });
     if($('duel-status') && $('duel-status').classList.contains('idle')) $('duel-status').textContent = t.startDuel;
     renderAch();
+    renderChangelog();
   }
 
   if($('lang-ru')) $('lang-ru').addEventListener('click', () => { lang = 'ru'; applyLang(); $('lang-ru').classList.add('active'); $('lang-en').classList.remove('active'); });
@@ -352,6 +366,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     theme = theme === 'pumpkin' ? 'samhain' : 'pumpkin';
     document.body.classList.toggle('theme-samhain', theme === 'samhain');
     applyLang();
+    // Вибро-фишка
+    if(navigator.vibrate) navigator.vibrate(30);
   });
 
   // ===== ВКЛАДКИ =====
@@ -375,6 +391,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       if(type === 'catch') { osc.frequency.value = 600; gain.gain.value = 0.1; }
       else if(type === 'bomb') { osc.type = 'sawtooth'; osc.frequency.value = 100; gain.gain.value = 0.2; }
       else if(type === 'boss') { osc.type = 'square'; osc.frequency.value = 80; gain.gain.value = 0.3; }
+      else if(type === 'click') { osc.frequency.value = 1200; gain.gain.value = 0.05; osc.stop(ctx.currentTime + 0.05); return; }
       osc.start(); osc.stop(ctx.currentTime + 0.1);
     } catch(e) {}
   }
@@ -386,7 +403,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   try { var sb = localStorage.getItem('mz_best_v9'); if(sb) best = parseInt(sb,10)||0; } catch(e) {}
   if($('best')) $('best').textContent = best;
 
-  // Функция для обновления позиции котла
   function moveCauldron(clientX) {
     if(!active || !gameArea) return;
     var rect = gameArea.getBoundingClientRect();
@@ -397,25 +413,9 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     }
   }
 
-  // Управление мышью (ПК)
-  document.addEventListener('mousemove', e => {
-    moveCauldron(e.clientX);
-  });
-
-  // Управление пальцем (Телефон)
-  gameArea.addEventListener('touchmove', e => {
-    e.preventDefault(); // Блокируем скролл страницы при игре
-    if(e.touches.length > 0) {
-      moveCauldron(e.touches[0].clientX);
-    }
-  }, { passive: false });
-
-  gameArea.addEventListener('touchstart', e => {
-    if(e.touches.length > 0) {
-      moveCauldron(e.touches[0].clientX);
-    }
-  }, { passive: true });
-
+  document.addEventListener('mousemove', e => moveCauldron(e.clientX));
+  gameArea.addEventListener('touchmove', e => { e.preventDefault(); if(e.touches.length > 0) moveCauldron(e.touches[0].clientX); }, { passive: false });
+  gameArea.addEventListener('touchstart', e => { if(e.touches.length > 0) moveCauldron(e.touches[0].clientX); }, { passive: true });
 
   function spawnItem() {
     if(!active) return;
@@ -447,12 +447,14 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
         if(item.x > cL && item.x < cR) {
           if(item.type === 'bomb') {
             lives--; playSound('bomb');
+            if(navigator.vibrate) navigator.vibrate([50, 30, 50]); // Вибро на бомбу
             $('lives').textContent = lives;
             document.body.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
             setTimeout(() => document.body.style.boxShadow = 'none', 300);
             if(lives <= 0) stopGame();
           } else {
             score += item.points; playSound('catch');
+            if(navigator.vibrate) navigator.vibrate(20); // Легкая вибрация на ловлю
             $('score').textContent = score;
             if(score > best) { best = score; $('best').textContent = best; localStorage.setItem('mz_best_v9', best); }
             if(score >= 10) unlockAch('first_blood');
@@ -476,6 +478,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     gameArea.innerHTML = '<div id="cauldron">🍲</div>';
     cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
     active = true;
+    playSound('click');
     gameLoop = setInterval(updateGame, 1000/60);
     itemTimer = setInterval(spawnItem, 700);
   }
@@ -483,6 +486,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   function stopGame() {
     active = false; clearInterval(gameLoop); clearInterval(itemTimer);
     items.forEach(i => { if(i.el.parentNode) i.el.parentNode.removeChild(i.el); }); items = [];
+    playSound('click');
   }
 
   if($('start-btn')) $('start-btn').addEventListener('click', startGame);
@@ -511,26 +515,41 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   function hitBoss() {
     if(!bossActive) return;
     bossHp -= 5; playSound('boss');
+    if(navigator.vibrate) navigator.vibrate(15); // Вибро на удар
     if(bossHp <= 0) { bossHp = 0; updateBossUI(); endBoss(true); }
     else {
       updateBossUI();
-      $('boss').style.transform = 'scale(0.9) translateY(10px)';
+      $('boss').style.transform = 'scale(0.85) translateY(15px)';
       setTimeout(() => $('boss').style.transform = '', 100);
     }
   }
 
   function endBoss(win) {
     bossActive = false; $('boss-area').classList.remove('active');
+    var modal = $('boss-message-modal');
+    var title = $('boss-message-title');
+    var text = $('boss-message-text');
     if(win) {
-      alert("🎉 ПОБЕДА! Тыквенный Король повержен! +100 очков!");
+      if(title) title.textContent = "🎉 ПОБЕДА!";
+      if(text) text.textContent = "Тыквенный Король повержен! Вы получаете +100 очков!";
       score += 100; $('score').textContent = score;
       if(score > best) { best = score; $('best').textContent = best; localStorage.setItem('mz_best_v9', best); }
       unlockAch('boss_killer');
-    } else { alert("💀 Время вышло! Король Тыкв сбежал..."); }
+      if(navigator.vibrate) navigator.vibrate([100, 50, 100]); // Победная вибрация
+    } else {
+      if(title) title.textContent = "💀 ВРЕМЯ ВЫШЛО!";
+      if(text) text.textContent = "Король Тыкв сбежал... Попробуй еще раз в следующий раз!";
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200]); // Грустная вибрация
+    }
+    if(modal) {
+        modal.classList.add('active');
+        var btn = modal.querySelector('button');
+        if(btn) btn.style.background = win ? 'var(--gold)' : 'var(--red)';
+    }
   }
 
   if($('boss')) $('boss').addEventListener('click', hitBoss);
-  setInterval(() => { if(!bossActive) spawnBoss(); }, 300000); 
+  setInterval(() => { if(!bossActive) spawnBoss(); }, 300000);
 
   // ===== ИСПЫТАНИЯ (ДУЭЛИ) =====
   var duelActive = false, currentDuel = null;
@@ -545,12 +564,12 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   if($('duel-start')) $('duel-start').addEventListener('click', function() {
     if(duelActive) return;
     duelActive = true;
+    playSound('click');
     currentDuel = duelMonsters[Math.floor(Math.random() * duelMonsters.length)];
     $('duel-monster').textContent = currentDuel.emoji;
     $('duel-status').classList.remove('idle');
     $('duel-status').textContent = `Покажи: ${currentDuel.weak} (${currentDuel.time} сек)`;
     
-    // Создаем кнопки выбора (ОЧИЩАЕМ СТАРЫЕ)
     var container = $('duel-btns-container');
     var oldChoices = $('duel-choices');
     if (oldChoices) oldChoices.remove();
@@ -567,7 +586,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     container.appendChild(btnsContainer);
     this.style.display = 'none';
 
-    // Таймер
     var timeLeft = currentDuel.time;
     var timerInt = setInterval(() => {
       timeLeft--;
@@ -589,9 +607,13 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     if(answer === currentDuel.weak) {
       $('duel-status').textContent = "ПОБЕДА! Монстр убежал! 🎉";
       score += 30; $('score').textContent = score;
+      playSound('catch');
+      if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
       unlockAch('duelist');
     } else {
       $('duel-status').textContent = "Промах! Монстр исцелился. 💀";
+      playSound('bomb');
+      if(navigator.vibrate) navigator.vibrate(100);
     }
     $('duel-status').classList.add('idle');
     currentDuel = null;
@@ -610,16 +632,17 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   var pingStart = Date.now();
   fetch('https://api.ipify.org?format=json').then(() => { if($('ping-display')) $('ping-display').textContent = (Date.now() - pingStart) + ' ms'; }).catch(() => { if($('ping-display')) $('ping-display').textContent = 'err'; });
 
-  // ===== CHANGELOG (ОБНОВЛЕНО) =====
+  // ===== CHANGELOG =====
   var versions = [
     {v:'1.0', ru:'Первый релиз.', en:'First release.'},
     {v:'6.0', ru:'Игра «Варка Зелий».', en:'Potion Brewing game.'},
     {v:'7.1', ru:'Босс, Дуэли, Секрет.', en:'Boss, Duels, Secret.'},
     {v:'8.0', ru:'Глобальный редизайн.', en:'Global redesign.'},
     {v:'9.0', ru:'Достижения, языки, новые испытания.', en:'Achievements, languages, new trials.'},
-    {v:'9.1', ru:'Полная поддержка мобильных устройств (touchmove, адаптация кнопок), исправлен баг с дублированием кнопок в испытаниях.', en:'Full mobile support (touchmove, button adaptation), fixed bug with duplicating buttons in trials.'}
+    {v:'9.1', ru:'Полная поддержка мобильных устройств (touchmove, адаптация кнопок), исправлен баг с дублированием кнопок в испытаниях.', en:'Full mobile support (touchmove, button adaptation), fixed bug with duplicating buttons in trials.'},
+    {v:'9.2', ru:'Замена системных alert() на стильные модалки внутри сайта, вибрация на телефонах, звуки кликов, исправление названия.', en:'Replaced system alert() with stylish in-site modals, mobile vibration, click sounds, title fix.'}
   ];
-  
+
   function renderChangelog() {
     if($('changelog-list')) {
       $('changelog-list').innerHTML = '';
@@ -630,13 +653,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       });
     }
   }
-
-  // Вызываем рендер при смене языка
-  var originalApplyLang = applyLang;
-  applyLang = function() {
-    originalApplyLang();
-    renderChangelog();
-  };
 
   applyLang();
 })();
