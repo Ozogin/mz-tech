@@ -38,11 +38,64 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);} .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
 .web path{stroke:var(--accent);filter:drop-shadow(0 0 8px var(--accent));}
 
-.topbar{width:100%;max-width:1200px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:25px;z-index:10;background:var(--panel);border:1px solid var(--border);padding:15px;border-radius:var(--radius);backdrop-filter:var(--glass-blur);box-shadow:0 8px 32px rgba(0,0,0,0.5);}
-.pill{padding:12px 24px;border-radius:50px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-weight:600;font-size:14px;cursor:pointer;transition:all .3s;}
-.pill:hover{background:var(--accent);color:#000;box-shadow:var(--glow-orange);transform:translateY(-2px);}
-.pill.active{border-color:var(--accent);color:var(--accent);background:rgba(255,102,0,0.1);}
+/* ===== HUD (Обновлённый) ===== */
+.hud {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    z-index: 10;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    backdrop-filter: var(--glass-blur);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: space-between;
+}
+.hud-left, .hud-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.hud-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.3);
+    padding: 6px 12px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.05);
+    font-size: 14px;
+    font-weight: 600;
+}
+.hud-stat .icon { font-size: 18px; filter: drop-shadow(0 0 5px currentColor); }
+.hud-stat .val { color: var(--gold); font-family: monospace; font-size: 16px; font-weight: 900; }
+.hud-stat .val.lives { color: var(--red); }
+.hud-stat .val.best { color: var(--green); }
 
+.hud-btn {
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.hud-btn:hover { background: var(--accent); color: #000; box-shadow: var(--glow-orange); }
+.hud-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,102,0,0.1); }
+
+/* Табы */
 .tabs{width:100%;max-width:1200px;display:flex;gap:15px;margin-bottom:25px;z-index:10;flex-wrap:wrap;}
 .tab-btn{flex:1;padding:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);color:var(--muted);font-weight:900;font-size:16px;cursor:pointer;border-radius:16px;transition:all .3s;text-transform:uppercase;letter-spacing:1px;}
 .tab-btn.active{background:linear-gradient(135deg, rgba(157,0,255,0.2), rgba(255,102,0,0.2));color:#fff;border-color:var(--accent-2);box-shadow:0 0 15px rgba(157,0,255,0.3);}
@@ -146,8 +199,10 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   body { padding: 10px; }
   h1 { font-size: 32px; }
   h2 { font-size: 24px; }
-  .topbar { padding: 10px; gap: 8px; }
-  .pill { padding: 10px 16px; font-size: 13px; flex: 1 1 40%; text-align: center; }
+  .hud { padding: 10px; gap: 8px; }
+  .hud-stat { padding: 4px 10px; font-size: 12px; }
+  .hud-stat .val { font-size: 14px; }
+  .hud-btn { padding: 6px 12px; font-size: 12px; }
   .tab-btn { padding: 14px; font-size: 14px; flex: 1 1 100%; }
   .card { padding: 20px; flex: 1 1 100%; }
   .game-area { height: 300px; }
@@ -202,6 +257,21 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     </div>
 </div>
 
+<!-- ===== ОБНОВЛЁННЫЙ HUD ===== -->
+<div class="hud">
+    <div class="hud-left">
+        <div class="hud-stat"><span class="icon">🎃</span> <span class="val" id="hud-score">0</span></div>
+        <div class="hud-stat"><span class="icon">❤️</span> <span class="val lives" id="hud-lives">3</span></div>
+        <div class="hud-stat"><span class="icon">🏆</span> <span class="val best" id="hud-best">0</span></div>
+    </div>
+    <div class="hud-right">
+        <button class="hud-btn active" id="lang-ru">RU</button>
+        <button class="hud-btn" id="lang-en">EN</button>
+        <button class="hud-btn" id="theme-toggle">🎃 Тыква</button>
+        <button class="hud-btn" id="music-toggle">🔇 Музыка</button>
+    </div>
+</div>
+
 <button class="secret-btn" id="secret-btn" title="Секрет...">🕯️</button>
 <button class="ach-btn" id="ach-btn" title="Достижения">🏆</button>
 
@@ -233,13 +303,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     <div id="boss">👑</div>
     <div class="boss-hp"><div id="boss-hp-bar"></div></div>
     <div class="boss-text" id="boss-timer">00:60</div>
-</div>
-
-<div class="topbar">
-  <button class="pill active" id="lang-ru">RU</button>
-  <button class="pill" id="lang-en">EN</button>
-  <button class="pill" id="theme-toggle">🎃 Тема: Тыква</button>
-  <button class="pill" id="music-toggle">🔇 Музыка: выкл</button>
 </div>
 
 <div class="tabs">
@@ -381,8 +444,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   // ===== ЯЗЫК =====
   function applyLang() {
     var t = translations[lang];
-    if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? t.themeP : t.themeS;
-    if($('music-toggle')) $('music-toggle').textContent = musicOn ? t.musicOn : t.musicOff;
+    if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? '🎃 Тыква' : '🌿 Самайн';
+    if($('music-toggle')) $('music-toggle').textContent = musicOn ? '🎵 Вкл' : '🔇 Выкл';
     if($('start-btn')) $('start-btn').textContent = t.start;
     if($('stop-btn')) $('stop-btn').textContent = t.stop;
     if($('duel-start')) $('duel-start').textContent = t.fight;
@@ -457,6 +520,9 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
   try { var sb = localStorage.getItem('mz_best_v9'); if(sb) best = parseInt(sb,10)||0; } catch(e) {}
   if($('best')) $('best').textContent = best;
+  if($('hud-best')) $('hud-best').textContent = best;
+  if($('hud-score')) $('hud-score').textContent = '0';
+  if($('hud-lives')) $('hud-lives').textContent = '3';
 
   function moveCauldron(clientX) {
     if(!active || !gameArea) return;
@@ -503,15 +569,17 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
           if(item.type === 'bomb') {
             lives--; playSound('bomb');
             if(navigator.vibrate) navigator.vibrate([50, 30, 50]);
-            $('lives').textContent = lives;
+            if($('lives')) $('lives').textContent = lives;
+            if($('hud-lives')) $('hud-lives').textContent = lives;
             document.body.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
             setTimeout(() => document.body.style.boxShadow = 'none', 300);
             if(lives <= 0) stopGame();
           } else {
             score += item.points; playSound('catch');
             if(navigator.vibrate) navigator.vibrate(20);
-            $('score').textContent = score;
-            if(score > best) { best = score; $('best').textContent = best; localStorage.setItem('mz_best_v9', best); }
+            if($('score')) $('score').textContent = score;
+            if($('hud-score')) $('hud-score').textContent = score;
+            if(score > best) { best = score; if($('best')) $('best').textContent = best; if($('hud-best')) $('hud-best').textContent = best; localStorage.setItem('mz_best_v9', best); }
             if(score >= 10) unlockAch('first_blood');
             if(score >= 50) unlockAch('witch');
             if(score >= 100) unlockAch('pumpkin_king');
@@ -529,7 +597,10 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
   function startGame() {
     stopGame(); score=0; lives=3; items=[];
-    $('score').textContent = '0'; $('lives').textContent = '3';
+    if($('score')) $('score').textContent = '0'; 
+    if($('lives')) $('lives').textContent = '3';
+    if($('hud-score')) $('hud-score').textContent = '0';
+    if($('hud-lives')) $('hud-lives').textContent = '3';
     gameArea.innerHTML = '<div id="cauldron">🍲</div>';
     cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
     active = true;
@@ -587,8 +658,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     if(win) {
       if(title) title.textContent = "🎉 ПОБЕДА!";
       if(text) text.textContent = "Тыквенный Король повержен! Вы получаете +100 очков!";
-      score += 100; $('score').textContent = score;
-      if(score > best) { best = score; $('best').textContent = best; localStorage.setItem('mz_best_v9', best); }
+      score += 100; if($('score')) $('score').textContent = score; if($('hud-score')) $('hud-score').textContent = score;
+      if(score > best) { best = score; if($('best')) $('best').textContent = best; if($('hud-best')) $('hud-best').textContent = best; localStorage.setItem('mz_best_v9', best); }
       unlockAch('boss_killer');
       if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
     } else {
@@ -661,7 +732,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
     if(answer === currentDuel.weak) {
       $('duel-status').textContent = "ПОБЕДА! Монстр убежал! 🎉";
-      score += 30; $('score').textContent = score;
+      score += 30; if($('score')) $('score').textContent = score; if($('hud-score')) $('hud-score').textContent = score;
       playSound('catch');
       if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
       unlockAch('duelist');
@@ -696,7 +767,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {v:'9.0', ru:'Достижения, языки, новые испытания.', en:'Achievements, languages, new trials.'},
     {v:'9.1', ru:'Полная поддержка мобильных устройств, исправление багов.', en:'Full mobile support, bug fixes.'},
     {v:'9.2', ru:'Стильные модалки, вибрация, звуки.', en:'Stylish modals, vibration, sounds.'},
-    {v:'9.4', ru:'Новогодний виджет с Дедом Морозом. Обучалка удалена. Стабильная версия.', en:'New Year widget with Santa. Tutorial removed. Stable version.'}
+    {v:'9.4', ru:'Новогодний виджет с Дедом Морозом. Обучалка удалена.', en:'New Year widget with Santa. Tutorial removed.'},
+    {v:'9.5', ru:'Обновлённый HUD: счёт, жизни и рекорд теперь в шапке. Компактный дизайн.', en:'Updated HUD: score, lives and record in the header. Compact design.'}
   ];
 
   function renderChangelog() {
