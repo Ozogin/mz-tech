@@ -373,11 +373,72 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
 
+  // ===== ОБУЧАЛКА (ЗАПУСКАЕТСЯ ПЕРВОЙ) =====
+  var TUTORIAL_VERSION = '9.3';
+  // Принудительно сбрасываем флаги старых версий
+  try {
+    if (localStorage.getItem('mz_has_seen_tut') === null) {
+      // Если флага нет — покажем полный туториал
+    }
+    // Удаляем устаревшие флаги обновлений, чтобы не мешали
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      if (key && key.indexOf('mz_update_v') === 0 && key !== 'mz_update_v' + TUTORIAL_VERSION) {
+        localStorage.removeItem(key);
+      }
+    }
+  } catch(e) {}
+
+  window.nextTutStep = function(step) {
+    var steps = document.querySelectorAll('#tutorial-overlay .tut-step');
+    for (var i = 0; i < steps.length; i++) { steps[i].classList.remove('active'); }
+    var target = document.querySelector('#tutorial-overlay .tut-step[data-step="' + step + '"]');
+    if(target) target.classList.add('active');
+    var dots = document.querySelectorAll('#tutorial-overlay .tut-dot');
+    for (var j = 0; j < dots.length; j++) {
+      dots[j].classList.toggle('active', j === step - 1);
+    }
+  };
+
+  window.skipTutorial = function() {
+    localStorage.setItem('mz_has_seen_tut', 'true');
+    document.getElementById('tutorial-overlay').classList.remove('active');
+    checkUpdate();
+  };
+
+  window.finishTutorial = function() {
+    localStorage.setItem('mz_has_seen_tut', 'true');
+    document.getElementById('tutorial-overlay').classList.remove('active');
+    checkUpdate();
+  };
+
+  window.checkUpdate = function() {
+    var hasSeenUpdate = localStorage.getItem('mz_update_v' + TUTORIAL_VERSION);
+    if (!hasSeenUpdate) {
+      var upd = document.getElementById('update-overlay');
+      if (upd) {
+        upd.classList.add('active');
+        localStorage.setItem('mz_update_v' + TUTORIAL_VERSION, 'true');
+      }
+    }
+  };
+
+  // Запуск обучалки после полной загрузки страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    var hasSeenFull = localStorage.getItem('mz_has_seen_tut');
+    if (!hasSeenFull) {
+      var tut = document.getElementById('tutorial-overlay');
+      if (tut) tut.classList.add('active');
+    } else {
+      window.checkUpdate();
+    }
+  });
+
   // ===== НОВОГОДНИЙ ВИДЖЕТ =====
   function updateNewYear() {
     var now = new Date();
     var year = now.getFullYear();
-    var newYear = new Date(year + 1, 0, 1, 0, 0, 0); // 1 января следующего года
+    var newYear = new Date(year + 1, 0, 1, 0, 0, 0);
     if (now > newYear) newYear = new Date(year + 2, 0, 1);
     var diff = newYear - now;
     
@@ -394,48 +455,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   }
   setInterval(updateNewYear, 1000);
   updateNewYear();
-
-  // ===== ОБУЧАЛКА =====
-  var TUTORIAL_VERSION = '9.3';
-  var hasSeenFullTutorial = localStorage.getItem('mz_has_seen_tut');
-  var hasSeenUpdate = localStorage.getItem('mz_update_v' + TUTORIAL_VERSION);
-
-  window.nextTutStep = function(step) {
-    var steps = document.querySelectorAll('#tutorial-overlay .tut-step');
-    steps.forEach(el => el.classList.remove('active'));
-    var target = document.querySelector('#tutorial-overlay .tut-step[data-step="' + step + '"]');
-    if(target) target.classList.add('active');
-    var dots = document.querySelectorAll('#tutorial-overlay .tut-dot');
-    dots.forEach((d, idx) => d.classList.toggle('active', idx === step - 1));
-  };
-
-  window.skipTutorial = function() {
-    localStorage.setItem('mz_has_seen_tut', 'true');
-    document.getElementById('tutorial-overlay').classList.remove('active');
-    checkUpdate();
-  };
-
-  window.finishTutorial = function() {
-    localStorage.setItem('mz_has_seen_tut', 'true');
-    document.getElementById('tutorial-overlay').classList.remove('active');
-    checkUpdate();
-  };
-
-  function checkUpdate() {
-    if (!hasSeenUpdate) {
-      document.getElementById('update-overlay').classList.add('active');
-      localStorage.setItem('mz_update_v' + TUTORIAL_VERSION, 'true');
-    }
-  }
-
-  // Запуск после полной загрузки
-  window.addEventListener('load', function() {
-    if (!hasSeenFullTutorial) {
-      document.getElementById('tutorial-overlay').classList.add('active');
-    } else {
-      checkUpdate();
-    }
-  });
 
   // ===== ПЕРЕВОДЫ =====
   var translations = {
