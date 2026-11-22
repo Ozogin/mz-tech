@@ -269,7 +269,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
 <!-- ===== НОВОГОДНИЙ ВИДЖЕТ ===== -->
 <div class="newyear-widget" id="ny-widget">
-    <div class="ny-title">До Нового Года</div>
+    <div class="ny-title" data-ru="До Нового Года" data-en="Until New Year">До Нового Года</div>
     <div class="ny-clock-holder">
         <div class="ny-garland"></div>
         <svg class="ny-santa-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -288,10 +288,10 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
         </svg>
     </div>
     <div class="ny-time">
-        <div class="ny-block"><span class="ny-num" id="ny-days">00</span><span class="ny-lbl">Дней</span></div>
-        <div class="ny-block"><span class="ny-num" id="ny-hours">00</span><span class="ny-lbl">Часов</span></div>
-        <div class="ny-block"><span class="ny-num" id="ny-mins">00</span><span class="ny-lbl">Минут</span></div>
-        <div class="ny-block"><span class="ny-num" id="ny-secs">00</span><span class="ny-lbl">Секунд</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-days">00</span><span class="ny-lbl" data-ru="Дней" data-en="Days">Дней</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-hours">00</span><span class="ny-lbl" data-ru="Часов" data-en="Hours">Часов</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-mins">00</span><span class="ny-lbl" data-ru="Минут" data-en="Mins">Минут</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-secs">00</span><span class="ny-lbl" data-ru="Секунд" data-en="Secs">Секунд</span></div>
     </div>
 </div>
 
@@ -320,16 +320,16 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
 <!-- Модалка Секрета -->
 <div class="modal-overlay" id="secret-modal">
-    <h1 style="font-size:70px; color:var(--gold); text-shadow:0 0 30px var(--gold);">ВЫ НАШЛИ ПАСХАЛКУ!</h1>
-    <p style="font-size:22px; margin-top:30px; max-width:700px; line-height:1.6; color:#ddd;">Древнее пророчество гласит: тот, кто найдёт эту свечу, обретёт вечный онлайн и защиту от снятия. Тыквенный Король приветствует тебя! 👑🎃</p>
-    <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:40px; padding:15px 35px; background:var(--accent); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
+    <h1 style="font-size:70px; color:var(--gold); text-shadow:0 0 30px var(--gold);" data-ru="ВЫ НАШЛИ ПАСХАЛКУ!" data-en="YOU FOUND THE EASTER EGG!">ВЫ НАШЛИ ПАСХАЛКУ!</h1>
+    <p style="font-size:22px; margin-top:30px; max-width:700px; line-height:1.6; color:#ddd;" data-ru="Древнее пророчество гласит: тот, кто найдёт эту свечу, обретёт вечный онлайн и защиту от снятия. Тыквенный Король приветствует тебя! 👑🎃" data-en="An ancient prophecy says: whoever finds this candle will gain eternal online and protection from removal. The Pumpkin King welcomes you! 👑🎃">Древнее пророчество гласит: тот, кто найдёт эту свечу, обретёт вечный онлайн и защиту от снятия. Тыквенный Король приветствует тебя! 👑🎃</p>
+    <button onclick="document.getElementById('secret-modal').classList.remove('active')" style="margin-top:40px; padding:15px 35px; background:var(--accent); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;" data-ru="ЗАКРЫТЬ" data-en="CLOSE">ЗАКРЫТЬ</button>
 </div>
 
 <!-- Модалка Достижений -->
 <div class="modal-overlay" id="ach-modal">
-    <h1 style="font-size:50px; color:var(--gold); text-shadow:0 0 30px var(--gold); margin-bottom:30px;">🏆 ДОСТИЖЕНИЯ</h1>
+    <h1 style="font-size:50px; color:var(--gold); text-shadow:0 0 30px var(--gold); margin-bottom:30px;" data-ru="🏆 ДОСТИЖЕНИЯ" data-en="🏆 ACHIEVEMENTS">🏆 ДОСТИЖЕНИЯ</h1>
     <div class="ach-list" id="ach-list"></div>
-    <button onclick="document.getElementById('ach-modal').classList.remove('active')" style="margin-top:30px; padding:15px 35px; background:var(--gold); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
+    <button onclick="document.getElementById('ach-modal').classList.remove('active')" style="margin-top:30px; padding:15px 35px; background:var(--gold); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;" data-ru="ЗАКРЫТЬ" data-en="CLOSE">ЗАКРЫТЬ</button>
 </div>
 
 <div class="tabs">
@@ -376,8 +376,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     <h2 data-ru="⚔️ Дуэль с Тенью" data-en="⚔️ Duel with Shadow">⚔️ Дуэль с Тенью</h2>
     <div class="duel-area">
       <div class="duel-bars">
-          <div class="bar-container"><div class="bar-fill boss-hp" id="boss-hp-fill" style="width:100%;"></div><div class="bar-label">HP БОССА</div></div>
-          <div class="bar-container"><div class="bar-fill player-mana" id="player-mana-fill" style="width:100%;"></div><div class="bar-label">МАНА</div></div>
+          <div class="bar-container"><div class="bar-fill boss-hp" id="boss-hp-fill" style="width:100%;"></div><div class="bar-label" data-ru="HP БОССА" data-en="BOSS HP">HP БОССА</div></div>
+          <div class="bar-container"><div class="bar-fill player-mana" id="player-mana-fill" style="width:100%;"></div><div class="bar-label" data-ru="МАНА" data-en="MANA">МАНА</div></div>
       </div>
       <div class="monster-container">
           <div class="monster" id="duel-monster">🧛</div>
@@ -385,9 +385,9 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       <h3 id="duel-status" style="margin-top:10px; font-size:18px; color:var(--muted); text-align:center;" data-ru="Нажми В БОЙ, чтобы начать" data-en="Press FIGHT to begin">Нажми В БОЙ, чтобы начать</h3>
       
       <div class="spell-btns" id="spell-btns-container" style="display:none;">
-          <button class="spell-btn fire" data-spell="fire">🔥<span class="cost">-20 маны</span></button>
-          <button class="spell-btn ice" data-spell="ice">❄️<span class="cost">-20 маны</span></button>
-          <button class="spell-btn light" data-spell="light">✨<span class="cost">-20 маны</span></button>
+          <button class="spell-btn fire" data-spell="fire">🔥<span class="cost" data-ru="-20 маны" data-en="-20 mana">-20 маны</span></button>
+          <button class="spell-btn ice" data-spell="ice">❄️<span class="cost" data-ru="-20 маны" data-en="-20 mana">-20 маны</span></button>
+          <button class="spell-btn light" data-spell="light">✨<span class="cost" data-ru="-20 маны" data-en="-20 mana">-20 маны</span></button>
       </div>
       
       <div class="duel-btns" id="duel-btns-container">
@@ -646,7 +646,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     el.style.left = x + '%'; el.style.top = '-60px';
     gameArea.appendChild(el);
     
-    // Динамическая сложность: чем больше очков, тем быстрее падают
     var speed = 3 + Math.random()*2 + (score * 0.02); 
     
     items.push({ el, x, y: -60, speed: speed, points: isCursed ? -1 : 1, emoji, isCursed });
@@ -667,7 +666,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
                 shields--;
                 updateScoreUI();
                 $('duel-status').textContent = "Щит поглотил удар!";
-                // Анимация щита
                 gameArea.style.boxShadow = 'inset 0 0 50px rgba(0, 204, 255, 0.5)';
                 setTimeout(() => gameArea.style.boxShadow = 'inset 0 0 60px rgba(0,0,0,1)', 300);
             } else {
@@ -682,11 +680,11 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
             if (item.emoji === ritualSequence[currentStep]) {
               score += 10 * combo; 
               currentStep++;
-              combo = Math.min(5, combo + 1); // Максимум x5
+              combo = Math.min(5, combo + 1); 
               
               if (currentStep >= ritualSequence.length) {
-                score += 50; // Бонус за цепочку
-                shields = Math.min(3, shields + 1); // Даём щит
+                score += 50; 
+                shields = Math.min(3, shields + 1); 
                 playSound('catch');
                 if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
                 generateRitual();
@@ -720,7 +718,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     stopGame(); score=0; lives=3; shields=0; items=[]; combo = 1;
     updateScoreUI();
     
-    // ВАЖНО: пересоздаём элементы и обновляем ссылку на cauldron
     gameArea.innerHTML = '<div class="ritual-quest" id="ritual-quest"></div><div class="combo-indicator" id="combo-indicator">x2</div><div id="cauldron">🍲</div>';
     cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
     
@@ -758,7 +755,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     bossHp = 100; playerMana = 100;
     currentDuel = duelMonsters[Math.floor(Math.random() * duelMonsters.length)];
     $('duel-monster').textContent = currentDuel.emoji;
-    $('duel-status').textContent = 'Слабость: ' + (currentDuel.weakness === 'fire' ? '🔥 Огонь' : currentDuel.weakness === 'ice' ? '❄️ Лёд' : '✨ Свет');
+    $('duel-status').textContent = (lang === 'ru' ? 'Слабость: ' : 'Weakness: ') + (currentDuel.weakness === 'fire' ? (lang === 'ru' ? '🔥 Огонь' : '🔥 Fire') : currentDuel.weakness === 'ice' ? (lang === 'ru' ? '❄️ Лёд' : '❄️ Ice') : (lang === 'ru' ? '✨ Свет' : '✨ Light'));
     $('duel-status').classList.remove('idle');
     
     $('spell-btns-container').style.display = 'flex';
@@ -794,10 +791,10 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     
     if(spellType === currentDuel.weakness) {
       bossHp -= 15;
-      $('duel-status').textContent = "Критический удар! -15 HP";
+      $('duel-status').textContent = (lang === 'ru' ? "Критический удар! -15 HP" : "Critical hit! -15 HP");
     } else {
       bossHp -= 5;
-      $('duel-status').textContent = "Обычный удар. -5 HP";
+      $('duel-status').textContent = (lang === 'ru' ? "Обычный удар. -5 HP" : "Normal hit. -5 HP");
     }
     
     if(bossHp <= 0) {
@@ -817,12 +814,12 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     $('duel-start').textContent = translations[lang].fight;
     
     if(win) {
-      $('duel-status').textContent = "ПОБЕДА! Тень рассеяна! 🎉";
+      $('duel-status').textContent = (lang === 'ru' ? "ПОБЕДА! Тень рассеяна! 🎉" : "VICTORY! The shadow is dispelled! 🎉");
       score += 50; updateScoreUI();
       unlockAch('duelist');
       if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
     } else {
-      $('duel-status').textContent = "ПОРАЖЕНИЕ! Тень оказалась сильнее. 💀";
+      $('duel-status').textContent = (lang === 'ru' ? "ПОРАЖЕНИЕ! Тень оказалась сильнее. 💀" : "DEFEAT! The shadow was stronger. 💀");
       if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
     }
     $('duel-status').classList.add('idle');
@@ -865,7 +862,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {v:'9.5', ru:'Обновлённый HUD: счёт, жизни и рекорд теперь в шапке.', en:'Updated HUD: score, lives and record in the header.'},
     {v:'9.6', ru:'ГЛОБАЛЬНОЕ ОБНОВЛЕНИЕ ИГР: «Ритуал Призыва» и «Дуэль с Тенью».', en:'GLOBAL GAME UPDATE: Summoning Ritual and Duel with Shadow.'},
     {v:'9.7', ru:'Удалён Король Тыкв. Кнопки Старт/Стоп стали красивее.', en:'Pumpkin King removed. Start/Stop buttons are now beautiful.'},
-    {v:'9.8', ru:'ИСПРАВЛЕН БАГ: игра не запускалась из-за ошибки в cauldron. Добавлены Щиты, ускорение и идеальный ритуал.', en:'BUGFIX: game didn\'t start due to cauldron error. Added Shields, speed-up and perfect ritual.'}
+    {v:'9.8', ru:'ИСПРАВЛЕН БАГ: игра не запускалась из-за ошибки в cauldron. Добавлены Щиты, ускорение и идеальный ритуал.', en:'BUGFIX: game didn\'t start due to cauldron error. Added Shields, speed-up and perfect ritual.'},
+    {v:'9.9', ru:'ПОЛНЫЙ ПЕРЕВОД: все элементы (включая кнопки, заголовки и чейнджлог) теперь переводятся на EN и обратно.', en:'FULL TRANSLATION: all elements (including buttons, headers and changelog) now translate to RU and back.'}
   ];
 
   function renderChangelog() {
