@@ -38,7 +38,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .web.tl{top:0;left:0;} .web.tr{top:0;right:0;transform:scaleX(-1);} .web.bl{bottom:0;left:0;transform:scaleY(-1);} .web.br{bottom:0;right:0;transform:scale(-1,-1);}
 .web path{stroke:var(--accent);filter:drop-shadow(0 0 8px var(--accent));}
 
-/* ===== HUD (Обновлённый) ===== */
+/* ===== HUD ===== */
 .hud {
     width: 100%; max-width: 1200px; display: flex; flex-wrap: wrap; gap: 15px;
     margin-bottom: 25px; z-index: 10; background: var(--panel);
@@ -87,7 +87,38 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .credits{margin-top:25px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);font-size:14px;line-height:1.8;color:#b0b0c0;}
 .credits span{font-weight:900;}
 
-/* ===== ИГРА 1: РИТУАЛ ПРИЗЫВА (ГЛОБАЛЬНО ОБНОВЛЕНО) ===== */
+/* ===== КРАСИВЫЕ КНОПКИ СТАРТ/СТОП ===== */
+.btns {
+    display: flex; gap: 15px; margin-top: 25px;
+}
+.btn {
+    flex: 1; padding: 18px 20px; border: none; border-radius: 16px;
+    color: #fff; font-weight: 900; font-size: 16px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    position: relative; overflow: hidden;
+}
+.btn::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+.btn:hover::before { left: 100%; }
+.btn.start {
+    background: linear-gradient(135deg, #ff6600, #a03d00);
+    box-shadow: 0 8px 20px rgba(255, 102, 0, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+}
+.btn.start:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 30px rgba(255, 102, 0, 0.6); }
+.btn.start:active { transform: translateY(0) scale(0.98); }
+.btn.stop {
+    background: linear-gradient(135deg, #ff0033, #8b1a1a);
+    box-shadow: 0 8px 20px rgba(255, 0, 51, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+}
+.btn.stop:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 30px rgba(255, 0, 51, 0.6); }
+.btn.stop:active { transform: translateY(0) scale(0.98); }
+.btn .btn-icon { font-size: 18px; }
+
+/* ===== ИГРА 1: РИТУАЛ ПРИЗЫВА ===== */
 .game-area{
     position:relative; width:100%; height:380px;
     background: radial-gradient(circle at 50% 100%, #1a052b 0%, #05010a 100%);
@@ -95,7 +126,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     overflow:hidden; box-shadow:inset 0 0 60px rgba(0,0,0,1);
     cursor:crosshair; touch-action: none;
 }
-/* Подсказка сверху */
 .ritual-quest {
     position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
     z-index: 10; display: flex; gap: 8px; background: rgba(0,0,0,0.7);
@@ -106,18 +136,15 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     font-size: 24px; filter: drop-shadow(0 0 5px #fff); opacity: 0.5; transition: all 0.3s;
 }
 .ritual-quest span.active-step { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 10px var(--gold)); }
-/* Котёл */
 #cauldron{
     position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
     font-size:70px; z-index:5; filter:drop-shadow(0 0 25px var(--green)); transition:left .1s ease-out;
 }
-/* Падающие предметы */
 .falling-item{
     position:absolute; font-size:40px; z-index:4; pointer-events:none; filter:drop-shadow(0 0 15px #fff);
     transition: transform 0.1s;
 }
 .falling-item.cursed { filter: drop-shadow(0 0 20px var(--red)) hue-rotate(180deg); }
-/* Индикатор комбо */
 .combo-indicator {
     position: absolute; top: 60px; right: 20px; z-index: 10;
     font-family: 'Creepster', cursive; font-size: 24px; color: var(--gold);
@@ -125,12 +152,11 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 }
 .combo-indicator.show { opacity: 1; }
 
-/* ===== ИГРА 2: ДУЭЛЬ С ТЕНЬЮ (ГЛОБАЛЬНО ОБНОВЛЕНО) ===== */
+/* ===== ИГРА 2: ДУЭЛЬ С ТЕНЬЮ ===== */
 .duel-area{
     width:100%; min-height:380px; display:flex; flex-direction:column;
     align-items:center; justify-content:space-between; position:relative; padding: 20px 0;
 }
-/* Полоски HP и Маны */
 .duel-bars { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 .bar-container { width: 100%; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); height: 20px; position: relative; }
 .bar-fill { height: 100%; transition: width 0.3s ease-out; }
@@ -144,7 +170,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .monster.hit { animation: monsterHit 0.2s; }
 @keyframes monsterHit { 0% { transform: scale(1); filter: drop-shadow(0 0 50px #fff); } 100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--accent-2)); } }
 
-/* Кнопки заклинаний */
 .spell-btns { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
 .spell-btn {
     padding: 15px 25px; font-size: 18px; background: rgba(255,255,255,0.05);
@@ -163,7 +188,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .spell-btn.light { border-color: #ffcc00; color: #ffcc00; }
 .spell-btn.light:hover { background: #ffcc00; color: #fff; }
 
-/* Модалка Секрета */
+/* Модалки */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:200;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px;backdrop-filter:blur(5px);}
 .modal-overlay.active{display:flex;animation:fadeIn 0.2s;}
 .secret-btn{position:fixed;bottom:25px;left:25px;z-index:50;font-size:35px;background:transparent;border:none;cursor:pointer;opacity:.3;transition:all .3s;filter:drop-shadow(0 0 10px var(--gold));}
@@ -222,14 +247,11 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   .card { padding: 20px; flex: 1 1 100%; }
   .game-area { height: 340px; }
   .duel-area { min-height: 340px; }
-  .btn { padding: 18px; font-size: 15px; }
+  .btn { padding: 15px 12px; font-size: 14px; }
   .spell-btn { padding: 12px 15px; font-size: 16px; flex: 1 1 40%; }
   .secret-btn, .ach-btn { bottom: 15px; font-size: 30px; }
   .changelog { padding: 20px; }
-  .boss-text { font-size: 24px; }
-  #boss { font-size: 100px; }
   .web { display: none; }
-  .boss-hp { width: 90%; }
   .newyear-widget { top: 10px; right: 10px; width: 180px; padding: 8px; }
   .ny-clock-holder { height: 70px; }
   .ny-santa-svg { width: 50px; height: 50px; }
@@ -272,7 +294,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     </div>
 </div>
 
-<!-- ===== HUD (Обновлённый) ===== -->
+<!-- ===== HUD ===== -->
 <div class="hud">
     <div class="hud-left">
         <div class="hud-stat" id="hud-click-score" title="Кликни по тыкве!">
@@ -308,20 +330,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     <button onclick="document.getElementById('ach-modal').classList.remove('active')" style="margin-top:30px; padding:15px 35px; background:var(--gold); border:none; border-radius:12px; font-weight:900; font-size:16px; cursor:pointer; color:#000; letter-spacing:1px;">ЗАКРЫТЬ</button>
 </div>
 
-<!-- Модалка Сообщения Босса -->
-<div class="modal-overlay" id="boss-message-modal" style="z-index: 250;">
-    <h2 id="boss-message-title" style="font-size: 40px; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin-bottom: 20px;"></h2>
-    <p id="boss-message-text" style="font-size: 20px; color: #fff; max-width: 600px; line-height: 1.5;"></p>
-    <button onclick="document.getElementById('boss-message-modal').classList.remove('active')" style="margin-top: 30px; padding: 15px 35px; background: var(--accent); border: none; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; color: #000; letter-spacing: 1px;">ЗАКРЫТЬ</button>
-</div>
-
-<div id="boss-area">
-    <div class="boss-text">🎃 КОРОЛЬ ТЫКВ 🎃</div>
-    <div id="boss">👑</div>
-    <div class="boss-hp"><div id="boss-hp-bar"></div></div>
-    <div class="boss-text" id="boss-timer">00:60</div>
-</div>
-
 <div class="tabs">
   <button class="tab-btn active" id="tab-main-btn" data-ru="Бот" data-en="Bot">Бот</button>
   <button class="tab-btn" id="tab-duel-btn" data-ru="⚔️ Испытания" data-en="⚔️ Trials">⚔️ Испытания</button>
@@ -345,9 +353,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   <div class="card game" id="card-game">
     <h2 data-ru="Ритуал Призыва" data-en="Summoning Ritual">Ритуал Призыва</h2>
     <div class="game-area" id="game-area">
-      <div class="ritual-quest" id="ritual-quest">
-         <!-- Сюда JS вставит подсказку -->
-      </div>
+      <div class="ritual-quest" id="ritual-quest"></div>
       <div class="combo-indicator" id="combo-indicator">x2</div>
       <div id="cauldron">🍲</div>
     </div>
@@ -357,8 +363,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       <div><span data-ru="РЕКОРД" data-en="BEST">РЕКОРД</span>: <span id="best" style="color:var(--gold);">0</span></div>
     </div>
     <div class="btns">
-      <button class="btn" id="start-btn" data-ru="Старт" data-en="Start">Старт</button>
-      <button class="btn stop" id="stop-btn" data-ru="Стоп" data-en="Stop">Стоп</button>
+      <button class="btn start" id="start-btn"><span class="btn-icon">▶</span> Старт</button>
+      <button class="btn stop" id="stop-btn"><span class="btn-icon">■</span> Стоп</button>
     </div>
   </div>
 </div>
@@ -450,7 +456,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {id: 'first_blood', icon: '🩸', ru: 'Первая кровь', en: 'First Blood', dRu: 'Наберите 10 очков', dEn: 'Reach 10 points'},
     {id: 'witch', icon: '🧙‍♀️', ru: 'Ведьма', en: 'Witch', dRu: 'Наберите 50 очков', dEn: 'Reach 50 points'},
     {id: 'pumpkin_king', icon: '👑', ru: 'Король Тыкв', en: 'Pumpkin King', dRu: 'Наберите 100 очков', dEn: 'Reach 100 points'},
-    {id: 'boss_killer', icon: '⚔️', ru: 'Убийца Босса', en: 'Boss Killer', dRu: 'Победите Босса', dEn: 'Defeat the Boss'},
     {id: 'duelist', icon: '🛡️', ru: 'Дуэлянт', en: 'Duelist', dRu: 'Победите в Дуэли', dEn: 'Win a Duel'}
   ];
   var unlockedAch = {};
@@ -494,8 +499,15 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     var t = translations[lang];
     if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? '🎃 Тыква' : '🌿 Самайн';
     if($('music-toggle')) $('music-toggle').textContent = musicOn ? '🎵 Вкл' : '🔇 Выкл';
-    if($('start-btn')) $('start-btn').textContent = t.start;
-    if($('stop-btn')) $('stop-btn').textContent = t.stop;
+    if($('start-btn')) {
+        // Сохраняем иконку
+        var icon = $('start-btn').querySelector('.btn-icon').outerHTML;
+        $('start-btn').innerHTML = icon + ' ' + t.start;
+    }
+    if($('stop-btn')) {
+        var icon = $('stop-btn').querySelector('.btn-icon').outerHTML;
+        $('stop-btn').innerHTML = icon + ' ' + t.stop;
+    }
     if($('duel-start')) $('duel-start').textContent = t.fight;
     document.querySelectorAll('[data-ru]').forEach(el => {
       el.textContent = el.getAttribute('data-' + lang);
@@ -503,7 +515,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     if($('duel-status') && $('duel-status').classList.contains('idle')) $('duel-status').textContent = t.startDuel;
     renderAch();
     renderChangelog();
-    // Обновляем подсказку ритуала
     renderRitualQuest();
   }
 
@@ -644,7 +655,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       
       if(item.y > rect.height - 100 && item.y < rect.height - 40) {
         if(item.x > cL && item.x < cR) {
-          // Попадание
           if(item.isCursed) {
             lives--; combo = 1; updateScoreUI();
             playSound('bomb');
@@ -653,18 +663,17 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
             setTimeout(() => document.body.style.boxShadow = 'none', 300);
             if(lives <= 0) stopGame();
           } else {
-            // Проверка последовательности
             if (item.emoji === ritualSequence[currentStep]) {
               score += 10 * combo; 
               currentStep++;
               if (currentStep >= ritualSequence.length) {
-                score += 50; // Бонус за завершение
+                score += 50;
                 generateRitual();
               }
               playSound('catch');
               if(navigator.vibrate) navigator.vibrate(20);
             } else {
-              score += 1; // Небольшой бонус за просто предмет, но без комбо
+              score += 1;
               combo = 1;
             }
             if (score > best) { best = score; localStorage.setItem('mz_best_v9', best); }
@@ -741,7 +750,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
         clearInterval(duelTimer);
         if(duelActive) endDuel(false);
       }
-      // Восстановление маны
       if(playerMana < 100) {
         playerMana = Math.min(100, playerMana + 5);
         $('player-mana-fill').style.width = playerMana + '%';
@@ -806,64 +814,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     });
   });
 
-  // ===== БОСС =====
-  var bossActive = false, bossHpBoss = 100, bossTimer = 60;
-  
-  function spawnBoss() {
-    if(bossActive) return;
-    bossActive = true; bossHpBoss = 100; bossTimer = 60;
-    $('boss-area').classList.add('active');
-    updateBossUI();
-    var bossInterval = setInterval(() => {
-      if(!bossActive) { clearInterval(bossInterval); return; }
-      bossTimer--; updateBossUI();
-      if(bossTimer <= 0) { endBoss(false); clearInterval(bossInterval); }
-    }, 1000);
-  }
-
-  function updateBossUI() {
-    $('boss-hp-bar').style.width = bossHpBoss + '%';
-    $('boss-timer').textContent = '00:' + String(bossTimer).padStart(2, '0');
-  }
-
-  function hitBoss() {
-    if(!bossActive) return;
-    bossHpBoss -= 5; playSound('boss');
-    if(navigator.vibrate) navigator.vibrate(15);
-    if(bossHpBoss <= 0) { bossHpBoss = 0; updateBossUI(); endBoss(true); }
-    else {
-      updateBossUI();
-      $('boss').style.transform = 'scale(0.85) translateY(15px)';
-      setTimeout(() => $('boss').style.transform = '', 100);
-    }
-  }
-
-  function endBoss(win) {
-    bossActive = false; $('boss-area').classList.remove('active');
-    var modal = $('boss-message-modal');
-    var title = $('boss-message-title');
-    var text = $('boss-message-text');
-    if(win) {
-      if(title) title.textContent = "🎉 ПОБЕДА!";
-      if(text) text.textContent = "Тыквенный Король повержен! Вы получаете +100 очков!";
-      score += 100; updateScoreUI();
-      unlockAch('boss_killer');
-      if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-    } else {
-      if(title) title.textContent = "💀 ВРЕМЯ ВЫШЛО!";
-      if(text) text.textContent = "Король Тыкв сбежал... Попробуй еще раз в следующий раз!";
-      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    }
-    if(modal) {
-        modal.classList.add('active');
-        var btn = modal.querySelector('button');
-        if(btn) btn.style.background = win ? 'var(--gold)' : 'var(--red)';
-    }
-  }
-
-  if($('boss')) $('boss').addEventListener('click', hitBoss);
-  setInterval(() => { if(!bossActive) spawnBoss(); }, 300000);
-
   // ===== СЕКРЕТ =====
   if($('secret-btn')) $('secret-btn').addEventListener('click', () => $('secret-modal').classList.add('active'));
 
@@ -887,8 +837,9 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {v:'9.1', ru:'Полная поддержка мобильных устройств, исправление багов.', en:'Full mobile support, bug fixes.'},
     {v:'9.2', ru:'Стильные модалки, вибрация, звуки.', en:'Stylish modals, vibration, sounds.'},
     {v:'9.4', ru:'Новогодний виджет с Дедом Морозом. Обучалка удалена.', en:'New Year widget with Santa. Tutorial removed.'},
-    {v:'9.5', ru:'Обновлённый HUD: счёт, жизни и рекорд теперь в шапке. Компактный дизайн.', en:'Updated HUD: score, lives and record in the header. Compact design.'},
-    {v:'9.6', ru:'ГЛОБАЛЬНОЕ ОБНОВЛЕНИЕ ИГР: «Ритуал Призыва» (последовательности + комбо) и «Дуэль с Тенью» (HP, мана, заклинания).', en:'GLOBAL GAME UPDATE: Summoning Ritual (sequences + combos) and Duel with Shadow (HP, mana, spells).'}
+    {v:'9.5', ru:'Обновлённый HUD: счёт, жизни и рекорд теперь в шапке.', en:'Updated HUD: score, lives and record in the header.'},
+    {v:'9.6', ru:'ГЛОБАЛЬНОЕ ОБНОВЛЕНИЕ ИГР: «Ритуал Призыва» и «Дуэль с Тенью».', en:'GLOBAL GAME UPDATE: Summoning Ritual and Duel with Shadow.'},
+    {v:'9.7', ru:'Удалён Король Тыкв. Кнопки Старт/Стоп стали красивее.', en:'Pumpkin King removed. Start/Stop buttons are now beautiful.'}
   ];
 
   function renderChangelog() {
