@@ -57,6 +57,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .hud-stat .val { color: var(--gold); font-family: monospace; font-size: 16px; font-weight: 900; }
 .hud-stat .val.lives { color: var(--red); }
 .hud-stat .val.best { color: var(--green); }
+.hud-stat .val.shields { color: var(--blue); }
 
 .hud-btn {
     padding: 8px 16px; border-radius: 50px; background: rgba(255,255,255,0.05);
@@ -302,6 +303,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
         </div>
         <div class="hud-stat"><span class="icon">❤️</span> <span class="val lives" id="hud-lives">3</span></div>
         <div class="hud-stat"><span class="icon">🏆</span> <span class="val best" id="hud-best">0</span></div>
+        <div class="hud-stat" style="display:none;" id="hud-shields-stat"><span class="icon">🛡️</span> <span class="val shields" id="hud-shields">0</span></div>
     </div>
     <div class="hud-right">
         <button class="hud-btn active" id="lang-ru">RU</button>
@@ -449,7 +451,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     en: { start: "Start", stop: "Stop", score: "SCORE", lives: "LIVES", best: "BEST", themeP: "🎃 Theme: Pumpkin", themeS: "🌿 Theme: Samhain", musicOff: "🔇 Music: off", musicOn: "🎵 Music: on", fight: "FIGHT", win: "VICTORY!", lose: "Miss!", startDuel: "Press FIGHT to begin", achUnlocked: "Achievement Unlocked!", achTitle: "🏆 ACHIEVEMENTS" }
   };
   var lang = 'ru', theme = 'pumpkin', musicOn = false;
-  var score = 0, lives = 3, best = 0;
+  var score = 0, lives = 3, best = 0, shields = 0;
 
   // ===== ДОСТИЖЕНИЯ =====
   var achievementsList = [
@@ -500,7 +502,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     if($('theme-toggle')) $('theme-toggle').textContent = theme === 'pumpkin' ? '🎃 Тыква' : '🌿 Самайн';
     if($('music-toggle')) $('music-toggle').textContent = musicOn ? '🎵 Вкл' : '🔇 Выкл';
     if($('start-btn')) {
-        // Сохраняем иконку
         var icon = $('start-btn').querySelector('.btn-icon').outerHTML;
         $('start-btn').innerHTML = icon + ' ' + t.start;
     }
@@ -591,6 +592,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     if($('hud-score')) $('hud-score').textContent = score;
     if($('lives')) $('lives').textContent = lives;
     if($('hud-lives')) $('hud-lives').textContent = lives;
+    if($('hud-shields')) $('hud-shields').textContent = shields;
+    if($('hud-shields-stat')) $('hud-shields-stat').style.display = shields > 0 ? 'flex' : 'none';
   }
 
   function generateRitual() {
@@ -600,6 +603,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       ritualSequence.push(pool[Math.floor(Math.random() * pool.length)]);
     }
     currentStep = 0;
+    combo = 1;
     renderRitualQuest();
   }
 
@@ -642,7 +646,10 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     el.style.left = x + '%'; el.style.top = '-60px';
     gameArea.appendChild(el);
     
-    items.push({ el, x, y: -60, speed: 3 + Math.random()*2, points: isCursed ? -1 : 1, emoji, isCursed });
+    // Динамическая сложность: чем больше очков, тем быстрее падают
+    var speed = 3 + Math.random()*2 + (score * 0.02); 
+    
+    items.push({ el, x, y: -60, speed: speed, points: isCursed ? -1 : 1, emoji, isCursed });
   }
 
   function updateGame() {
@@ -656,22 +663,37 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       if(item.y > rect.height - 100 && item.y < rect.height - 40) {
         if(item.x > cL && item.x < cR) {
           if(item.isCursed) {
-            lives--; combo = 1; updateScoreUI();
-            playSound('bomb');
-            if(navigator.vibrate) navigator.vibrate([50, 30, 50]);
-            document.body.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
-            setTimeout(() => document.body.style.boxShadow = 'none', 300);
-            if(lives <= 0) stopGame();
+            if (shields > 0) {
+                shields--;
+                updateScoreUI();
+                $('duel-status').textContent = "Щит поглотил удар!";
+                // Анимация щита
+                gameArea.style.boxShadow = 'inset 0 0 50px rgba(0, 204, 255, 0.5)';
+                setTimeout(() => gameArea.style.boxShadow = 'inset 0 0 60px rgba(0,0,0,1)', 300);
+            } else {
+                lives--; combo = 1; updateScoreUI();
+                playSound('bomb');
+                if(navigator.vibrate) navigator.vibrate([50, 30, 50]);
+                document.body.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
+                setTimeout(() => document.body.style.boxShadow = 'none', 300);
+                if(lives <= 0) stopGame();
+            }
           } else {
             if (item.emoji === ritualSequence[currentStep]) {
               score += 10 * combo; 
               currentStep++;
+              combo = Math.min(5, combo + 1); // Максимум x5
+              
               if (currentStep >= ritualSequence.length) {
-                score += 50;
+                score += 50; // Бонус за цепочку
+                shields = Math.min(3, shields + 1); // Даём щит
+                playSound('catch');
+                if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
                 generateRitual();
+              } else {
+                playSound('catch');
+                if(navigator.vibrate) navigator.vibrate(20);
               }
-              playSound('catch');
-              if(navigator.vibrate) navigator.vibrate(20);
             } else {
               score += 1;
               combo = 1;
@@ -695,10 +717,13 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   }
 
   function startGame() {
-    stopGame(); score=0; lives=3; items=[]; combo = 1;
+    stopGame(); score=0; lives=3; shields=0; items=[]; combo = 1;
     updateScoreUI();
+    
+    // ВАЖНО: пересоздаём элементы и обновляем ссылку на cauldron
     gameArea.innerHTML = '<div class="ritual-quest" id="ritual-quest"></div><div class="combo-indicator" id="combo-indicator">x2</div><div id="cauldron">🍲</div>';
     cauldron = $('cauldron'); cauldronX = 50; cauldron.style.left = '50%';
+    
     generateRitual();
     gameActive = true;
     playSound('click');
@@ -839,7 +864,8 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {v:'9.4', ru:'Новогодний виджет с Дедом Морозом. Обучалка удалена.', en:'New Year widget with Santa. Tutorial removed.'},
     {v:'9.5', ru:'Обновлённый HUD: счёт, жизни и рекорд теперь в шапке.', en:'Updated HUD: score, lives and record in the header.'},
     {v:'9.6', ru:'ГЛОБАЛЬНОЕ ОБНОВЛЕНИЕ ИГР: «Ритуал Призыва» и «Дуэль с Тенью».', en:'GLOBAL GAME UPDATE: Summoning Ritual and Duel with Shadow.'},
-    {v:'9.7', ru:'Удалён Король Тыкв. Кнопки Старт/Стоп стали красивее.', en:'Pumpkin King removed. Start/Stop buttons are now beautiful.'}
+    {v:'9.7', ru:'Удалён Король Тыкв. Кнопки Старт/Стоп стали красивее.', en:'Pumpkin King removed. Start/Stop buttons are now beautiful.'},
+    {v:'9.8', ru:'ИСПРАВЛЕН БАГ: игра не запускалась из-за ошибки в cauldron. Добавлены Щиты, ускорение и идеальный ритуал.', en:'BUGFIX: game didn\'t start due to cauldron error. Added Shields, speed-up and perfect ritual.'}
   ];
 
   function renderChangelog() {
