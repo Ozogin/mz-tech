@@ -113,6 +113,34 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .changelog li::before{content:'🎃';position:absolute;left:0;top:2px;filter:drop-shadow(0 0 5px var(--accent));}
 .changelog li b{color:var(--accent);font-size:16px;}
 
+/* ===== НОВОГОДНИЙ ВИДЖЕТ ===== */
+.newyear-widget {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 230px;
+    background: linear-gradient(180deg, rgba(180, 220, 255, 0.15) 0%, rgba(20, 30, 50, 0.85) 100%);
+    border: 2px solid rgba(150, 210, 255, 0.6);
+    border-radius: 20px;
+    padding: 12px 12px 14px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(100, 180, 255, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    font-family: 'Montserrat', sans-serif;
+    transition: transform 0.3s;
+}
+.newyear-widget:hover { transform: translateY(-3px); }
+.ny-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #d4ecff; margin-bottom: 4px; text-shadow: 0 0 8px rgba(100, 180, 255, 0.8); }
+.ny-clock-holder { position: relative; height: 90px; margin: 0 auto; }
+.ny-garland { position: absolute; top: 0; left: 5%; right: 5%; height: 2px; background: linear-gradient(90deg, transparent, #a8d8ff, #fff, #a8d8ff, transparent); box-shadow: 0 0 10px #a8d8ff; border-radius: 2px; }
+.ny-santa-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%) translateY(0); width: 70px; height: 70px; animation: santaSwing 2.5s ease-in-out infinite; transform-origin: top center; filter: drop-shadow(0 0 10px rgba(255, 50, 50, 0.6)); }
+@keyframes santaSwing { 0%, 100% { transform: translateX(-50%) rotate(-6deg); } 50% { transform: translateX(-50%) rotate(6deg); } }
+.ny-time { margin-top: 6px; display: flex; justify-content: space-between; gap: 4px; }
+.ny-block { flex: 1; background: rgba(0, 20, 40, 0.6); border: 1px solid rgba(150, 210, 255, 0.3); border-radius: 10px; padding: 6px 2px 4px; }
+.ny-num { display: block; font-family: 'Courier New', monospace; font-size: 22px; font-weight: 900; color: #fff; text-shadow: 0 0 10px rgba(100, 180, 255, 0.9); line-height: 1; }
+.ny-lbl { display: block; font-size: 9px; letter-spacing: 1px; color: #a8c8e8; margin-top: 3px; text-transform: uppercase; }
+
 /* Мобильная адаптация */
 @media (max-width: 768px) {
   body { padding: 10px; }
@@ -133,6 +161,11 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   #boss { font-size: 100px; }
   .web { display: none; }
   .boss-hp { width: 90%; }
+  .newyear-widget { top: 10px; right: 10px; width: 180px; padding: 8px; }
+  .ny-clock-holder { height: 70px; }
+  .ny-santa-svg { width: 50px; height: 50px; }
+  .ny-num { font-size: 17px; }
+  .ny-lbl { font-size: 8px; }
 }
 </style>
 </head>
@@ -140,6 +173,34 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 <div class="fog"></div>
 <svg class="web tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" fill="none" stroke-width="1"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" fill="none" stroke-width="0.8"/></svg>
 <svg class="web tr" viewBox="0 0 100 100"></svg><svg class="web bl" viewBox="0 0 100 100"></svg><svg class="web br" viewBox="0 0 100 100"></svg>
+
+<!-- ===== НОВОГОДНИЙ ВИДЖЕТ ===== -->
+<div class="newyear-widget" id="ny-widget">
+    <div class="ny-title">До Нового Года</div>
+    <div class="ny-clock-holder">
+        <div class="ny-garland"></div>
+        <svg class="ny-santa-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 Q30 8 28 25 L72 25 Q70 8 50 5 Z" fill="#e63946"/>
+            <rect x="26" y="22" width="48" height="8" rx="4" fill="#f1f1f1"/>
+            <circle cx="50" cy="5" r="5" fill="#f1f1f1"/>
+            <circle cx="50" cy="40" r="14" fill="#ffd9b3"/>
+            <path d="M36 42 Q36 62 50 65 Q64 62 64 42 Q58 52 50 52 Q42 52 36 42 Z" fill="#f1f1f1"/>
+            <circle cx="45" cy="38" r="1.8" fill="#222"/>
+            <circle cx="55" cy="38" r="1.8" fill="#222"/>
+            <circle cx="50" cy="43" r="2" fill="#ff8c69"/>
+            <path d="M30 55 Q30 80 50 85 Q70 80 70 55 Q60 65 50 65 Q40 65 30 55 Z" fill="#e63946"/>
+            <circle cx="28" cy="68" r="4" fill="#f1f1f1"/>
+            <circle cx="72" cy="68" r="4" fill="#f1f1f1"/>
+            <line x1="50" y1="10" x2="50" y2="0" stroke="#a8d8ff" stroke-width="1.5" stroke-dasharray="2 2"/>
+        </svg>
+    </div>
+    <div class="ny-time">
+        <div class="ny-block"><span class="ny-num" id="ny-days">00</span><span class="ny-lbl">Дней</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-hours">00</span><span class="ny-lbl">Часов</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-mins">00</span><span class="ny-lbl">Минут</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-secs">00</span><span class="ny-lbl">Секунд</span></div>
+    </div>
+</div>
 
 <button class="secret-btn" id="secret-btn" title="Секрет...">🕯️</button>
 <button class="ach-btn" id="ach-btn" title="Достижения">🏆</button>
@@ -243,6 +304,28 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
+
+  // ===== НОВОГОДНИЙ ВИДЖЕТ =====
+  function updateNewYear() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var newYear = new Date(year + 1, 0, 1, 0, 0, 0);
+    if (now > newYear) newYear = new Date(year + 2, 0, 1);
+    var diff = newYear - now;
+    
+    var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var s = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    var pad = function(n) { return n < 10 ? '0' + n : n; };
+    if($('ny-days')) $('ny-days').textContent = pad(d);
+    if($('ny-hours')) $('ny-hours').textContent = pad(h);
+    if($('ny-mins')) $('ny-mins').textContent = pad(m);
+    if($('ny-secs')) $('ny-secs').textContent = pad(s);
+  }
+  setInterval(updateNewYear, 1000);
+  updateNewYear();
 
   // ===== ПЕРЕВОДЫ =====
   var translations = {
@@ -613,7 +696,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {v:'9.0', ru:'Достижения, языки, новые испытания.', en:'Achievements, languages, new trials.'},
     {v:'9.1', ru:'Полная поддержка мобильных устройств, исправление багов.', en:'Full mobile support, bug fixes.'},
     {v:'9.2', ru:'Стильные модалки, вибрация, звуки.', en:'Stylish modals, vibration, sounds.'},
-    {v:'9.4', ru:'Удалена обучалка и новогодний виджет. Стабильная версия.', en:'Removed tutorial and New Year widget. Stable version.'}
+    {v:'9.4', ru:'Новогодний виджет с Дедом Морозом. Обучалка удалена. Стабильная версия.', en:'New Year widget with Santa. Tutorial removed. Stable version.'}
   ];
 
   function renderChangelog() {
