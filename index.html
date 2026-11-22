@@ -375,12 +375,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
   // ===== ОБУЧАЛКА (ЗАПУСКАЕТСЯ ПЕРВОЙ) =====
   var TUTORIAL_VERSION = '9.3';
-  // Принудительно сбрасываем флаги старых версий
   try {
-    if (localStorage.getItem('mz_has_seen_tut') === null) {
-      // Если флага нет — покажем полный туториал
-    }
-    // Удаляем устаревшие флаги обновлений, чтобы не мешали
     for (var i = 0; i < localStorage.length; i++) {
       var key = localStorage.key(i);
       if (key && key.indexOf('mz_update_v') === 0 && key !== 'mz_update_v' + TUTORIAL_VERSION) {
@@ -403,13 +398,14 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   window.skipTutorial = function() {
     localStorage.setItem('mz_has_seen_tut', 'true');
     document.getElementById('tutorial-overlay').classList.remove('active');
-    checkUpdate();
+    // НЕ вызываем checkUpdate здесь, чтобы избежать ошибки до его объявления
+    setTimeout(window.checkUpdate, 100);
   };
 
   window.finishTutorial = function() {
     localStorage.setItem('mz_has_seen_tut', 'true');
     document.getElementById('tutorial-overlay').classList.remove('active');
-    checkUpdate();
+    setTimeout(window.checkUpdate, 100);
   };
 
   window.checkUpdate = function() {
@@ -423,7 +419,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     }
   };
 
-  // Запуск обучалки после полной загрузки страницы
   document.addEventListener('DOMContentLoaded', function() {
     var hasSeenFull = localStorage.getItem('mz_has_seen_tut');
     if (!hasSeenFull) {
@@ -527,6 +522,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   if($('lang-en')) $('lang-en').addEventListener('click', () => { lang = 'en'; applyLang(); $('lang-en').classList.add('active'); $('lang-ru').classList.remove('active'); });
 
   // ===== МУЗЫКА =====
+  // ИСПРАВЛЕНО: не перезаписываем глобальную функцию, а добавляем в очередь
   var YT_ID = 'RaDa7m76uXY', ytPlayer = null;
   var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
   var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
