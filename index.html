@@ -113,31 +113,35 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 .changelog li::before{content:'🎃';position:absolute;left:0;top:2px;filter:drop-shadow(0 0 5px var(--accent));}
 .changelog li b{color:var(--accent);font-size:16px;}
 
-/* ===== ОБУЧАЛКА ===== */
-.tutorial-overlay {
-    position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 20px; text-align: center;
+/* ===== НОВОГОДНИЙ ВИДЖЕТ ===== */
+.newyear-widget {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 230px;
+    background: linear-gradient(180deg, rgba(180, 220, 255, 0.15) 0%, rgba(20, 30, 50, 0.85) 100%);
+    border: 2px solid rgba(150, 210, 255, 0.6);
+    border-radius: 20px;
+    padding: 12px 12px 14px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(100, 180, 255, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    font-family: 'Montserrat', sans-serif;
+    transition: transform 0.3s;
 }
-.tutorial-overlay.active { display: flex; animation: fadeIn 0.4s; }
-.tut-step { display: none; max-width: 600px; width: 100%; background: var(--panel); border: 2px solid var(--accent); border-radius: 24px; padding: 40px 30px; box-shadow: 0 0 50px rgba(255,102,0,0.3); }
-.tut-step.active { display: block; animation: fadeIn 0.3s; }
-.tut-icon { font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 20px var(--gold)); }
-.tut-title { font-family: 'Creepster', cursive; font-size: 36px; color: var(--gold); margin-bottom: 15px; letter-spacing: 2px; }
-.tut-text { font-size: 18px; color: #ddd; line-height: 1.6; margin-bottom: 30px; }
-.tut-btn {
-    padding: 15px 40px; background: linear-gradient(135deg, var(--accent), #a03d00);
-    border: none; border-radius: 12px; color: #fff; font-weight: 900; font-size: 18px;
-    cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;
-    box-shadow: 0 5px 15px rgba(255,102,0,0.3);
-}
-.tut-btn:hover { transform: translateY(-3px); box-shadow: var(--glow-orange); filter: brightness(1.1); }
-.tut-skip { background: transparent; border: none; color: var(--muted); font-size: 14px; cursor: pointer; margin-top: 20px; text-decoration: underline; }
-.tut-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 25px; }
-.tut-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; }
-.tut-dot.active { background: var(--accent); box-shadow: 0 0 10px var(--accent); transform: scale(1.2); }
+.newyear-widget:hover { transform: translateY(-3px); }
+.ny-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #d4ecff; margin-bottom: 4px; text-shadow: 0 0 8px rgba(100, 180, 255, 0.8); }
+.ny-clock-holder { position: relative; height: 90px; margin: 0 auto; }
+.ny-garland { position: absolute; top: 0; left: 5%; right: 5%; height: 2px; background: linear-gradient(90deg, transparent, #a8d8ff, #fff, #a8d8ff, transparent); box-shadow: 0 0 10px #a8d8ff; border-radius: 2px; }
+.ny-santa-svg { position: absolute; top: 0; left: 50%; transform: translateX(-50%) translateY(0); width: 70px; height: 70px; animation: santaSwing 2.5s ease-in-out infinite; transform-origin: top center; filter: drop-shadow(0 0 10px rgba(255, 50, 50, 0.6)); }
+@keyframes santaSwing { 0%, 100% { transform: translateX(-50%) rotate(-6deg); } 50% { transform: translateX(-50%) rotate(6deg); } }
+.ny-time { margin-top: 6px; display: flex; justify-content: space-between; gap: 4px; }
+.ny-block { flex: 1; background: rgba(0, 20, 40, 0.6); border: 1px solid rgba(150, 210, 255, 0.3); border-radius: 10px; padding: 6px 2px 4px; }
+.ny-num { display: block; font-family: 'Courier New', monospace; font-size: 22px; font-weight: 900; color: #fff; text-shadow: 0 0 10px rgba(100, 180, 255, 0.9); line-height: 1; }
+.ny-lbl { display: block; font-size: 9px; letter-spacing: 1px; color: #a8c8e8; margin-top: 3px; text-transform: uppercase; }
 
+/* Мобильная адаптация */
 @media (max-width: 768px) {
   body { padding: 10px; }
   h1 { font-size: 32px; }
@@ -161,13 +165,61 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   .tut-text { font-size: 16px; }
   .tut-icon { font-size: 60px; }
   .tut-step { padding: 30px 20px; }
+  .newyear-widget { top: 10px; right: 10px; width: 180px; padding: 8px; }
+  .ny-clock-holder { height: 70px; }
+  .ny-santa-svg { width: 50px; height: 50px; }
+  .ny-num { font-size: 17px; }
+  .ny-lbl { font-size: 8px; }
 }
+
+/* ===== ОБУЧАЛКА ===== */
+.tutorial-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+.tutorial-overlay.active { display: flex; animation: fadeIn 0.4s; }
+.tut-step { display: none; max-width: 600px; width: 100%; background: var(--panel); border: 2px solid var(--accent); border-radius: 24px; padding: 40px 30px; box-shadow: 0 0 50px rgba(255,102,0,0.3); }
+.tut-step.active { display: block; animation: fadeIn 0.3s; }
+.tut-icon { font-size: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 20px var(--gold)); }
+.tut-title { font-family: 'Creepster', cursive; font-size: 36px; color: var(--gold); margin-bottom: 15px; letter-spacing: 2px; }
+.tut-text { font-size: 18px; color: #ddd; line-height: 1.6; margin-bottom: 30px; }
+.tut-btn { padding: 15px 40px; background: linear-gradient(135deg, var(--accent), #a03d00); border: none; border-radius: 12px; color: #fff; font-weight: 900; font-size: 18px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; box-shadow: 0 5px 15px rgba(255,102,0,0.3); }
+.tut-btn:hover { transform: translateY(-3px); box-shadow: var(--glow-orange); filter: brightness(1.1); }
+.tut-skip { background: transparent; border: none; color: var(--muted); font-size: 14px; cursor: pointer; margin-top: 20px; text-decoration: underline; }
+.tut-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 25px; }
+.tut-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; }
+.tut-dot.active { background: var(--accent); box-shadow: 0 0 10px var(--accent); transform: scale(1.2); }
 </style>
 </head>
 <body>
 <div class="fog"></div>
 <svg class="web tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 M0,0 L0,100 M0,0 L70,70" fill="none" stroke-width="1"/><path d="M20,0 C20,10 10,20 0,20 M40,0 C40,25 25,40 0,40 M60,0 C60,40 40,60 0,60 M80,0 C80,55 55,80 0,80" fill="none" stroke-width="0.8"/></svg>
 <svg class="web tr" viewBox="0 0 100 100"></svg><svg class="web bl" viewBox="0 0 100 100"></svg><svg class="web br" viewBox="0 0 100 100"></svg>
+
+<!-- ===== НОВОГОДНИЙ ВИДЖЕТ ===== -->
+<div class="newyear-widget" id="ny-widget">
+    <div class="ny-title">До Нового Года</div>
+    <div class="ny-clock-holder">
+        <div class="ny-garland"></div>
+        <svg class="ny-santa-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 Q30 8 28 25 L72 25 Q70 8 50 5 Z" fill="#e63946"/>
+            <rect x="26" y="22" width="48" height="8" rx="4" fill="#f1f1f1"/>
+            <circle cx="50" cy="5" r="5" fill="#f1f1f1"/>
+            <circle cx="50" cy="40" r="14" fill="#ffd9b3"/>
+            <path d="M36 42 Q36 62 50 65 Q64 62 64 42 Q58 52 50 52 Q42 52 36 42 Z" fill="#f1f1f1"/>
+            <circle cx="45" cy="38" r="1.8" fill="#222"/>
+            <circle cx="55" cy="38" r="1.8" fill="#222"/>
+            <circle cx="50" cy="43" r="2" fill="#ff8c69"/>
+            <path d="M30 55 Q30 80 50 85 Q70 80 70 55 Q60 65 50 65 Q40 65 30 55 Z" fill="#e63946"/>
+            <circle cx="28" cy="68" r="4" fill="#f1f1f1"/>
+            <circle cx="72" cy="68" r="4" fill="#f1f1f1"/>
+            <line x1="50" y1="10" x2="50" y2="0" stroke="#a8d8ff" stroke-width="1.5" stroke-dasharray="2 2"/>
+        </svg>
+    </div>
+    <div class="ny-time">
+        <div class="ny-block"><span class="ny-num" id="ny-days">00</span><span class="ny-lbl">Дней</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-hours">00</span><span class="ny-lbl">Часов</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-mins">00</span><span class="ny-lbl">Минут</span></div>
+        <div class="ny-block"><span class="ny-num" id="ny-secs">00</span><span class="ny-lbl">Секунд</span></div>
+    </div>
+</div>
 
 <button class="secret-btn" id="secret-btn" title="Секрет...">🕯️</button>
 <button class="ach-btn" id="ach-btn" title="Достижения">🏆</button>
@@ -176,44 +228,32 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
 
 <!-- ===== ОБУЧАЛКА ===== -->
 <div class="tutorial-overlay" id="tutorial-overlay">
-    <!-- Шаг 1 -->
     <div class="tut-step" data-step="1">
-        <div class="tut-progress">
-            <div class="tut-dot active"></div><div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot"></div>
-        </div>
+        <div class="tut-progress"><div class="tut-dot active"></div><div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot"></div></div>
         <div class="tut-icon">👋</div>
         <div class="tut-title">ДОБРО ПОЖАЛОВАТЬ!</div>
         <p class="tut-text">Это Техничка МЗ — твой карманный портал в мир хеллоуинской магии. Здесь ты будешь варить зелья, сражаться с монстрами и побеждать боссов.</p>
         <button class="tut-btn" onclick="nextTutStep(2)">ДАЛЕЕ</button>
         <button class="tut-skip" onclick="skipTutorial()">Пропустить обучение</button>
     </div>
-    <!-- Шаг 2 -->
     <div class="tut-step" data-step="2">
-        <div class="tut-progress">
-            <div class="tut-dot"></div><div class="tut-dot active"></div><div class="tut-dot"></div><div class="tut-dot"></div>
-        </div>
+        <div class="tut-progress"><div class="tut-dot"></div><div class="tut-dot active"></div><div class="tut-dot"></div><div class="tut-dot"></div></div>
         <div class="tut-icon">🍲</div>
         <div class="tut-title">ВАРКА ЗЕЛИЙ</div>
         <p class="tut-text">Вкладка «Бот». Управляй котлом мышкой или пальцем. Лови падающие ингредиенты, но избегай бомб 💣! Счет и рекорд сохраняются.</p>
         <button class="tut-btn" onclick="nextTutStep(3)">ДАЛЕЕ</button>
         <button class="tut-skip" onclick="skipTutorial()">Пропустить обучение</button>
     </div>
-    <!-- Шаг 3 -->
     <div class="tut-step" data-step="3">
-        <div class="tut-progress">
-            <div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot active"></div><div class="tut-dot"></div>
-        </div>
+        <div class="tut-progress"><div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot active"></div><div class="tut-dot"></div></div>
         <div class="tut-icon">⚔️</div>
         <div class="tut-title">ИСПЫТАНИЯ</div>
         <p class="tut-text">Вкладка «Испытания». Сразись с монстром, вовремя нажимая на правильный символ. Победа даст 30 очков и достижение.</p>
         <button class="tut-btn" onclick="nextTutStep(4)">ДАЛЕЕ</button>
         <button class="tut-skip" onclick="skipTutorial()">Пропустить обучение</button>
     </div>
-    <!-- Шаг 4 -->
     <div class="tut-step" data-step="4">
-        <div class="tut-progress">
-            <div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot active"></div>
-        </div>
+        <div class="tut-progress"><div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot active"></div></div>
         <div class="tut-icon">🎃</div>
         <div class="tut-title">СЕКРЕТЫ И БОСС</div>
         <p class="tut-text">Раз в 5 минут появляется Король Тыкв — нажимай на него, чтобы победить. Также не забудь поискать пасхалку (свечу) и заглянуть в достижения 🏆.</p>
@@ -221,17 +261,15 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     </div>
 </div>
 
-<!-- ===== ОБУЧАЛКА ДЛЯ СТАРИЧКОВ (ОБНОВА) ===== -->
 <div class="tutorial-overlay" id="update-overlay">
     <div class="tut-step active" style="border-color: var(--gold);">
         <div class="tut-icon">🚀</div>
-        <div class="tut-title" style="color: var(--gold);">ЧТО НОВОГО В v9.2</div>
+        <div class="tut-title" style="color: var(--gold);">ЧТО НОВОГО В v9.3</div>
         <div style="text-align: left; font-size: 16px; color: #ddd; line-height: 1.8; margin-bottom: 30px;">
+            <p style="margin-bottom: 10px;">✔️ <b>Новогодний виджет:</b> обратный отсчёт до Нового года с Дедом Морозом.</p>
             <p style="margin-bottom: 10px;">✔️ <b>Мобильная адаптация:</b> кнопки стали больше, игра работает через касания.</p>
             <p style="margin-bottom: 10px;">✔️ <b>Красивые попапы:</b> вместо системных окон — стильные модалки.</p>
-            <p style="margin-bottom: 10px;">✔️ <b>Вибрация:</b> телефон реагирует на игровые события.</p>
-            <p style="margin-bottom: 10px;">✔️ <b>Звуки:</b> добавлен звук кликов и попадания по боссу.</p>
-            <p style="margin-bottom: 10px;">✔️ <b>Исправление багов:</b> кнопки в испытаниях больше не дублируются.</p>
+            <p style="margin-bottom: 10px;">✔️ <b>Обучалка:</b> для новичков — полный туториал, для старичков — краткий обзор.</p>
         </div>
         <button class="tut-btn" onclick="document.getElementById('update-overlay').classList.remove('active')">ПОНЯТНО</button>
     </div>
@@ -335,16 +373,38 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
 
+  // ===== НОВОГОДНИЙ ВИДЖЕТ =====
+  function updateNewYear() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var newYear = new Date(year + 1, 0, 1, 0, 0, 0); // 1 января следующего года
+    if (now > newYear) newYear = new Date(year + 2, 0, 1);
+    var diff = newYear - now;
+    
+    var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var s = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    var pad = function(n) { return n < 10 ? '0' + n : n; };
+    if($('ny-days')) $('ny-days').textContent = pad(d);
+    if($('ny-hours')) $('ny-hours').textContent = pad(h);
+    if($('ny-mins')) $('ny-mins').textContent = pad(m);
+    if($('ny-secs')) $('ny-secs').textContent = pad(s);
+  }
+  setInterval(updateNewYear, 1000);
+  updateNewYear();
+
   // ===== ОБУЧАЛКА =====
-  var TUTORIAL_VERSION = '9.2';
+  var TUTORIAL_VERSION = '9.3';
   var hasSeenFullTutorial = localStorage.getItem('mz_has_seen_tut');
   var hasSeenUpdate = localStorage.getItem('mz_update_v' + TUTORIAL_VERSION);
 
   window.nextTutStep = function(step) {
-    document.querySelectorAll('#tutorial-overlay .tut-step').forEach(el => el.classList.remove('active'));
-    var target = document.querySelector(`#tutorial-overlay .tut-step[data-step="${step}"]`);
+    var steps = document.querySelectorAll('#tutorial-overlay .tut-step');
+    steps.forEach(el => el.classList.remove('active'));
+    var target = document.querySelector('#tutorial-overlay .tut-step[data-step="' + step + '"]');
     if(target) target.classList.add('active');
-    // Обновляем точки прогресса
     var dots = document.querySelectorAll('#tutorial-overlay .tut-dot');
     dots.forEach((d, idx) => d.classList.toggle('active', idx === step - 1));
   };
@@ -352,7 +412,6 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
   window.skipTutorial = function() {
     localStorage.setItem('mz_has_seen_tut', 'true');
     document.getElementById('tutorial-overlay').classList.remove('active');
-    // После пропуска покажем обновление, если еще не видели
     checkUpdate();
   };
 
@@ -369,31 +428,19 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     }
   }
 
-  // Запуск обучения при загрузке страницы
-  window.addEventListener('DOMContentLoaded', () => {
+  // Запуск после полной загрузки
+  window.addEventListener('load', function() {
     if (!hasSeenFullTutorial) {
-      // Первый раз — показываем полную обучалку
       document.getElementById('tutorial-overlay').classList.add('active');
     } else {
-      // Если уже видел — проверяем обновление
       checkUpdate();
     }
   });
 
   // ===== ПЕРЕВОДЫ =====
   var translations = {
-    ru: {
-      start: "Старт", stop: "Стоп", score: "СЧЕТ", lives: "ЖИЗНИ", best: "РЕКОРД",
-      themeP: "🎃 Тема: Тыква", themeS: "🌿 Тема: Самайн", musicOff: "🔇 Музыка: выкл", musicOn: "🎵 Музыка: вкл",
-      fight: "В БОЙ", win: "ПОБЕДА!", lose: "Промах!", startDuel: "Нажми Старт, чтобы начать",
-      achUnlocked: "Достижение получено!", achTitle: "🏆 ДОСТИЖЕНИЯ"
-    },
-    en: {
-      start: "Start", stop: "Stop", score: "SCORE", lives: "LIVES", best: "BEST",
-      themeP: "🎃 Theme: Pumpkin", themeS: "🌿 Theme: Samhain", musicOff: "🔇 Music: off", musicOn: "🎵 Music: on",
-      fight: "FIGHT", win: "VICTORY!", lose: "Miss!", startDuel: "Press Start to begin",
-      achUnlocked: "Achievement Unlocked!", achTitle: "🏆 ACHIEVEMENTS"
-    }
+    ru: { start: "Старт", stop: "Стоп", score: "СЧЕТ", lives: "ЖИЗНИ", best: "РЕКОРД", themeP: "🎃 Тема: Тыква", themeS: "🌿 Тема: Самайн", musicOff: "🔇 Музыка: выкл", musicOn: "🎵 Музыка: вкл", fight: "В БОЙ", win: "ПОБЕДА!", lose: "Промах!", startDuel: "Нажми Старт, чтобы начать", achUnlocked: "Достижение получено!", achTitle: "🏆 ДОСТИЖЕНИЯ" },
+    en: { start: "Start", stop: "Stop", score: "SCORE", lives: "LIVES", best: "BEST", themeP: "🎃 Theme: Pumpkin", themeS: "🌿 Theme: Samhain", musicOff: "🔇 Music: off", musicOn: "🎵 Music: on", fight: "FIGHT", win: "VICTORY!", lose: "Miss!", startDuel: "Press Start to begin", achUnlocked: "Achievement Unlocked!", achTitle: "🏆 ACHIEVEMENTS" }
   };
   var lang = 'ru', theme = 'pumpkin', musicOn = false;
 
@@ -415,8 +462,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       var un = unlockedAch[a.id];
       var div = document.createElement('div');
       div.className = 'ach-item' + (un ? ' unlocked' : '');
-      div.innerHTML = `<div class="ach-icon">${un ? a.icon : '🔒'}</div>
-                       <div class="ach-text"><b>${lang === 'ru' ? a.ru : a.en}</b><span>${lang === 'ru' ? a.dRu : a.dEn}</span></div>`;
+      div.innerHTML = '<div class="ach-icon">' + (un ? a.icon : '🔒') + '</div><div class="ach-text"><b>' + (lang === 'ru' ? a.ru : a.en) + '</b><span>' + (lang === 'ru' ? a.dRu : a.dEn) + '</span></div>';
       list.appendChild(div);
     });
   }
@@ -430,9 +476,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     if(!a) return;
     var toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<div class="toast-icon">${a.icon}</div>
-                       <div><div style="font-size:12px; text-transform:uppercase; opacity:0.8;">${translations[lang].achUnlocked}</div>
-                       <div style="font-size:16px;">${lang === 'ru' ? a.ru : a.en}</div></div>`;
+    toast.innerHTML = '<div class="toast-icon">' + a.icon + '</div><div><div style="font-size:12px; text-transform:uppercase; opacity:0.8;">' + translations[lang].achUnlocked + '</div><div style="font-size:16px;">' + (lang === 'ru' ? a.ru : a.en) + '</div></div>';
     $('toast-container').appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 100);
     setTimeout(() => {
@@ -689,7 +733,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     currentDuel = duelMonsters[Math.floor(Math.random() * duelMonsters.length)];
     $('duel-monster').textContent = currentDuel.emoji;
     $('duel-status').classList.remove('idle');
-    $('duel-status').textContent = `Покажи: ${currentDuel.weak} (${currentDuel.time} сек)`;
+    $('duel-status').textContent = 'Покажи: ' + currentDuel.weak + ' (' + currentDuel.time + ' сек)';
     
     var container = $('duel-btns-container');
     var oldChoices = $('duel-choices');
@@ -711,7 +755,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     var timerInt = setInterval(() => {
       timeLeft--;
       if(!duelActive) { clearInterval(timerInt); return; }
-      $('duel-status').textContent = `Покажи: ${currentDuel.weak} (${timeLeft} сек)`;
+      $('duel-status').textContent = 'Покажи: ' + currentDuel.weak + ' (' + timeLeft + ' сек)';
       if(timeLeft <= 0) {
         clearInterval(timerInt);
         if(duelActive) checkDuelAnswer(null);
@@ -760,8 +804,9 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
     {v:'7.1', ru:'Босс, Дуэли, Секрет.', en:'Boss, Duels, Secret.'},
     {v:'8.0', ru:'Глобальный редизайн.', en:'Global redesign.'},
     {v:'9.0', ru:'Достижения, языки, новые испытания.', en:'Achievements, languages, new trials.'},
-    {v:'9.1', ru:'Полная поддержка мобильных устройств (touchmove, адаптация кнопок), исправлен баг с дублированием кнопок в испытаниях.', en:'Full mobile support (touchmove, button adaptation), fixed bug with duplicating buttons in trials.'},
-    {v:'9.2', ru:'Замена системных alert() на стильные модалки внутри сайта, вибрация на телефонах, звуки кликов, обучалка для новичков и старичков.', en:'Replaced system alert() with stylish in-site modals, mobile vibration, click sounds, tutorial for newbies and veterans.'}
+    {v:'9.1', ru:'Полная поддержка мобильных устройств, исправление багов.', en:'Full mobile support, bug fixes.'},
+    {v:'9.2', ru:'Стильные модалки, вибрация, звуки, обучалка.', en:'Stylish modals, vibration, sounds, tutorial.'},
+    {v:'9.3', ru:'Новогодний виджет с Дедом Морозом и обратным отсчётом до Нового года.', en:'New Year widget with Santa and countdown.'}
   ];
 
   function renderChangelog() {
@@ -769,7 +814,7 @@ h2{color:var(--accent-2);font-size:32px;text-shadow:var(--glow-purple);}
       $('changelog-list').innerHTML = '';
       versions.forEach(v => {
         var li = document.createElement('li');
-        li.innerHTML = `<b>v${v.v}</b> — ${lang === 'ru' ? v.ru : v.en}`;
+        li.innerHTML = '<b>v' + v.v + '</b> — ' + (lang === 'ru' ? v.ru : v.en);
         $('changelog-list').appendChild(li);
       });
     }
